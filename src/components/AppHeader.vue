@@ -1,18 +1,14 @@
 <template>
     <header class="bg-white border-b border-gray-200 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <!-- Logo and Brand -->
                 <div class="flex items-center">
-                    <div class="flex-shrink-0 flex items-center">
-                        <div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
-                            <CloudIcon class="w-5 h-5 text-white" />
-                        </div>
-                        <span class="ml-3 text-xl font-semibold text-gray-900">CloudDrive</span>
+                    <div class="flex-shrink-0 flex items-center logo-container">
+                        <img data-v-c970699f="" class="logo-image" src="../assets/logo.png" alt="Logo">
+                        <span class="ml-3 text-xl font-semibold text-gray-900"><span class="logo-text">Control
+                                Center</span> Cloud</span>
                     </div>
                 </div>
-
-                <!-- Search Bar -->
                 <div class="hidden md:flex flex-1 max-w-2xl mx-8">
                     <div class="relative w-full">
                         <input type="text" placeholder="Search files and folders..."
@@ -20,8 +16,6 @@
                         <SearchIcon class="absolute left-3 top-2.5 w-5 h-5 text-gray-400" />
                     </div>
                 </div>
-
-                <!-- Navigation -->
                 <nav class="hidden md:flex space-x-6">
                     <RouterLink to="/"
                         class="text-gray-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
@@ -39,31 +33,22 @@
                         Shared
                     </RouterLink>
                 </nav>
-
-                <!-- User Menu -->
                 <div class="flex items-center space-x-4">
-                    <!-- Notifications -->
                     <button class="p-2 text-gray-400 hover:text-gray-600 transition-colors">
                         <BellIcon class="w-5 h-5" />
                     </button>
-
-                    <!-- User Profile -->
                     <div class="flex items-center space-x-3">
                         <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
                             <UserIcon class="w-5 h-5 text-gray-600" />
                         </div>
                         <span class="hidden sm:block text-sm font-medium text-gray-700">Admin User</span>
                     </div>
-
-                    <!-- Mobile menu button -->
                     <button @click="toggleMobileMenu" class="md:hidden p-2 text-gray-400 hover:text-gray-600">
                         <MenuIcon v-if="!mobileMenuOpen" class="w-6 h-6" />
                         <XIcon v-else class="w-6 h-6" />
                     </button>
                 </div>
             </div>
-
-            <!-- Mobile Navigation -->
             <div v-if="mobileMenuOpen" class="md:hidden border-t border-gray-200 pt-4 pb-4">
                 <div class="space-y-1">
                     <RouterLink to="/"
@@ -90,15 +75,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
-
-// Icons (simplified SVG components)
-const CloudIcon = {
-    template: `
-    <svg viewBox="0 0 20 20" fill="currentColor">
-      <path fill-rule="evenodd" d="M5.5 17a4.5 4.5 0 01-1.44-8.765 4.5 4.5 0 018.302-3.046 3.5 3.5 0 014.504 4.272A4 4 0 0115 17H5.5zm3.75-2.75a.75.75 0 001.5 0V9.66l1.95 2.1a.75.75 0 101.1-1.02l-3.25-3.5a.75.75 0 00-1.1 0l-3.25 3.5a.75.75 0 101.1 1.02l1.95-2.1v4.59z" clip-rule="evenodd" />
-    </svg>
-  `
-}
 
 const SearchIcon = {
     template: `
@@ -153,3 +129,31 @@ const closeMobileMenu = () => {
     mobileMenuOpen.value = false
 }
 </script>
+
+<style scoped>
+.logo-text {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.8px;
+    line-height: 1;
+    transition: color 0.2s ease;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #ea0e2b;
+}
+
+.logo-image {
+    height: 32px;
+    width: auto;
+    transition: transform 0.2s ease;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    height: 100%;
+    justify-content: flex-start;
+    padding: 4px 0;
+}
+</style>
