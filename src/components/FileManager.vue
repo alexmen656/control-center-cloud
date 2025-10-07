@@ -1,8 +1,7 @@
 <template>
     <div class="min-h-screen bg-gray-50">
-        <!-- Storage Info Banner -->
         <div class="bg-gradient-to-r from-primary-600 to-primary-700 text-white">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div class="mx-auto px-4 sm:px-6 lg:px-8 py-6">
                 <div class="flex items-center justify-between">
                     <div>
                         <h3 class="text-lg font-medium mb-1">Storage</h3>
@@ -20,11 +19,8 @@
                 </div>
             </div>
         </div>
-
-        <!-- Main Content -->
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <!-- Quick Stats -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-3">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-8">
                 <div class="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow">
                     <div class="flex items-center justify-between mb-2">
                         <span class="text-sm text-gray-600">Total Files</span>
@@ -79,19 +75,14 @@
                     <p class="text-xs text-gray-500 mt-1">Last 7 days</p>
                 </div>
             </div>
-
-            <!-- Files Grid -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Main Files Area -->
-                <div class="lg:col-span-2 space-y-6">
-                    <!-- Quick Access Folders -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
+                <div class="lg:col-span-2 space-y-6 mb-3">
                     <div class="bg-white rounded-lg border border-gray-200">
                         <div class="px-6 py-4 border-b border-gray-200">
                             <h3 class="text-lg font-medium text-gray-900">Quick Access</h3>
                         </div>
                         <div class="p-6">
                             <div class="grid grid-cols-2 gap-4">
-                                <!-- Documents Folder -->
                                 <div
                                     class="flex items-center p-4 border border-gray-200 rounded-lg hover:border-primary-300 hover:bg-primary-50 cursor-pointer transition-all">
                                     <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
@@ -105,7 +96,6 @@
                                         <p class="text-xs text-gray-500">124 files</p>
                                     </div>
                                 </div>
-                                <!-- Photos Folder -->
                                 <div
                                     class="flex items-center p-4 border border-gray-200 rounded-lg hover:border-primary-300 hover:bg-primary-50 cursor-pointer transition-all">
                                     <div class="w-10 h-10 bg-pink-100 rounded-lg flex items-center justify-center mr-3">
@@ -119,7 +109,6 @@
                                         <p class="text-xs text-gray-500">856 files</p>
                                     </div>
                                 </div>
-                                <!-- Videos Folder -->
                                 <div
                                     class="flex items-center p-4 border border-gray-200 rounded-lg hover:border-primary-300 hover:bg-primary-50 cursor-pointer transition-all">
                                     <div
@@ -134,7 +123,6 @@
                                         <p class="text-xs text-gray-500">32 files</p>
                                     </div>
                                 </div>
-                                <!-- Projects Folder -->
                                 <div
                                     class="flex items-center p-4 border border-gray-200 rounded-lg hover:border-primary-300 hover:bg-primary-50 cursor-pointer transition-all">
                                     <div
@@ -152,14 +140,11 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Recent Files -->
                     <div class="bg-white rounded-lg border border-gray-200">
                         <div class="px-6 py-4 border-b border-gray-200">
                             <h3 class="text-lg font-medium text-gray-900">Recent Files</h3>
                         </div>
                         <div class="p-6 space-y-2">
-                            <!-- File Item -->
                             <div
                                 class="flex items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
                                 <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center mr-3">
@@ -180,7 +165,6 @@
                                     </svg>
                                 </button>
                             </div>
-                            <!-- File Item -->
                             <div
                                 class="flex items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
                                 <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3">
@@ -201,7 +185,6 @@
                                     </svg>
                                 </button>
                             </div>
-                            <!-- File Item -->
                             <div
                                 class="flex items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
                                 <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
@@ -225,10 +208,7 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Sidebar -->
                 <div class="space-y-6">
-                    <!-- Recent Activity -->
                     <div class="bg-white rounded-lg border border-gray-200">
                         <div class="px-6 py-4 border-b border-gray-200">
                             <h3 class="text-lg font-medium text-gray-900">Activity</h3>
@@ -266,8 +246,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Storage by Type -->
                     <div class="bg-white rounded-lg border border-gray-200">
                         <div class="px-6 py-4 border-b border-gray-200">
                             <h3 class="text-lg font-medium text-gray-900">Storage</h3>
