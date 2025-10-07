@@ -17,7 +17,7 @@
                     </div>
                 </div>
                 <nav class="hidden md:flex space-x-6">
-                    <RouterLink to="/"
+                    <RouterLink to="/dashboard"
                         class="text-gray-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                         active-class="text-primary-600 bg-primary-50">
                         Files
@@ -51,7 +51,7 @@
             </div>
             <div v-if="mobileMenuOpen" class="md:hidden border-t border-gray-200 pt-4 pb-4">
                 <div class="space-y-1">
-                    <RouterLink to="/"
+                    <RouterLink to="/dashboard"
                         class="block px-3 py-2 text-gray-600 hover:text-primary-600 hover:bg-gray-50 rounded-md text-base font-medium"
                         @click="closeMobileMenu">
                         Files
