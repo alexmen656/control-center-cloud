@@ -20,10 +20,10 @@
             </div>
         </div>
         <div class="mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-3">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-8">
-                <div class="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-sm text-gray-600">Total Files</span>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                <div class="bg-white rounded-xl border border-gray-200 p-4 hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="text-lg text-gray-600 font-semibold">Total Files</span>
                         <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                             <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"
@@ -35,9 +35,9 @@
                     <p class="text-2xl font-semibold text-gray-900">1,247</p>
                     <p class="text-xs text-gray-500 mt-1">+24 this week</p>
                 </div>
-                <div class="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-sm text-gray-600">Folders</span>
+                <div class="bg-white rounded-xl border border-gray-200 p-4 hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="text-lg text-gray-600 font-semibold">Folders</span>
                         <div class="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
                             <svg class="w-4 h-4 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
@@ -47,9 +47,9 @@
                     <p class="text-2xl font-semibold text-gray-900">48</p>
                     <p class="text-xs text-gray-500 mt-1">+3 this week</p>
                 </div>
-                <div class="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-sm text-gray-600">Shared</span>
+                <div class="bg-white rounded-xl border border-gray-200 p-4 hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="text-lg text-gray-600 font-semibold">Shared</span>
                         <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                             <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
                                 <path
@@ -60,9 +60,9 @@
                     <p class="text-2xl font-semibold text-gray-900">23</p>
                     <p class="text-xs text-gray-500 mt-1">5 new shares</p>
                 </div>
-                <div class="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-sm text-gray-600">Recent</span>
+                <div class="bg-white rounded-xl border border-gray-200 p-4 hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="text-lg text-gray-600 font-semibold">Recent</span>
                         <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                             <svg class="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"
@@ -77,11 +77,11 @@
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
                 <div class="lg:col-span-2 space-y-6 mb-3">
-                    <div class="bg-white rounded-lg border border-gray-200">
+                    <div class="bg-white rounded-xl border border-gray-200">
                         <div class="px-6 py-4 border-b border-gray-200">
                             <h3 class="text-lg font-medium text-gray-900">Quick Access</h3>
                         </div>
-                        <div class="p-6">
+                        <div class="p-4">
                             <div class="grid grid-cols-2 gap-4">
                                 <div
                                     class="flex items-center p-4 border border-gray-200 rounded-lg hover:border-primary-300 hover:bg-primary-50 cursor-pointer transition-all">
@@ -140,11 +140,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="bg-white rounded-lg border border-gray-200">
+                    <div class="bg-white rounded-xl border border-gray-200">
                         <div class="px-6 py-4 border-b border-gray-200">
                             <h3 class="text-lg font-medium text-gray-900">Recent Files</h3>
                         </div>
-                        <div class="p-6 space-y-2">
+                        <div class="p-4 space-y-2">
                             <div
                                 class="flex items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
                                 <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center mr-3">
@@ -209,7 +209,7 @@
                     </div>
                 </div>
                 <div class="space-y-6">
-                    <div class="bg-white rounded-lg border border-gray-200">
+                    <div class="bg-white rounded-xl border border-gray-200">
                         <div class="px-6 py-4 border-b border-gray-200">
                             <h3 class="text-lg font-medium text-gray-900">Activity</h3>
                         </div>
