@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import FileManager from '../components/FileManager.vue'
+import FilesView from './FilesView.vue'
 </script>
 
 <template>
-  <FileManager />
+  <FilesView />
 </template>
