@@ -20,13 +20,15 @@ const showSidebar = computed(() => {
     <AppHeader v-if="showHeader" />
     <div class="flex">
       <AppSidebar v-if="showSidebar" />
-      <main :class="showSidebar ? 'ml-64 pt-16 w-full' : 'w-full'">
+      <main :class="showSidebar ? 'ml-64 pt-15 w-full' : 'w-full'">
         <RouterView />
       </main>
     </div>
   </div>
 </template>
 
-<style>
-/* Global styles are handled by Tailwind CSS */
+<style scoped>
+main {
+  border-top-left-radius: 12px !important;
+}
 </style>

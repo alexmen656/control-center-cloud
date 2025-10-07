@@ -1,5 +1,5 @@
 <template>
-    <div class="w-64 h-screen bg-white border-r border-gray-200 flex flex-col fixed left-0 top-16">
+    <div class="w-64 h-screen bg-white flex flex-col fixed left-0 top-15 sidebar">
         <div class="p-4">
             <button
                 class="flex items-center space-x-3 bg-white hover:bg-gray-50 shadow-md hover:shadow-lg border border-gray-200 rounded-full px-6 py-3 w-full transition-all group">
@@ -84,6 +84,10 @@ import { RouterLink } from 'vue-router'
 </script>
 
 <style scoped>
+.sidebar {
+    background: #eff3f6;
+}
+
 ::-webkit-scrollbar {
     width: 6px;
 }

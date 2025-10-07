@@ -1,12 +1,12 @@
 <template>
-    <header class="bg-white border-b border-gray-200 shadow-sm fixed top-0 left-0 right-0 z-50">
+    <header class="bg-white fixed top-0 left-0 right-0 z-50">
         <div class="mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
+            <div class="flex justify-between items-center h-15">
                 <div class="flex items-center">
-                    <div class="flex-shrink-0 flex items-center logo-container">
+                    <div @click="router.push('/dashboard')" class="flex-shrink-0 flex items-center logo-container">
                         <img data-v-c970699f="" class="logo-image" src="../assets/logo.png" alt="Logo">
-                        <span class="ml-3 text-xl font-semibold text-gray-900"><span class="logo-text">Control
-                                Center</span> Cloud</span>
+                        <span class="ml-3 text-xl font-semibold text-gray-900"><span class="logo-text">
+                                Control Cloud</span></span>
                     </div>
                 </div>
                 <div class="hidden md:flex flex-1 max-w-2xl mx-8">
@@ -16,6 +16,7 @@
                         <SearchIcon class="absolute left-3 top-2.5 w-5 h-5 text-gray-400" />
                     </div>
                 </div>
+                <!---
                 <nav class="hidden md:flex space-x-6">
                     <RouterLink to="/dashboard"
                         class="text-gray-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
@@ -32,7 +33,7 @@
                         active-class="text-primary-600 bg-primary-50">
                         Shared
                     </RouterLink>
-                </nav>
+                </nav>--->
                 <div class="flex items-center space-x-4">
                     <button class="p-2 text-gray-400 hover:text-gray-600 transition-colors">
                         <BellIcon class="w-5 h-5" />
@@ -73,6 +74,7 @@
 </template>
 
 <script setup lang="ts">
+import router from '@/router'
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
 
@@ -139,6 +141,7 @@ const closeMobileMenu = () => {
     transition: color 0.2s ease;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     color: #ea0e2b;
+    cursor: pointer;
 }
 
 .logo-image {
@@ -155,5 +158,9 @@ const closeMobileMenu = () => {
     height: 100%;
     justify-content: flex-start;
     padding: 4px 0;
+}
+
+header {
+    background: #eff3f6;
 }
 </style>
