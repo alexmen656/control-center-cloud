@@ -16,21 +16,28 @@ const showSidebar = computed(() => {
 </script>
 
 <template>
-  <div id="app" class="min-h-screen bg-gray-50">
+  <div id="app" class="min-h-screen" :class="showSidebar ? 'app-with-sidebar' : 'bg-gray-50'">
     <AppHeader v-if="showHeader" />
-    <div class="flex">
+    <div class="flex h-full">
       <AppSidebar v-if="showSidebar" />
-      <main :class="showSidebar ? 'ml-64 pt-15 w-full main-content' : 'w-full'">
-        <RouterView />
+      <main :class="showSidebar ? 'ml-64 w-full main-content' : 'w-full'">
+        <RouterView /><!--pt-15-->
       </main>
     </div>
   </div>
 </template>
 
 <style scoped>
+.app-with-sidebar {
+  background: #eff3f6;
+}
+
 .main-content {
-  border-top-left-radius: 24px;
+  border-top-left-radius: 16px;
+  /*24*/
   background: white;
   overflow: hidden;
+  margin-top: 60px;
+  min-height: calc(100vh - 60px);
 }
 </style>

@@ -3,7 +3,6 @@
         <div class="border-b border-gray-200 bg-white px-6 py-3 sticky top-0 z-10">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-4">
-                    <!-- Drive Selector -->
                     <div class="relative">
                         <button @click="showDriveMenu = !showDriveMenu"
                             class="flex items-center space-x-2 text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-lg">
@@ -44,7 +43,6 @@
                         </div>
                     </div>
                     <div class="flex items-center space-x-2">
-                        <!-- Type Filter -->
                         <div class="relative">
                             <button @click="showTypeFilter = !showTypeFilter"
                                 class="flex items-center space-x-1 text-sm text-gray-700 hover:bg-gray-100 px-3 py-1.5 rounded-lg border border-gray-300">
@@ -70,7 +68,6 @@
                                 </button>
                             </div>
                         </div>
-                        <!-- People Filter -->
                         <div class="relative">
                             <button @click="showPeopleFilter = !showPeopleFilter"
                                 class="flex items-center space-x-1 text-sm text-gray-700 hover:bg-gray-100 px-3 py-1.5 rounded-lg border border-gray-300">
@@ -95,7 +92,6 @@
                                 </button>
                             </div>
                         </div>
-                        <!-- Modified Filter -->
                         <div class="relative">
                             <button @click="showModifiedFilter = !showModifiedFilter"
                                 class="flex items-center space-x-1 text-sm text-gray-700 hover:bg-gray-100 px-3 py-1.5 rounded-lg border border-gray-300">
@@ -122,12 +118,11 @@
                                 </button>
                             </div>
                         </div>
-                        <!-- Source Filter -->
                         <div class="relative">
                             <button @click="showSourceFilter = !showSourceFilter"
                                 class="flex items-center space-x-1 text-sm text-gray-700 hover:bg-gray-100 px-3 py-1.5 rounded-lg border border-gray-300">
                                 <span>Source{{((selectedSource != null) ? ': ' + sources.find(s => s.value ===
-                                    selectedSource)?.label : '') }}</span>
+                                    selectedSource)?.label : '')}}</span>
                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd"
                                         d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
@@ -250,22 +245,26 @@
                                                 d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
                                         </svg>
                                     </button>
-                                    <button @click.stop="downloadFile(file)" class="p-1.5 hover:bg-gray-200 rounded-full" title="Download">
+                                    <button @click.stop="downloadFile(file)"
+                                        class="p-1.5 hover:bg-gray-200 rounded-full" title="Download">
                                         <svg class="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd"
                                                 d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
                                                 clip-rule="evenodd" />
                                         </svg>
                                     </button>
-                                    <button class="p-1.5 hover:bg-gray-200 rounded-full" title="Delete">
+                                    <button @click.stop="moveToTrash(file)" class="p-1.5 hover:bg-gray-200 rounded-full"
+                                        title="Delete">
                                         <svg class="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd"
                                                 d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
                                                 clip-rule="evenodd" />
                                         </svg>
                                     </button>
-                                    <button @click.stop="toggleStar(file)" class="p-1.5 hover:bg-gray-200 rounded-full" title="Star">
-                                        <svg class="w-4 h-4" :class="file.starred ? 'text-yellow-500' : 'text-gray-600'" fill="currentColor" viewBox="0 0 20 20">
+                                    <button @click.stop="toggleStar(file)" class="p-1.5 hover:bg-gray-200 rounded-full"
+                                        title="Star">
+                                        <svg class="w-4 h-4" :class="file.starred ? 'text-yellow-500' : 'text-gray-600'"
+                                            fill="currentColor" viewBox="0 0 20 20">
                                             <path
                                                 d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                         </svg>
@@ -309,8 +308,6 @@
         <FilePreviewModal :show="showPreview" :fileName="selectedFile?.name || ''"
             :filePath="selectedFile?.path || selectedFile?.name || ''" :fileSize="selectedFile?.size || ''"
             @close="closePreview" />
-
-        <!-- New Drive Modal -->
         <div v-if="showNewDriveModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
             @click.self="showNewDriveModal = false">
             <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
@@ -348,14 +345,12 @@ const viewMode = ref<'list' | 'grid'>('list')
 const showPreview = ref(false)
 const selectedFile = ref<File | null>(null)
 
-// Drive management
 const currentDrive = ref('default')
 const drives = ref<string[]>(['default'])
 const showDriveMenu = ref(false)
 const showNewDriveModal = ref(false)
 const newDriveName = ref('')
 
-// Filter states
 const showTypeFilter = ref(false)
 const showPeopleFilter = ref(false)
 const showModifiedFilter = ref(false)
@@ -382,7 +377,6 @@ const files = ref<File[]>([])
 
 const token = localStorage.getItem('auth_token') || ''
 
-// File type options
 const fileTypes = [
     { label: 'Folders', value: 'folder' },
     { label: 'PDFs', value: 'pdf' },
@@ -394,7 +388,6 @@ const fileTypes = [
     { label: 'Forms', value: 'form' }
 ]
 
-// Modified period options
 const modifiedPeriods = [
     { label: 'Today', value: 'today' },
     { label: 'Last 7 days', value: 'week' },
@@ -402,20 +395,17 @@ const modifiedPeriods = [
     { label: 'This year', value: 'year' }
 ]
 
-// Source options
 const sources = [
     { label: 'My files', value: 'mine' },
     { label: 'Shared with me', value: 'shared' }
 ]
 
-// Get unique owners from files
 const uniqueOwners = computed(() => {
     const owners = new Set<string>()
     allFiles.value.forEach(file => owners.add(file.owner))
     return Array.from(owners)
 })
 
-// Close dropdowns when clicking outside
 const closeAllDropdowns = () => {
     showDriveMenu.value = false
     showTypeFilter.value = false
@@ -435,7 +425,6 @@ onMounted(() => {
     loadFiles()
 })
 
-// Load user's drives
 const loadDrives = async () => {
     try {
         const response = await axios.get('https://alex.polan.sk/control-center/cloud/files.php?action=get_drives', {
@@ -449,19 +438,16 @@ const loadDrives = async () => {
         }
     } catch (error) {
         console.error('Error fetching drives:', error)
-        // Fallback to default drive
         drives.value = ['default']
     }
 }
 
-// Select a drive
 const selectDrive = (drive: string) => {
     currentDrive.value = drive
     showDriveMenu.value = false
     loadFiles()
 }
 
-// Create new drive
 const createNewDrive = async () => {
     if (!newDriveName.value.trim()) {
         alert('Please enter a drive name')
@@ -495,7 +481,6 @@ const createNewDrive = async () => {
     }
 }
 
-// Load files from current drive
 const loadFiles = async () => {
     try {
         const response = await axios.get(`https://alex.polan.sk/control-center/cloud/files.php?action=get_drive&drive=${currentDrive.value}`, {
@@ -511,7 +496,6 @@ const loadFiles = async () => {
     }
 }
 
-// Toggle star on a file
 const toggleStar = async (file: File) => {
     try {
         await axios.post('https://alex.polan.sk/control-center/cloud/files.php', {
@@ -525,7 +509,7 @@ const toggleStar = async (file: File) => {
                 'Authorization': `Bearer ${token}`
             }
         })
-        // Update local state
+
         const fileIndex = allFiles.value.findIndex(f => f.id === file.id)
         if (fileIndex !== -1 && allFiles.value[fileIndex]) {
             allFiles.value[fileIndex].starred = !allFiles.value[fileIndex].starred
@@ -536,7 +520,6 @@ const toggleStar = async (file: File) => {
     }
 }
 
-// Download file directly
 const downloadFile = async (file: File) => {
     try {
         const response = await axios.get(
@@ -563,7 +546,33 @@ const downloadFile = async (file: File) => {
     }
 }
 
-// Filter functions
+const moveToTrash = async (file: File) => {
+    if (!confirm(`Move "${file.name}" to trash?`)) return
+
+    try {
+        await axios.post('https://alex.polan.sk/control-center/cloud/files.php', {
+            action: 'move_to_trash',
+            file_id: file.id,
+            drive: currentDrive.value,
+            file_path: file.path || file.name,
+            file_name: file.name,
+            file_type: file.type,
+            file_size: file.size,
+            file_owner: file.owner,
+            file_modified: file.modified
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        loadFiles()
+    } catch (error) {
+        console.error('Error moving file to trash:', error)
+        alert('Failed to move file to trash')
+    }
+}
+
 const setTypeFilter = (type: string | null) => {
     selectedType.value = type
     showTypeFilter.value = false
@@ -588,21 +597,17 @@ const setSourceFilter = (source: string | null) => {
     applyFilters()
 }
 
-// Apply all filters
 const applyFilters = () => {
     let filtered = [...allFiles.value]
 
-    // Type filter
     if (selectedType.value) {
         filtered = filtered.filter(file => file.type === selectedType.value)
     }
 
-    // Owner filter
     if (selectedOwner.value) {
         filtered = filtered.filter(file => file.owner === selectedOwner.value)
     }
 
-    // Modified filter
     if (selectedModified.value) {
         const now = new Date()
         filtered = filtered.filter(file => {
@@ -624,10 +629,7 @@ const applyFilters = () => {
         })
     }
 
-    // Source filter (placeholder - implement based on your data structure)
     if (selectedSource.value) {
-        // This would depend on how you track shared files
-        // For now, we'll just filter by owner
         const currentUser = localStorage.getItem('username') || ''
         if (selectedSource.value === 'mine') {
             filtered = filtered.filter(file => file.owner === currentUser)
@@ -798,7 +800,6 @@ const getFileColor = (type: string) => {
 </script>
 
 <style scoped>
-/* Custom scrollbar */
 ::-webkit-scrollbar {
     width: 8px;
     height: 8px;

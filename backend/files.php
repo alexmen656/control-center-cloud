@@ -64,7 +64,6 @@ if ($method === 'OPTIONS') {
                 $fileManager = new FileManager(__DIR__ . '/uploads'.'/'.$username .'/'.$drive);
                 $files = $fileManager->listFilesRecursive();
                 
-                // Load starred files
                 $starredFile = __DIR__ . '/uploads/'.$username.'/starred.json';
                 $starredMap = [];
                 if(file_exists($starredFile)){
@@ -78,7 +77,6 @@ if ($method === 'OPTIONS') {
                     }
                 }
                 
-                // Add starred status to files
                 foreach($files as &$file){
                     $filePath = $file['path'] ?? $file['name'];
                     $file['starred'] = isset($starredMap[$filePath]);
@@ -175,6 +173,30 @@ if ($method === 'OPTIONS') {
             http_response_code(401);
             echo json_encode(['message' => 'Authorization header missing']);
         }
+    }elseif($_GET['action'] === 'get_trash'){
+        $user = new User();
+        $headers = getallheaders();
+        if(isset($headers['Authorization'])){
+            $token = str_replace('Bearer ', '', $headers['Authorization']);
+            if($user->verifyJWT($token)){
+                $decoded = $user->decodeJWT($token);
+                $username = $decoded['username'];
+                
+                $trashFile = __DIR__ . '/uploads/'.$username.'/trash.json';
+                if(file_exists($trashFile)){
+                    $trash = json_decode(file_get_contents($trashFile), true);
+                    echo json_encode(is_array($trash) ? $trash : []);
+                }else{
+                    echo json_encode([]);
+                }
+            }else{
+                http_response_code(401);
+                echo json_encode(['message' => 'Invalid token']);
+            }
+        }else{
+            http_response_code(401);
+            echo json_encode(['message' => 'Authorization header missing']);
+        }
     }else{
    $fileManager = new FileManager(__DIR__ . '/uploads');
     //echo json_encode($fileManager->listFiles());
@@ -200,7 +222,6 @@ if ($method === 'OPTIONS') {
     $decoded = $user->decodeJWT($token);
     $username = $decoded['username'];
     
-    // Handle file upload
     if(isset($_FILES['file'])) {
         $fileManager = new FileManager(__DIR__ . '/uploads');
         if ($fileManager->uploadFile($_FILES['file'])) {
@@ -211,7 +232,6 @@ if ($method === 'OPTIONS') {
             echo json_encode(['message' => 'File upload failed']);
         }
     } else {
-        // Handle create drive and other actions
         $data = json_decode(file_get_contents('php://input'), true);
         
         if(isset($data['action']) && $data['action'] === 'toggle_star'){
@@ -221,14 +241,12 @@ if ($method === 'OPTIONS') {
             $userDir = __DIR__ . '/uploads/'.$username;
             $starredFile = $userDir . '/starred.json';
             
-            // Load existing starred files
             $starred = [];
             if(file_exists($starredFile)){
                 $starred = json_decode(file_get_contents($starredFile), true);
                 if(!is_array($starred)) $starred = [];
             }
             
-            // Check if file is already starred
             $isStarred = false;
             $keyToRemove = -1;
             foreach($starred as $key => $item){
@@ -239,12 +257,9 @@ if ($method === 'OPTIONS') {
                 }
             }
             
-            // Toggle star
             if($isStarred){
-                // Remove from starred
                 array_splice($starred, $keyToRemove, 1);
             }else{
-                // Add to starred
                 $starred[] = [
                     'drive' => $drive,
                     'file_path' => $filePath,
@@ -252,7 +267,6 @@ if ($method === 'OPTIONS') {
                 ];
             }
             
-            // Save starred files
             if(!is_dir($userDir)){
                 mkdir($userDir, 0777, true);
             }
@@ -263,6 +277,113 @@ if ($method === 'OPTIONS') {
                 'message' => $isStarred ? 'Unstarred' : 'Starred',
                 'starred' => !$isStarred
             ]);
+        }elseif(isset($data['action']) && $data['action'] === 'restore_file'){
+            $drive = $data['drive'] ?? 'default';
+            $filePath = $data['file_path'];
+            $fileId = $data['file_id'];
+            
+            $userDir = __DIR__ . '/uploads/'.$username;
+            $trashFile = $userDir . '/trash.json';
+            
+            $trash = [];
+            if(file_exists($trashFile)){
+                $trash = json_decode(file_get_contents($trashFile), true);
+                if(!is_array($trash)) $trash = [];
+            }
+            
+            $keyToRemove = -1;
+            foreach($trash as $key => $item){
+                if($item['id'] == $fileId){
+                    $keyToRemove = $key;
+                    break;
+                }
+            }
+            
+            if($keyToRemove !== -1){
+                array_splice($trash, $keyToRemove, 1);
+                file_put_contents($trashFile, json_encode($trash, JSON_PRETTY_PRINT));
+                
+                http_response_code(200);
+                echo json_encode(['message' => 'File restored successfully']);
+            }else{
+                http_response_code(404);
+                echo json_encode(['message' => 'File not found in trash']);
+            }
+        }elseif(isset($data['action']) && $data['action'] === 'delete_permanently'){
+            $drive = $data['drive'] ?? 'default';
+            $filePath = $data['file_path'];
+            $fileId = $data['file_id'];
+            
+            $userDir = __DIR__ . '/uploads/'.$username;
+            $trashFile = $userDir . '/trash.json';
+            
+            $trash = [];
+            if(file_exists($trashFile)){
+                $trash = json_decode(file_get_contents($trashFile), true);
+                if(!is_array($trash)) $trash = [];
+            }
+            
+            $keyToRemove = -1;
+            foreach($trash as $key => $item){
+                if($item['id'] == $fileId){
+                    $keyToRemove = $key;
+                    break;
+                }
+            }
+            
+            if($keyToRemove !== -1){
+                array_splice($trash, $keyToRemove, 1);
+                file_put_contents($trashFile, json_encode($trash, JSON_PRETTY_PRINT));
+                
+                http_response_code(200);
+                echo json_encode(['message' => 'File deleted permanently']);
+            }else{
+                http_response_code(404);
+                echo json_encode(['message' => 'File not found in trash']);
+            }
+        }elseif(isset($data['action']) && $data['action'] === 'empty_trash'){
+            $userDir = __DIR__ . '/uploads/'.$username;
+            $trashFile = $userDir . '/trash.json';
+            
+            if(file_exists($trashFile)){
+                file_put_contents($trashFile, json_encode([], JSON_PRETTY_PRINT));
+            }
+            
+            http_response_code(200);
+            echo json_encode(['message' => 'Trash emptied successfully']);
+        }elseif(isset($data['action']) && $data['action'] === 'move_to_trash'){
+            $drive = $data['drive'] ?? 'default';
+            $filePath = $data['file_path'];
+            $fileId = $data['file_id'];
+            
+            $userDir = __DIR__ . '/uploads/'.$username;
+            $trashFile = $userDir . '/trash.json';
+            
+            $trash = [];
+            if(file_exists($trashFile)){
+                $trash = json_decode(file_get_contents($trashFile), true);
+                if(!is_array($trash)) $trash = [];
+            }
+            
+            $trash[] = [
+                'id' => $fileId,
+                'name' => $data['file_name'],
+                'path' => $filePath,
+                'type' => $data['file_type'],
+                'drive' => $drive,
+                'size' => $data['file_size'],
+                'owner' => $data['file_owner'] ?? 'me',
+                'modified' => $data['file_modified'],
+                'deleted' => date('d M Y')
+            ];
+            
+            if(!is_dir($userDir)){
+                mkdir($userDir, 0777, true);
+            }
+            file_put_contents($trashFile, json_encode($trash, JSON_PRETTY_PRINT));
+            
+            http_response_code(200);
+            echo json_encode(['message' => 'File moved to trash']);
         }elseif(isset($data['action']) && $data['action'] === 'create_drive' && isset($data['drive_name'])){
             $driveName = preg_replace('/[^a-zA-Z0-9_-]/', '', $data['drive_name']);
             
@@ -274,7 +395,6 @@ if ($method === 'OPTIONS') {
             
             $userDir = __DIR__ . '/uploads/'.$username;
             
-            // Check number of existing drives
             $drives = [];
             if(is_dir($userDir)){
                 $items = scandir($userDir);

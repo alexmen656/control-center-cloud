@@ -20,6 +20,9 @@ export default {
                     900: '#7f1d1d',
                     950: '#450a0a',
                 }
+            },
+            spacing: {
+                '15': '3.75rem',
             }
         },
     },
