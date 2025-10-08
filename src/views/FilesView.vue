@@ -250,7 +250,7 @@
                                                 d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
                                         </svg>
                                     </button>
-                                    <button class="p-1.5 hover:bg-gray-200 rounded-full" title="Download">
+                                    <button @click.stop="downloadFile(file)" class="p-1.5 hover:bg-gray-200 rounded-full" title="Download">
                                         <svg class="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd"
                                                 d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
@@ -264,8 +264,8 @@
                                                 clip-rule="evenodd" />
                                         </svg>
                                     </button>
-                                    <button class="p-1.5 hover:bg-gray-200 rounded-full" title="Star">
-                                        <svg class="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <button @click.stop="toggleStar(file)" class="p-1.5 hover:bg-gray-200 rounded-full" title="Star">
+                                        <svg class="w-4 h-4" :class="file.starred ? 'text-yellow-500' : 'text-gray-600'" fill="currentColor" viewBox="0 0 20 20">
                                             <path
                                                 d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                         </svg>
@@ -374,6 +374,7 @@ interface File {
     owner: string
     modified: string
     size: string
+    starred?: boolean
 }
 
 const allFiles = ref<File[]>([])
@@ -507,6 +508,58 @@ const loadFiles = async () => {
         applyFilters()
     } catch (error) {
         console.error('Error fetching files:', error)
+    }
+}
+
+// Toggle star on a file
+const toggleStar = async (file: File) => {
+    try {
+        await axios.post('https://alex.polan.sk/control-center/cloud/files.php', {
+            action: 'toggle_star',
+            file_id: file.id,
+            drive: currentDrive.value,
+            file_path: file.path || file.name
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        // Update local state
+        const fileIndex = allFiles.value.findIndex(f => f.id === file.id)
+        if (fileIndex !== -1 && allFiles.value[fileIndex]) {
+            allFiles.value[fileIndex].starred = !allFiles.value[fileIndex].starred
+        }
+        applyFilters()
+    } catch (error) {
+        console.error('Error toggling star:', error)
+    }
+}
+
+// Download file directly
+const downloadFile = async (file: File) => {
+    try {
+        const response = await axios.get(
+            `https://alex.polan.sk/control-center/cloud/files.php?action=get_file_contents&drive=${currentDrive.value}&file=${encodeURIComponent(file.path || file.name)}`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        )
+
+        const blob = await fetch(`data:${response.data.mime_type};base64,${response.data.content}`).then(res => res.blob())
+        const url = window.URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = file.name
+        document.body.appendChild(a)
+        a.click()
+        window.URL.revokeObjectURL(url)
+        document.body.removeChild(a)
+    } catch (error) {
+        console.error('Error downloading file:', error)
     }
 }
 

@@ -20,7 +20,7 @@ const showSidebar = computed(() => {
     <AppHeader v-if="showHeader" />
     <div class="flex">
       <AppSidebar v-if="showSidebar" />
-      <main :class="showSidebar ? 'ml-64 pt-15 w-full' : 'w-full'">
+      <main :class="showSidebar ? 'ml-64 pt-15 w-full main-content' : 'w-full'">
         <RouterView />
       </main>
     </div>
@@ -28,7 +28,9 @@ const showSidebar = computed(() => {
 </template>
 
 <style scoped>
-main {
-  border-top-left-radius: 12px !important;
+.main-content {
+  border-top-left-radius: 24px;
+  background: white;
+  overflow: hidden;
 }
 </style>

@@ -62,7 +62,29 @@ if ($method === 'OPTIONS') {
 
                 //echo __DIR__ . '/uploads'.'/'.$username;
                 $fileManager = new FileManager(__DIR__ . '/uploads'.'/'.$username .'/'.$drive);
-                echo json_encode($fileManager->listFilesRecursive());
+                $files = $fileManager->listFilesRecursive();
+                
+                // Load starred files
+                $starredFile = __DIR__ . '/uploads/'.$username.'/starred.json';
+                $starredMap = [];
+                if(file_exists($starredFile)){
+                    $starred = json_decode(file_get_contents($starredFile), true);
+                    if(is_array($starred)){
+                        foreach($starred as $item){
+                            if($item['drive'] === $drive){
+                                $starredMap[$item['file_path']] = true;
+                            }
+                        }
+                    }
+                }
+                
+                // Add starred status to files
+                foreach($files as &$file){
+                    $filePath = $file['path'] ?? $file['name'];
+                    $file['starred'] = isset($starredMap[$filePath]);
+                }
+                
+                echo json_encode($files);
             }else{
                 http_response_code(401);
                 echo json_encode(['message' => 'Invalid token']);
@@ -98,6 +120,52 @@ if ($method === 'OPTIONS') {
                 }else{
                     http_response_code(404);
                     echo json_encode(['message' => 'File not found']);
+                }
+            }else{
+                http_response_code(401);
+                echo json_encode(['message' => 'Invalid token']);
+            }
+        }else{
+            http_response_code(401);
+            echo json_encode(['message' => 'Authorization header missing']);
+        }
+    }elseif($_GET['action'] === 'get_starred'){
+        $user = new User();
+        $headers = getallheaders();
+        if(isset($headers['Authorization'])){
+            $token = str_replace('Bearer ', '', $headers['Authorization']);
+            if($user->verifyJWT($token)){
+                $decoded = $user->decodeJWT($token);
+                $username = $decoded['username'];
+                
+                $starredFile = __DIR__ . '/uploads/'.$username.'/starred.json';
+                if(file_exists($starredFile)){
+                    $starred = json_decode(file_get_contents($starredFile), true);
+                    $starredFiles = [];
+                    
+                    foreach($starred as $item){
+                        $drive = $item['drive'];
+                        $filePath = $item['file_path'];
+                        $fullPath = __DIR__ . '/uploads/'.$username.'/'.$drive.'/'.$filePath;
+                        
+                        if(file_exists($fullPath)){
+                            $fileManager = new FileManager(__DIR__ . '/uploads/'.$username.'/'.$drive);
+                            $files = $fileManager->listFilesRecursive();
+                            
+                            foreach($files as $file){
+                                if(($file['path'] ?? $file['name']) === $filePath){
+                                    $file['drive'] = $drive;
+                                    $file['starred'] = true;
+                                    $starredFiles[] = $file;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    
+                    echo json_encode($starredFiles);
+                }else{
+                    echo json_encode([]);
                 }
             }else{
                 http_response_code(401);
@@ -143,10 +211,59 @@ if ($method === 'OPTIONS') {
             echo json_encode(['message' => 'File upload failed']);
         }
     } else {
-        // Handle create drive
+        // Handle create drive and other actions
         $data = json_decode(file_get_contents('php://input'), true);
         
-        if(isset($data['action']) && $data['action'] === 'create_drive' && isset($data['drive_name'])){
+        if(isset($data['action']) && $data['action'] === 'toggle_star'){
+            $drive = $data['drive'] ?? 'default';
+            $filePath = $data['file_path'];
+            
+            $userDir = __DIR__ . '/uploads/'.$username;
+            $starredFile = $userDir . '/starred.json';
+            
+            // Load existing starred files
+            $starred = [];
+            if(file_exists($starredFile)){
+                $starred = json_decode(file_get_contents($starredFile), true);
+                if(!is_array($starred)) $starred = [];
+            }
+            
+            // Check if file is already starred
+            $isStarred = false;
+            $keyToRemove = -1;
+            foreach($starred as $key => $item){
+                if($item['drive'] === $drive && $item['file_path'] === $filePath){
+                    $isStarred = true;
+                    $keyToRemove = $key;
+                    break;
+                }
+            }
+            
+            // Toggle star
+            if($isStarred){
+                // Remove from starred
+                array_splice($starred, $keyToRemove, 1);
+            }else{
+                // Add to starred
+                $starred[] = [
+                    'drive' => $drive,
+                    'file_path' => $filePath,
+                    'starred_at' => date('Y-m-d H:i:s')
+                ];
+            }
+            
+            // Save starred files
+            if(!is_dir($userDir)){
+                mkdir($userDir, 0777, true);
+            }
+            file_put_contents($starredFile, json_encode($starred, JSON_PRETTY_PRINT));
+            
+            http_response_code(200);
+            echo json_encode([
+                'message' => $isStarred ? 'Unstarred' : 'Starred',
+                'starred' => !$isStarred
+            ]);
+        }elseif(isset($data['action']) && $data['action'] === 'create_drive' && isset($data['drive_name'])){
             $driveName = preg_replace('/[^a-zA-Z0-9_-]/', '', $data['drive_name']);
             
             if(empty($driveName)){

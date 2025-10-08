@@ -18,26 +18,33 @@ class FileManager {
         //echo "Base Dir: " . $this->baseDir . "\n"; // Debug line to check base directory
         $rii = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->baseDir));
         $files = [];
+        $id = 1;
         foreach ($rii as $file) {
             if (!$file->isDir()) {
                 $ext = pathinfo($file->getFilename(), PATHINFO_EXTENSION);
+                $relativePath = str_replace($this->baseDir, '', $file->getPathname());
                 $files[] = [
-                    "id" => 1,
-                    "name" => str_replace($this->baseDir, '', $file->getPathname()),
+                    "id" => $id++,
+                    "name" => basename($file->getFilename()),
+                    "path" => $relativePath,
                     "type" => $ext ?: 'file',
                     "owner" => 'me',
                     "modified" => date('d M Y', $file->getMTime()),
                     "size" => filesize($file) . ' bytes'
                 ];
             } else {
-                $files[] = [
-                    "id" => 1,
-                    "name" => str_replace($this->baseDir, '', $file->getPathname()),
-                    "type" => 'folder',
-                    "owner" => 'me',
-                    "modified" => date('d M Y', $file->getMTime()),
-                    "size" => '—'
-                ];
+                $relativePath = str_replace($this->baseDir, '', $file->getPathname());
+                if($relativePath !== '.' && $relativePath !== '..'){
+                    $files[] = [
+                        "id" => $id++,
+                        "name" => basename($file->getPathname()),
+                        "path" => $relativePath,
+                        "type" => 'folder',
+                        "owner" => 'me',
+                        "modified" => date('d M Y', $file->getMTime()),
+                        "size" => '—'
+                    ];
+                }
             }
         }
         return $files;
