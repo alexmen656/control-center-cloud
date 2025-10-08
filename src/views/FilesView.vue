@@ -209,6 +209,7 @@
 
 <script setup lang="ts">
 import { ref, defineComponent, h } from 'vue'
+import axios from 'axios'
 
 const viewMode = ref<'list' | 'grid'>('list')
 
@@ -222,16 +223,30 @@ interface File {
 }
 
 const files = ref<File[]>([
-    { id: 1, name: 'addon', type: 'folder', owner: 'me', modified: '31 Mar 2024 me', size: '—' },
-    { id: 2, name: 'Google AI Studio', type: 'folder', owner: 'me', modified: '14 Apr me', size: '—' },
-    { id: 3, name: 'Google Earth', type: 'folder', owner: 'me', modified: '16 Dec 2023 me', size: '—' },
-    { id: 4, name: 'Antwortschreiben.pdf', type: 'pdf', owner: 'me', modified: '21 Mar 2024 me', size: '47 KB' },
-    { id: 5, name: 'Slovak_Cyber_Team.pdf', type: 'pdf', owner: 'me', modified: '24 Jan me', size: '16.2 MB' },
-    { id: 7, name: 'Bill_2499004722.pdf', type: 'pdf', owner: 'me', modified: '10 Jan 2024 me', size: '56 KB' },
-    { id: 8, name: 'Letter', type: 'doc', owner: 'me', modified: '2 Feb me', size: '3 KB' },
-    { id: 10, name: 'out.jpg', type: 'image', owner: 'me', modified: '9 Mar 2023 me', size: '162 bytes' },
-    { id: 12, name: 'shop.zip', type: 'zip', owner: 'me', modified: '28 Jun 2023 me', size: '3 KB' },
+    /*  { id: 1, name: 'addon', type: 'folder', owner: 'me', modified: '31 Mar 2024 me', size: '—' },
+      { id: 2, name: 'Google AI Studio', type: 'folder', owner: 'me', modified: '14 Apr me', size: '—' },
+      { id: 3, name: 'Google Earth', type: 'folder', owner: 'me', modified: '16 Dec 2023 me', size: '—' },
+      { id: 4, name: 'Antwortschreiben.pdf', type: 'pdf', owner: 'me', modified: '21 Mar 2024 me', size: '47 KB' },
+      { id: 5, name: 'Slovak_Cyber_Team.pdf', type: 'pdf', owner: 'me', modified: '24 Jan me', size: '16.2 MB' },
+      { id: 7, name: 'Bill_2499004722.pdf', type: 'pdf', owner: 'me', modified: '10 Jan 2024 me', size: '56 KB' },
+      { id: 8, name: 'Letter', type: 'doc', owner: 'me', modified: '2 Feb me', size: '3 KB' },
+      { id: 10, name: 'out.jpg', type: 'image', owner: 'me', modified: '9 Mar 2023 me', size: '162 bytes' },
+      { id: 12, name: 'shop.zip', type: 'zip', owner: 'me', modified: '28 Jun 2023 me', size: '3 KB' },*/
 ])
+
+const token = localStorage.getItem('auth_token') || ''
+
+axios.get('https://alex.polan.sk/control-center/cloud/files.php?action=get_drive&drive=default', {
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+    }
+}).then(response => {
+    files.value = response.data
+}).catch(error => {
+    console.error('Error fetching files:', error)
+})
+
 
 const FolderIcon = defineComponent({
     props: ['color'],

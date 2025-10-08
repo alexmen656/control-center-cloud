@@ -15,11 +15,29 @@ class FileManager {
     }
 
     public function listFilesRecursive() {
+        //echo "Base Dir: " . $this->baseDir . "\n"; // Debug line to check base directory
         $rii = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->baseDir));
         $files = [];
         foreach ($rii as $file) {
             if (!$file->isDir()) {
-                $files[] = str_replace($this->baseDir, '', $file->getPathname());
+                $ext = pathinfo($file->getFilename(), PATHINFO_EXTENSION);
+                $files[] = [
+                    "id" => 1,
+                    "name" => str_replace($this->baseDir, '', $file->getPathname()),
+                    "type" => $ext ?: 'file',
+                    "owner" => 'me',
+                    "modified" => date('d M Y', $file->getMTime()),
+                    "size" => filesize($file) . ' bytes'
+                ];
+            } else {
+                $files[] = [
+                    "id" => 1,
+                    "name" => str_replace($this->baseDir, '', $file->getPathname()),
+                    "type" => 'folder',
+                    "owner" => 'me',
+                    "modified" => date('d M Y', $file->getMTime()),
+                    "size" => '—'
+                ];
             }
         }
         return $files;
