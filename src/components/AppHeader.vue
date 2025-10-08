@@ -38,11 +38,36 @@
                     <button class="p-2 text-gray-400 hover:text-gray-600 transition-colors">
                         <BellIcon class="w-5 h-5" />
                     </button>
-                    <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-                            <UserIcon class="w-5 h-5 text-gray-600" />
+                    <div class="relative">
+                        <button @click="toggleUserMenu"
+                            class="flex items-center space-x-3 hover:bg-gray-50 rounded-lg px-3 py-2 transition-colors">
+                            <div
+                                class="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                                {{ userInitial }}
+                            </div>
+                            <span class="hidden sm:block text-sm font-medium text-gray-700">{{ username }}</span>
+                            <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                        <div v-if="userMenuOpen"
+                            class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+                            <div class="px-4 py-2 border-b border-gray-200">
+                                <p class="text-sm font-medium text-gray-900">{{ username }}</p>
+                                <p class="text-xs text-gray-500">{{ role }}</p>
+                            </div>
+                            <button @click="handleLogout"
+                                class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors flex items-center space-x-2">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                <span>Sign out</span>
+                            </button>
                         </div>
-                        <span class="hidden sm:block text-sm font-medium text-gray-700">Admin User</span>
                     </div>
                     <button @click="toggleMobileMenu" class="md:hidden p-2 text-gray-400 hover:text-gray-600">
                         <MenuIcon v-if="!mobileMenuOpen" class="w-6 h-6" />
@@ -74,9 +99,37 @@
 </template>
 
 <script setup lang="ts">
-import router from '@/router'
-import { ref } from 'vue'
-import { RouterLink } from 'vue-router'
+import { ref, computed } from 'vue'
+import { RouterLink, useRouter } from 'vue-router'
+import { useAuthStore } from '../stores/auth'
+
+const router = useRouter()
+const authStore = useAuthStore()
+
+const mobileMenuOpen = ref(false)
+const userMenuOpen = ref(false)
+
+const username = computed(() => authStore.username || 'User')
+const role = computed(() => authStore.role || 'user')
+const userInitial = computed(() => username.value.charAt(0).toUpperCase())
+
+const toggleMobileMenu = () => {
+    mobileMenuOpen.value = !mobileMenuOpen.value
+}
+
+const closeMobileMenu = () => {
+    mobileMenuOpen.value = false
+}
+
+const toggleUserMenu = () => {
+    userMenuOpen.value = !userMenuOpen.value
+}
+
+const handleLogout = () => {
+    authStore.logout()
+    userMenuOpen.value = false
+    router.push('/login')
+}
 
 const SearchIcon = {
     template: `
@@ -119,16 +172,6 @@ const XIcon = {
       <line x1="6" y1="6" x2="18" y2="18"></line>
     </svg>
   `
-}
-
-const mobileMenuOpen = ref(false)
-
-const toggleMobileMenu = () => {
-    mobileMenuOpen.value = !mobileMenuOpen.value
-}
-
-const closeMobileMenu = () => {
-    mobileMenuOpen.value = false
 }
 </script>
 
