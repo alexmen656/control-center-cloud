@@ -68,9 +68,9 @@
                         <span class="text-gray-600">45.2 GB of 100 GB used</span>
                     </div>
                     <div class="w-full bg-gray-200 rounded-full h-2">
-                        <div class="bg-primary-600 rounded-full h-2 transition-all" style="width: 45%"></div>
+                        <div class="bg-gray-600 rounded-full h-2 transition-all" style="width: 45%"></div>
                     </div>
-                    <button class="text-xs text-primary-600 hover:text-primary-700 font-medium hover:underline">
+                    <button class="text-xs text-gray-600 hover:text-primary-700 font-medium hover:underline">
                         Buy storage
                     </button>
                 </div>

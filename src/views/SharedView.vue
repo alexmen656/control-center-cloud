@@ -1,11 +1,10 @@
 <template>
     <div class="min-h-screen bg-gray-50">
-        <!-- Page Header -->
-        <div class="bg-white shadow-sm border-b border-gray-200">
+        <div>
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h1 class="text-2xl font-bold text-gray-900">Shared with Me</h1>
+                        <h1 class="text-3xl font-bold text-gray-900">Shared with Me</h1>
                         <p class="mt-1 text-sm text-gray-500">Files and folders shared by others</p>
                     </div>
                     <button
@@ -15,13 +14,9 @@
                 </div>
             </div>
         </div>
-
-        <!-- Main Content -->
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <!-- Shared Files Grid -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
             <div class="bg-white rounded-lg border border-gray-200">
-                <div class="p-6 space-y-2">
-                    <!-- Shared File Items -->
+                <div class="p-3 space-y-2">
                     <div v-for="i in 8" :key="i"
                         class="flex items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
                         <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3">
