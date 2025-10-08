@@ -1,6 +1,6 @@
 <template>
     <header class="bg-white fixed top-0 left-0 right-0 z-50">
-        <div class="mx-auto px-4 sm:px-6 2xl:px-4">
+        <div class="mx-auto px-3 sm:px-3 2xl:px-3">
             <div class="flex justify-between items-center h-15">
                 <div class="flex items-center">
                     <div @click="router.push('/dashboard')" class="flex-shrink-0 flex items-center logo-container">
@@ -48,10 +48,11 @@
                         <button @click="toggleUserMenu"
                             class="flex items-center space-x-3 hover:bg-gray-50 rounded-lg px-3 py-2 transition-colors">
                             <div
-                                class="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                                class="w-8 h-8 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
                                 {{ userInitial }}
                             </div>
-                            <span class="hidden sm:block text-sm font-medium text-gray-700">{{ username }}</span>
+                            <span class="hidden sm:block text-md font-medium text-gray-700">{{
+                                username[0]?.toUpperCase() + username.slice(1) }}</span>
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"
                                     d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
@@ -183,7 +184,7 @@ const XIcon = {
 
 <style scoped>
 .logo-text {
-    font-size: 22px;
+    font-size: 24px;
     font-weight: 700;
     letter-spacing: -0.8px;
     line-height: 1;
@@ -194,7 +195,7 @@ const XIcon = {
 }
 
 .logo-image {
-    height: 32px;
+    height: 34px;
     width: auto;
     transition: transform 0.2s ease;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
