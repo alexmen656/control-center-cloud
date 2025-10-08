@@ -58,4 +58,41 @@ class FileManager {
         }
         return false;
     }
+
+    public function createDirectory($dirname) {
+        $dirPath = $this->baseDir . basename($dirname);
+        if (!is_dir($dirPath)) {
+            return mkdir($dirPath, 0755, true);
+        }
+        return false;
+    }
+
+    public function renameFile($oldName, $newName) {
+        $oldPath = $this->baseDir . basename($oldName);
+        $newPath = $this->baseDir . basename($newName);
+        if (file_exists($oldPath)) {
+            return rename($oldPath, $newPath);
+        }
+        return false;
+    }
+
+    public function moveFile($filename, $newDir) {
+        $filePath = $this->baseDir . basename($filename);
+        $newDirPath = rtrim($this->baseDir . basename($newDir), '/') . '/';
+        if (!is_dir($newDirPath)) {
+            mkdir($newDirPath, 0755, true);
+        }
+        if (file_exists($filePath)) {
+            return rename($filePath, $newDirPath . basename($filename));
+        }
+        return false;
+    }
+
+    public function getFileContents($filename) {
+        $filePath = $this->baseDir . basename($filename);
+        if (file_exists($filePath)) {
+            return file_get_contents($filePath);
+        }
+        return false;
+    }
 }

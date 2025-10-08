@@ -44,8 +44,24 @@ export const authApi = {
 }
 
 export const filesApi = {
-  getFiles: async () => {
-    const response = await api.get('/files.php')
+  getFiles: async (drive: string = 'default') => {
+    const response = await api.get('/files.php', {
+      params: {
+        action: 'get_drive',
+        drive: drive,
+      },
+    })
+    return response.data
+  },
+
+  getFileContents: async (drive: string, file: string) => {
+    const response = await api.get('/files.php', {
+      params: {
+        action: 'get_file_contents',
+        drive: drive,
+        file: file,
+      },
+    })
     return response.data
   },
 }

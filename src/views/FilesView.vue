@@ -112,9 +112,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="file in files" :key="file.id"
+                        <tr v-for="file in files" :key="file.id" @click="openFilePreview(file)"
                             class="hover:bg-gray-50 border-b border-gray-100 cursor-pointer group">
-                            <td class="py-3 pr-4">
+                            <td class="py-3 pr-4" @click.stop>
                                 <input type="checkbox" class="rounded border-gray-300">
                             </td>
                             <td class="py-3 pr-4">
@@ -182,12 +182,13 @@
                 </table>
             </div>
             <div v-else class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-                <div v-for="file in files" :key="file.id"
+                <div v-for="file in files" :key="file.id" @click="openFilePreview(file)"
                     class="group border border-gray-200 rounded-lg hover:shadow-lg hover:border-primary-300 transition-all cursor-pointer p-3">
                     <div
                         class="aspect-square bg-gray-100 rounded-lg mb-3 flex items-center justify-center relative overflow-hidden">
                         <component :is="getFileIcon(file.type)" :color="getFileColor(file.type)" class="w-16 h-16" />
-                        <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                            @click.stop>
                             <input type="checkbox" class="rounded border-gray-300 bg-white">
                         </div>
                     </div>
@@ -204,37 +205,48 @@
                 </div>
             </div>
         </div>
+        <FilePreviewModal :show="showPreview" :fileName="selectedFile?.name || ''"
+            :filePath="selectedFile?.path || selectedFile?.name || ''" :fileSize="selectedFile?.size || ''"
+            @close="closePreview" />
     </div>
 </template>
 
 <script setup lang="ts">
 import { ref, defineComponent, h } from 'vue'
 import axios from 'axios'
+import FilePreviewModal from '../components/FilePreviewModal.vue'
 
 const viewMode = ref<'list' | 'grid'>('list')
+const showPreview = ref(false)
+const selectedFile = ref<File | null>(null)
 
 interface File {
     id: number
     name: string
+    path?: string
     type: 'folder' | 'pdf' | 'image' | 'video' | 'sheet' | 'doc' | 'zip' | 'form'
     owner: string
     modified: string
     size: string
 }
 
-const files = ref<File[]>([
-    /*  { id: 1, name: 'addon', type: 'folder', owner: 'me', modified: '31 Mar 2024 me', size: '—' },
-      { id: 2, name: 'Google AI Studio', type: 'folder', owner: 'me', modified: '14 Apr me', size: '—' },
-      { id: 3, name: 'Google Earth', type: 'folder', owner: 'me', modified: '16 Dec 2023 me', size: '—' },
-      { id: 4, name: 'Antwortschreiben.pdf', type: 'pdf', owner: 'me', modified: '21 Mar 2024 me', size: '47 KB' },
-      { id: 5, name: 'Slovak_Cyber_Team.pdf', type: 'pdf', owner: 'me', modified: '24 Jan me', size: '16.2 MB' },
-      { id: 7, name: 'Bill_2499004722.pdf', type: 'pdf', owner: 'me', modified: '10 Jan 2024 me', size: '56 KB' },
-      { id: 8, name: 'Letter', type: 'doc', owner: 'me', modified: '2 Feb me', size: '3 KB' },
-      { id: 10, name: 'out.jpg', type: 'image', owner: 'me', modified: '9 Mar 2023 me', size: '162 bytes' },
-      { id: 12, name: 'shop.zip', type: 'zip', owner: 'me', modified: '28 Jun 2023 me', size: '3 KB' },*/
-])
+const files = ref<File[]>([])
 
 const token = localStorage.getItem('auth_token') || ''
+
+const openFilePreview = (file: File) => {
+    if (file.type === 'folder') {
+        return
+    }
+
+    selectedFile.value = file
+    showPreview.value = true
+}
+
+const closePreview = () => {
+    showPreview.value = false
+    selectedFile.value = null
+}
 
 axios.get('https://alex.polan.sk/control-center/cloud/files.php?action=get_drive&drive=default', {
     headers: {
