@@ -5,15 +5,40 @@ header('Access-Control-Allow-Methods: *');
 header('Content-Type: application/json');
 
 include_once 'classes/FileManager.php';
+include_once 'classes/User.php';
+
 $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method === 'OPTIONS') {
     http_response_code(200);
     exit;
 } elseif ($method === 'GET') {
-    $fileManager = new FileManager(__DIR__ . '/uploads');
+    if($_GET['action'] === 'get_drive' && isset($_GET['drive'])){
+        $user = new User();
+        $headers = getallheaders();
+        if(isset($headers['Authorization'])){
+            $token = str_replace('Bearer ', '', $headers['Authorization']);
+            if($user->verifyJWT($token)){
+                $decoded = $user->decodeJWT($token);
+                $username = $decoded['username'];
+                $drive = $_GET['drive'] ?? 'default';
+
+                //echo __DIR__ . '/uploads'.'/'.$username;
+                $fileManager = new FileManager(__DIR__ . '/uploads'.'/'.$username .'/'.$drive);
+                echo json_encode($fileManager->listFilesRecursive());
+            }else{
+                http_response_code(401);
+                echo json_encode(['message' => 'Invalid token']);
+            }   
+        }else{
+            http_response_code(401);
+            echo json_encode(['message' => 'Authorization header missing']);
+        }
+    }else{
+   $fileManager = new FileManager(__DIR__ . '/uploads');
     //echo json_encode($fileManager->listFiles());
     echo json_encode($fileManager->listFilesRecursive());
+    }
 } elseif ($method === 'POST' && isset($_FILES['file'])) {
     $fileManager = new FileManager(__DIR__ . '/uploads');
     if ($fileManager->uploadFile($_FILES['file'])) {

@@ -24,6 +24,17 @@ class User {
         return "$header.$payload.$signature";
     }
 
+    public function verifyJWT($token) {
+        list($header, $payload, $signature) = explode('.', $token);
+        $expectedSignature = base64_encode(hash_hmac('sha256', "$header.$payload", 'secret_key', true));
+        return hash_equals($expectedSignature, $signature);
+    }
+
+    public function decodeJWT($token) {
+        list($header, $payload, $signature) = explode('.', $token);
+        return json_decode(base64_decode($payload), true);
+    }
+
     public function authenticate($username, $password) {
         foreach ($this->users as $user) {
             if ($user['username'] === $username && $user['password'] === $password) {
