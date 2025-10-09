@@ -34,7 +34,7 @@ const showSidebar = computed(() => {
 
 @media (prefers-color-scheme: dark) {
   .app-with-sidebar {
-    background: #0f172a;
+    background: #1f2937;
   }
 }
 

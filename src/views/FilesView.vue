@@ -1,7 +1,7 @@
 <template>
     <div class="min-h-screen bg-white dark:bg-gray-900">
         <div
-            class="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-6 py-3 sticky top-0 z-10">
+            class="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-6 py-3 sticky top-0 z-10">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-4">
                     <div class="relative">
@@ -49,7 +49,7 @@
                     <div class="flex items-center space-x-2">
                         <div class="relative">
                             <button @click="showTypeFilter = !showTypeFilter"
-                                class="flex items-center space-x-1 text-sm text-gray-700 hover:bg-gray-100 px-3 py-1.5 rounded-lg border border-gray-300">
+                                class="flex items-center space-x-1 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600">
                                 <span>Type{{((selectedType != null) ? ': ' + fileTypes.find(fT => fT.value ==
                                     selectedType)?.label : '')}}</span>
                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -59,22 +59,22 @@
                                 </svg>
                             </button>
                             <div v-if="showTypeFilter"
-                                class="absolute left-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                                class="absolute left-0 top-full mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50">
                                 <button @click="setTypeFilter(null)"
-                                    class="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
-                                    :class="selectedType === null ? 'font-semibold text-primary-600' : 'text-gray-700'">
+                                    class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm"
+                                    :class="selectedType === null ? 'font-semibold text-primary-600 dark:text-primary-400' : 'text-gray-700 dark:text-gray-300'">
                                     All types
                                 </button>
                                 <button v-for="type in fileTypes" :key="type.value" @click="setTypeFilter(type.value)"
-                                    class="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
-                                    :class="selectedType === type.value ? 'font-semibold text-primary-600' : 'text-gray-700'">
+                                    class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm"
+                                    :class="selectedType === type.value ? 'font-semibold text-primary-600 dark:text-primary-400' : 'text-gray-700 dark:text-gray-300'">
                                     {{ type.label }}
                                 </button>
                             </div>
                         </div>
                         <div class="relative">
                             <button @click="showPeopleFilter = !showPeopleFilter"
-                                class="flex items-center space-x-1 text-sm text-gray-700 hover:bg-gray-100 px-3 py-1.5 rounded-lg border border-gray-300">
+                                class="flex items-center space-x-1 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600">
                                 <span>People{{ ((selectedOwner != null) ? ': ' + selectedOwner : '') }}</span>
                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd"
@@ -83,22 +83,22 @@
                                 </svg>
                             </button>
                             <div v-if="showPeopleFilter"
-                                class="absolute left-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                                class="absolute left-0 top-full mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50">
                                 <button @click="setOwnerFilter(null)"
-                                    class="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
-                                    :class="selectedOwner === null ? 'font-semibold text-primary-600' : 'text-gray-700'">
+                                    class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm"
+                                    :class="selectedOwner === null ? 'font-semibold text-primary-600 dark:text-primary-400' : 'text-gray-700 dark:text-gray-300'">
                                     All owners
                                 </button>
                                 <button v-for="owner in uniqueOwners" :key="owner" @click="setOwnerFilter(owner)"
-                                    class="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
-                                    :class="selectedOwner === owner ? 'font-semibold text-primary-600' : 'text-gray-700'">
+                                    class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm"
+                                    :class="selectedOwner === owner ? 'font-semibold text-primary-600 dark:text-primary-400' : 'text-gray-700 dark:text-gray-300'">
                                     {{ owner }}
                                 </button>
                             </div>
                         </div>
                         <div class="relative">
                             <button @click="showModifiedFilter = !showModifiedFilter"
-                                class="flex items-center space-x-1 text-sm text-gray-700 hover:bg-gray-100 px-3 py-1.5 rounded-lg border border-gray-300">
+                                class="flex items-center space-x-1 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600">
                                 <span>Modified{{((selectedModified != null) ? ': ' + modifiedPeriods.find(mP =>
                                     mP.value === selectedModified)?.label : '')}}</span>
                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -108,23 +108,23 @@
                                 </svg>
                             </button>
                             <div v-if="showModifiedFilter"
-                                class="absolute left-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                                class="absolute left-0 top-full mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50">
                                 <button @click="setModifiedFilter(null)"
-                                    class="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
-                                    :class="selectedModified === null ? 'font-semibold text-primary-600' : 'text-gray-700'">
+                                    class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm"
+                                    :class="selectedModified === null ? 'font-semibold text-primary-600 dark:text-primary-400' : 'text-gray-700 dark:text-gray-300'">
                                     Any time
                                 </button>
                                 <button v-for="period in modifiedPeriods" :key="period.value"
                                     @click="setModifiedFilter(period.value)"
-                                    class="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
-                                    :class="selectedModified === period.value ? 'font-semibold text-primary-600' : 'text-gray-700'">
+                                    class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm"
+                                    :class="selectedModified === period.value ? 'font-semibold text-primary-600 dark:text-primary-400' : 'text-gray-700 dark:text-gray-300'">
                                     {{ period.label }}
                                 </button>
                             </div>
                         </div>
                         <div class="relative">
                             <button @click="showSourceFilter = !showSourceFilter"
-                                class="flex items-center space-x-1 text-sm text-gray-700 hover:bg-gray-100 px-3 py-1.5 rounded-lg border border-gray-300">
+                                class="flex items-center space-x-1 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600">
                                 <span>Source{{((selectedSource != null) ? ': ' + sources.find(s => s.value ===
                                     selectedSource)?.label : '')}}</span>
                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -134,16 +134,16 @@
                                 </svg>
                             </button>
                             <div v-if="showSourceFilter"
-                                class="absolute left-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                                class="absolute left-0 top-full mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50">
                                 <button @click="setSourceFilter(null)"
-                                    class="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
-                                    :class="selectedSource === null ? 'font-semibold text-primary-600' : 'text-gray-700'">
+                                    class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm"
+                                    :class="selectedSource === null ? 'font-semibold text-primary-600 dark:text-primary-400' : 'text-gray-700 dark:text-gray-300'">
                                     All sources
                                 </button>
                                 <button v-for="source in sources" :key="source.value"
                                     @click="setSourceFilter(source.value)"
-                                    class="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
-                                    :class="selectedSource === source.value ? 'font-semibold text-primary-600' : 'text-gray-700'">
+                                    class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm"
+                                    :class="selectedSource === source.value ? 'font-semibold text-primary-600 dark:text-primary-400' : 'text-gray-700 dark:text-gray-300'">
                                     {{ source.label }}
                                 </button>
                             </div>
@@ -151,20 +151,22 @@
                     </div>
                 </div>
                 <div class="flex items-center space-x-2">
-                    <div class="flex items-center bg-gray-100 rounded-lg p-0.5">
+                    <div class="flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-0.5">
                         <button @click="viewMode = 'list'"
-                            :class="viewMode === 'list' ? 'bg-white shadow-sm' : 'hover:bg-gray-200'"
+                            :class="viewMode === 'list' ? 'bg-white dark:bg-gray-600 shadow-sm' : 'hover:bg-gray-200 dark:hover:bg-gray-600'"
                             class="p-1.5 rounded transition-all">
-                            <svg class="w-5 h-5 text-gray-700" fill="currentColor" viewBox="0 0 20 20">
+                            <svg class="w-5 h-5 text-gray-700 dark:text-gray-200" fill="currentColor"
+                                viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"
                                     d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
                                     clip-rule="evenodd" />
                             </svg>
                         </button>
                         <button @click="viewMode = 'grid'"
-                            :class="viewMode === 'grid' ? 'bg-white shadow-sm' : 'hover:bg-gray-200'"
+                            :class="viewMode === 'grid' ? 'bg-white dark:bg-gray-600 shadow-sm' : 'hover:bg-gray-200 dark:hover:bg-gray-600'"
                             class="p-1.5 rounded transition-all">
-                            <svg class="w-5 h-5 text-gray-700" fill="currentColor" viewBox="0 0 20 20">
+                            <svg class="w-5 h-5 text-gray-700 dark:text-gray-200" fill="currentColor"
+                                viewBox="0 0 20 20">
                                 <path
                                     d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM13 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2h-2z" />
                             </svg>
@@ -184,12 +186,14 @@
             <div v-if="viewMode === 'list'" class="overflow-x-auto">
                 <table class="min-w-full">
                     <thead>
-                        <tr class="border-b border-gray-200">
-                            <th class="text-left py-3 pr-4 text-xs font-medium text-gray-600 w-8">
-                                <input type="checkbox" class="rounded border-gray-300">
+                        <tr class="border-b border-gray-200 dark:border-gray-700">
+                            <th class="text-left py-3 pr-4 text-xs font-medium text-gray-600 dark:text-gray-400 w-8">
+                                <input type="checkbox"
+                                    class="rounded border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-primary-600 focus:ring-primary-500">
                             </th>
-                            <th class="text-left py-3 pr-4 text-xs font-medium text-gray-600">
-                                <button class="flex items-center space-x-1 hover:text-gray-900">
+                            <th class="text-left py-3 pr-4 text-xs font-medium text-gray-600 dark:text-gray-400">
+                                <button
+                                    class="flex items-center space-x-1 hover:text-gray-900 dark:hover:text-gray-200">
                                     <span>Name</span>
                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                         <path
@@ -197,11 +201,15 @@
                                     </svg>
                                 </button>
                             </th>
-                            <th class="text-left py-3 px-4 text-xs font-medium text-gray-600">Owner</th>
-                            <th class="text-left py-3 px-4 text-xs font-medium text-gray-600">Date modified</th>
-                            <th class="text-left py-3 px-4 text-xs font-medium text-gray-600">File size</th>
-                            <th class="text-right py-3 pl-4 text-xs font-medium text-gray-600 w-16">
-                                <button class="flex items-center space-x-1 hover:text-gray-900 ml-auto">
+                            <th class="text-left py-3 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">Owner
+                            </th>
+                            <th class="text-left py-3 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">Date
+                                modified</th>
+                            <th class="text-left py-3 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">File
+                                size</th>
+                            <th class="text-right py-3 pl-4 text-xs font-medium text-gray-600 dark:text-gray-400 w-16">
+                                <button
+                                    class="flex items-center space-x-1 hover:text-gray-900 dark:hover:text-gray-200 ml-auto">
                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                         <path
                                             d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z" />
@@ -213,16 +221,18 @@
                     </thead>
                     <tbody>
                         <tr v-for="file in files" :key="file.id" @click="openFilePreview(file)"
-                            class="hover:bg-gray-50 border-b border-gray-100 cursor-pointer group">
+                            class="hover:bg-gray-50 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-700 cursor-pointer group">
                             <td class="py-3 pr-4" @click.stop>
-                                <input type="checkbox" class="rounded border-gray-300">
+                                <input type="checkbox"
+                                    class="rounded border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-primary-600 focus:ring-primary-500">
                             </td>
                             <td class="py-3 pr-4">
                                 <div class="flex items-center space-x-3">
                                     <div class="flex-shrink-0">
                                         <component :is="getFileIcon(file.type)" :color="getFileColor(file.type)" />
                                     </div>
-                                    <span class="text-sm text-gray-900 font-medium truncate">{{ file.name }}</span>
+                                    <span class="text-sm text-gray-900 dark:text-gray-100 font-medium truncate">{{
+                                        file.name }}</span>
                                 </div>
                             </td>
                             <td class="py-3 px-4">
@@ -231,50 +241,60 @@
                                         class="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center text-white text-xs">
                                         {{ file.owner.charAt(0).toUpperCase() }}
                                     </div>
-                                    <span class="text-sm text-gray-600">{{ file.owner }}</span>
+                                    <span class="text-sm text-gray-600 dark:text-gray-300">{{ file.owner }}</span>
                                 </div>
                             </td>
                             <td class="py-3 px-4">
-                                <span class="text-sm text-gray-600">{{ file.modified }}</span>
+                                <span class="text-sm text-gray-600 dark:text-gray-300">{{ file.modified }}</span>
                             </td>
                             <td class="py-3 px-4">
-                                <span class="text-sm text-gray-600">{{ file.size }}</span>
+                                <span class="text-sm text-gray-600 dark:text-gray-300">{{ file.size }}</span>
                             </td>
                             <td class="py-3 pl-4 text-right">
                                 <div
                                     class="flex items-center justify-end space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button class="p-1.5 hover:bg-gray-200 rounded-full" title="Share">
-                                        <svg class="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <button class="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full"
+                                        title="Share">
+                                        <svg class="w-4 h-4 text-gray-600 dark:text-gray-400" fill="currentColor"
+                                            viewBox="0 0 20 20">
                                             <path
                                                 d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
                                         </svg>
                                     </button>
                                     <button @click.stop="downloadFile(file)"
-                                        class="p-1.5 hover:bg-gray-200 rounded-full" title="Download">
-                                        <svg class="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                                        class="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full"
+                                        title="Download">
+                                        <svg class="w-4 h-4 text-gray-600 dark:text-gray-400" fill="currentColor"
+                                            viewBox="0 0 20 20">
                                             <path fill-rule="evenodd"
                                                 d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
                                                 clip-rule="evenodd" />
                                         </svg>
                                     </button>
-                                    <button @click.stop="moveToTrash(file)" class="p-1.5 hover:bg-gray-200 rounded-full"
+                                    <button @click.stop="moveToTrash(file)"
+                                        class="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full"
                                         title="Delete">
-                                        <svg class="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <svg class="w-4 h-4 text-gray-600 dark:text-gray-400" fill="currentColor"
+                                            viewBox="0 0 20 20">
                                             <path fill-rule="evenodd"
                                                 d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
                                                 clip-rule="evenodd" />
                                         </svg>
                                     </button>
-                                    <button @click.stop="toggleStar(file)" class="p-1.5 hover:bg-gray-200 rounded-full"
+                                    <button @click.stop="toggleStar(file)"
+                                        class="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full"
                                         title="Star">
-                                        <svg class="w-4 h-4" :class="file.starred ? 'text-yellow-500' : 'text-gray-600'"
+                                        <svg class="w-4 h-4"
+                                            :class="file.starred ? 'text-yellow-500' : 'text-gray-600 dark:text-gray-400'"
                                             fill="currentColor" viewBox="0 0 20 20">
                                             <path
                                                 d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                         </svg>
                                     </button>
-                                    <button class="p-1.5 hover:bg-gray-200 rounded-full" title="More">
-                                        <svg class="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <button class="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full"
+                                        title="More">
+                                        <svg class="w-4 h-4 text-gray-600 dark:text-gray-400" fill="currentColor"
+                                            viewBox="0 0 20 20">
                                             <path
                                                 d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
                                         </svg>
