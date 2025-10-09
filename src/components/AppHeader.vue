@@ -1,5 +1,5 @@
 <template>
-    <header class="bg-white fixed top-0 left-0 right-0 z-50">
+    <header class="bg-white dark:bg-gray-800 fixed top-0 left-0 right-0 z-50">
         <div class="mx-auto px-3 sm:px-3 2xl:px-3">
             <div class="flex justify-between items-center h-15">
                 <div class="flex items-center">
@@ -11,14 +11,14 @@
                 </div>
                 <div class="hidden md:flex flex-1 max-w-2xl mx-8">
                     <div class="relative w-full">
-                        <svg class="absolute left-3 top-2.5 w-5 h-5 text-gray-400" viewBox="0 0 20 20"
-                            fill="currentColor">
+                        <svg class="absolute left-3 top-2.5 w-5 h-5 text-gray-400 dark:text-gray-500"
+                            viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd"
                                 d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
                                 clip-rule="evenodd" />
                         </svg>
                         <input type="text" placeholder="Search files and folders..."
-                            class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" />
+                            class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400" />
                         <!--  <SearchIcon class="absolute left-3 top-2.5 w-5 h-5 text-gray-400" />-->
                     </div>
                 </div>
@@ -41,32 +41,34 @@
                     </RouterLink>
                 </nav>--->
                 <div class="flex items-center space-x-4">
-                    <button class="p-2 text-gray-400 hover:text-gray-600 transition-colors">
+                    <button
+                        class="p-2 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors">
                         <BellIcon class="w-5 h-5" />
                     </button>
                     <div class="m-0">
                         <button @click="toggleUserMenu"
-                            class="flex items-center space-x-3 hover:bg-gray-50 rounded-lg px-3 py-2 transition-colors">
+                            class="flex items-center space-x-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg px-3 py-2 transition-colors">
                             <div
                                 class="w-8 h-8 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
                                 {{ userInitial }}
                             </div>
-                            <span class="hidden sm:block text-md font-medium text-gray-700">{{
+                            <span class="hidden sm:block text-md font-medium text-gray-700 dark:text-gray-200">{{
                                 username[0]?.toUpperCase() + username.slice(1) }}</span>
-                            <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <svg class="w-4 h-4 text-gray-400 dark:text-gray-500" fill="currentColor"
+                                viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"
                                     d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
                                     clip-rule="evenodd" />
                             </svg>
                         </button>
                         <div v-if="userMenuOpen"
-                            class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
-                            <div class="px-4 py-2 border-b border-gray-200">
-                                <p class="text-sm font-medium text-gray-900">{{ username }}</p>
-                                <p class="text-xs text-gray-500">{{ role }}</p>
+                            class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50">
+                            <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
+                                <p class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ username }}</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">{{ role }}</p>
                             </div>
                             <button @click="handleLogout"
-                                class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors flex items-center space-x-2">
+                                class="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center space-x-2">
                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd"
                                         d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z"
@@ -76,26 +78,27 @@
                             </button>
                         </div>
                     </div>
-                    <button @click="toggleMobileMenu" class="md:hidden p-2 text-gray-400 hover:text-gray-600">
+                    <button @click="toggleMobileMenu"
+                        class="md:hidden p-2 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300">
                         <MenuIcon v-if="!mobileMenuOpen" class="w-6 h-6" />
                         <XIcon v-else class="w-6 h-6" />
                     </button>
                 </div>
             </div>
-            <div v-if="mobileMenuOpen" class="md:hidden border-t border-gray-200 pt-4 pb-4">
+            <div v-if="mobileMenuOpen" class="md:hidden border-t border-gray-200 dark:border-gray-700 pt-4 pb-4">
                 <div class="space-y-1">
                     <RouterLink to="/dashboard"
-                        class="block px-3 py-2 text-gray-600 hover:text-primary-600 hover:bg-gray-50 rounded-md text-base font-medium"
+                        class="block px-3 py-2 text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md text-base font-medium"
                         @click="closeMobileMenu">
                         Files
                     </RouterLink>
                     <RouterLink to="/recent"
-                        class="block px-3 py-2 text-gray-600 hover:text-primary-600 hover:bg-gray-50 rounded-md text-base font-medium"
+                        class="block px-3 py-2 text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md text-base font-medium"
                         @click="closeMobileMenu">
                         Recent
                     </RouterLink>
                     <RouterLink to="/shared"
-                        class="block px-3 py-2 text-gray-600 hover:text-primary-600 hover:bg-gray-50 rounded-md text-base font-medium"
+                        class="block px-3 py-2 text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md text-base font-medium"
                         @click="closeMobileMenu">
                         Shared
                     </RouterLink>
@@ -212,5 +215,11 @@ const XIcon = {
 
 header {
     background: #eff3f6;
+}
+
+@media (prefers-color-scheme: dark) {
+    header {
+        background: #1f2937;
+    }
 }
 </style>

@@ -16,7 +16,7 @@ const showSidebar = computed(() => {
 </script>
 
 <template>
-  <div id="app" class="min-h-screen" :class="showSidebar ? 'app-with-sidebar' : 'bg-gray-50'">
+  <div id="app" class="min-h-screen" :class="showSidebar ? 'app-with-sidebar' : 'bg-gray-50 dark:bg-gray-900'">
     <AppHeader v-if="showHeader" />
     <div class="flex h-full">
       <AppSidebar v-if="showSidebar" />
@@ -32,6 +32,12 @@ const showSidebar = computed(() => {
   background: #eff3f6;
 }
 
+@media (prefers-color-scheme: dark) {
+  .app-with-sidebar {
+    background: #0f172a;
+  }
+}
+
 .main-content {
   border-top-left-radius: 16px;
   /*24*/
@@ -39,5 +45,11 @@ const showSidebar = computed(() => {
   overflow: hidden;
   margin-top: 60px;
   min-height: calc(100vh - 60px);
+}
+
+@media (prefers-color-scheme: dark) {
+  .main-content {
+    background: #1e293b;
+  }
 }
 </style>

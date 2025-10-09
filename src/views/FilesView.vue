@@ -1,11 +1,12 @@
 <template>
-    <div class="min-h-screen bg-white">
-        <div class="border-b border-gray-200 bg-white px-6 py-3 sticky top-0 z-10">
+    <div class="min-h-screen bg-white dark:bg-gray-900">
+        <div
+            class="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-6 py-3 sticky top-0 z-10">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-4">
                     <div class="relative">
                         <button @click="showDriveMenu = !showDriveMenu"
-                            class="flex items-center space-x-2 text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-lg">
+                            class="flex items-center space-x-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-lg">
                             <span class="text-lg font-medium">{{
                                 currentDrive[0]?.toUpperCase() + currentDrive.slice(1) }}</span>
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -15,20 +16,23 @@
                             </svg>
                         </button>
                         <div v-if="showDriveMenu"
-                            class="absolute left-0 top-full mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-                            <div class="px-4 py-2 text-xs font-medium text-gray-500 uppercase">My Drives</div>
+                            class="absolute left-0 top-full mt-2 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50">
+                            <div class="px-4 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">My
+                                Drives</div>
                             <button v-for="drive in drives" :key="drive" @click="selectDrive(drive)"
-                                class="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center space-x-2">
-                                <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                                class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2">
+                                <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="currentColor"
+                                    viewBox="0 0 20 20">
                                     <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
                                 </svg>
                                 <span class="text-sm"
-                                    :class="drive === currentDrive ? 'font-semibold text-primary-600' : 'text-gray-700'">{{
+                                    :class="drive === currentDrive ? 'font-semibold text-primary-600 dark:text-primary-400' : 'text-gray-700 dark:text-gray-300'">{{
                                         drive[0]?.toUpperCase() + drive.slice(1) }}</span>
                             </button>
-                            <div v-if="drives.length < 3" class="border-t border-gray-200 mt-2 pt-2">
+                            <div v-if="drives.length < 3"
+                                class="border-t border-gray-200 dark:border-gray-700 mt-2 pt-2">
                                 <button @click="showNewDriveModal = true; showDriveMenu = false"
-                                    class="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center space-x-2 text-primary-600">
+                                    class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2 text-primary-600 dark:text-primary-400">
                                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd"
                                             d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
@@ -37,8 +41,8 @@
                                     <span class="text-sm font-medium">New Drive</span>
                                 </button>
                             </div>
-                            <div v-else class="border-t border-gray-200 mt-2 pt-2 px-4 py-2">
-                                <p class="text-xs text-gray-500">Maximum of 3 drives reached</p>
+                            <div v-else class="border-t border-gray-200 dark:border-gray-700 mt-2 pt-2 px-4 py-2">
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Maximum of 3 drives reached</p>
                             </div>
                         </div>
                     </div>
