@@ -1,20 +1,18 @@
 <template>
-    <div class="min-h-screen bg-white dark:bg-gray-900 relative">
-        <div ref="dropZoneRef" class="fixed inset-0 z-50" style="pointer-events: all;">
-            <div v-if="isOverDropZone"
-                class="absolute inset-0 bg-blue-50/90 dark:bg-blue-900/40 border-4 border-dashed border-blue-400 flex items-center justify-center">
-                <div class="text-center pointer-events-none">
-                    <svg class="w-24 h-24 text-blue-500 mx-auto mb-4" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12">
-                        </path>
-                    </svg>
-                    <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">Drop files here to upload</p>
-                    <p class="text-lg text-blue-500 dark:text-blue-300 mt-2">to {{ currentDrive }} drive</p>
-                </div>
+    <div ref="dropZoneRef" class="drop-zone bg-white dark:bg-gray-900 relative">
+        <div v-if="isOverDropZone"
+            class="fixed inset-0 z-[9999] bg-blue-50/90 dark:bg-blue-900/40 border-4 border-dashed border-blue-400 flex items-center justify-center pointer-events-none">
+            <div class="text-center">
+                <svg class="w-24 h-24 text-blue-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12">
+                    </path>
+                </svg>
+                <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">Drop files here to upload</p>
+                <p class="text-lg text-blue-500 dark:text-blue-300 mt-2">to {{ currentDrive }} drive</p>
             </div>
         </div>
+
         <div
             class="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-6 py-3 sticky top-0 z-10">
             <div class="flex items-center justify-between">
@@ -956,5 +954,9 @@ const { isOverDropZone } = useDropZone(dropZoneRef, {
 
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
+}
+
+.drop-zone {
+    height: 100%;
 }
 </style>
