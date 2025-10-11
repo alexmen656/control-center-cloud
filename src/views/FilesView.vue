@@ -1,5 +1,20 @@
 <template>
-    <div class="min-h-screen bg-white dark:bg-gray-900">
+    <div class="min-h-screen bg-white dark:bg-gray-900 relative">
+        <div ref="dropZoneRef" class="fixed inset-0 z-50" style="pointer-events: all;">
+            <div v-if="isOverDropZone"
+                class="absolute inset-0 bg-blue-50/90 dark:bg-blue-900/40 border-4 border-dashed border-blue-400 flex items-center justify-center">
+                <div class="text-center pointer-events-none">
+                    <svg class="w-24 h-24 text-blue-500 mx-auto mb-4" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12">
+                        </path>
+                    </svg>
+                    <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">Drop files here to upload</p>
+                    <p class="text-lg text-blue-500 dark:text-blue-300 mt-2">to {{ currentDrive }} drive</p>
+                </div>
+            </div>
+        </div>
         <div
             class="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-6 py-3 sticky top-0 z-10">
             <div class="flex items-center justify-between">
@@ -182,7 +197,7 @@
                 </div>
             </div>
         </div>
-        <div class="px-6 py-4">
+        <div class="flex-1 px-6 py-4">
             <div v-if="viewMode === 'list'" class="overflow-x-auto">
                 <table class="min-w-full">
                     <thead>
@@ -365,6 +380,7 @@
 
 <script setup lang="ts">
 import { ref, defineComponent, h, computed, onMounted, watch } from 'vue'
+import { useDropZone } from '@vueuse/core'
 import axios from 'axios'
 import FilePreviewModal from '../components/FilePreviewModal.vue'
 import { useRoute } from 'vue-router'
@@ -883,6 +899,44 @@ const getFileColor = (type: string) => {
         default: return '#5F6368'
     }
 }
+
+const dropZoneRef = ref<HTMLDivElement>()
+
+const uploadFiles = async (droppedFiles: globalThis.File[]) => {
+    console.log('Uploading files:', droppedFiles)
+    for (const file of droppedFiles) {
+        const formData = new FormData()
+        formData.append('file', file)
+        formData.append('action', 'upload')
+        formData.append('drive', currentDrive.value)
+
+        try {
+            await axios.post('https://alex.polan.sk/control-center/cloud/files.php', formData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            console.log('File uploaded:', file.name)
+        } catch (error) {
+            console.error('Error uploading file:', error)
+            alert(`Failed to upload ${file.name}`)
+        }
+    }
+
+    loadFiles()
+}
+
+function onDrop(files: globalThis.File[] | null, event: DragEvent) {
+    console.log('onDrop triggered', files, event)
+    if (files && files.length > 0) {
+        uploadFiles(files)
+    }
+}
+
+const { isOverDropZone } = useDropZone(dropZoneRef, {
+    onDrop,
+    multiple: true,
+})
 </script>
 
 <style scoped>
