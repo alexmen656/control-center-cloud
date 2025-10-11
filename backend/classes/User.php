@@ -49,4 +49,17 @@ class User {
         }
         return false;
     }
+
+    public function register($username, $password, $role = 'user') {
+        $db = new Database();
+        $username = $db->escape($username);
+        $password = $db->escape($password);
+        $role = $db->escape($role);
+
+        $sql = "INSERT INTO control_cloud_users (username, password, role) VALUES ('$username', '$password', '$role')";
+        if ($db->query($sql)) {
+            return true;
+        }
+        return false;
+    }
 }

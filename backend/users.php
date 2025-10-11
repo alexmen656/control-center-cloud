@@ -15,7 +15,7 @@ if ($method === 'OPTIONS') {
     echo json_encode($user->listUsers());
 } elseif ($method === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
-    if (isset($data['username']) && isset($data['password'])) {
+    if (isset($data['action']) && $data['action'] === 'login' && isset($data['username']) && isset($data['password'])) {
         $user = new User();
         $jwt = $user->authenticate($data['username'], $data['password']);
         if ($jwt) {
@@ -23,6 +23,15 @@ if ($method === 'OPTIONS') {
         } else {
             http_response_code(401);
             echo json_encode(['message' => 'Invalid credentials']);
+        }
+    } elseif (isset($data['action']) && $data['action'] === 'register' && isset($data['username']) && isset($data['password'])) {
+        $user = new User();
+        $success = $user->register($data['username'], $data['password'], 'user');
+        if ($success) {
+            echo json_encode(['message' => 'User registered successfully']);
+        } else {
+            http_response_code(500);
+            echo json_encode(['message' => 'Registration failed']);
         }
     } else {
         http_response_code(400);

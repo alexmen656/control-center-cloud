@@ -62,37 +62,37 @@
                         <label for="name" class="block text-sm font-medium text-gray-700 mb-1">
                             Full name
                         </label>
-                        <input id="name" name="name" type="text" disabled
+                        <input id="name" name="name" type="text"
                             class="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-                            placeholder="John Doe">
+                            placeholder="John Doe" v-model="name">
                     </div>
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
                             Email address
                         </label>
-                        <input id="email" name="email" type="email" disabled
+                        <input id="email" name="email" type="email"
                             class="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-                            placeholder="you@example.com">
+                            placeholder="you@example.com" v-model="email">
                     </div>
                     <div>
                         <label for="password" class="block text-sm font-medium text-gray-700 mb-1">
                             Password
                         </label>
-                        <input id="password" name="password" type="password" disabled
+                        <input id="password" name="password" type="password"
                             class="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-                            placeholder="••••••••">
+                            placeholder="••••••••" v-model="password">
                     </div>
                     <div>
                         <label for="confirm-password" class="block text-sm font-medium text-gray-700 mb-1">
                             Confirm password
                         </label>
-                        <input id="confirm-password" name="confirm-password" type="password" disabled
+                        <input id="confirm-password" name="confirm-password" type="password"
                             class="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-                            placeholder="••••••••">
+                            placeholder="••••••••" v-model="confirmPassword">
                     </div>
                     <div class="flex items-start">
                         <div class="flex items-center h-5">
-                            <input id="terms" name="terms" type="checkbox" disabled
+                            <input id="terms" name="terms" type="checkbox"
                                 class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
                         </div>
                         <div class="ml-3 text-sm">
@@ -106,8 +106,9 @@
                             </label>
                         </div>
                     </div>
-                    <button type="submit" disabled
-                        class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
+                    <button type="submit"
+                        class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors"
+                        @click="register">
                         Create account
                     </button>
                 </form>
@@ -124,5 +125,36 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts">
+export default {
+    name: 'SignUpView',
+    data() {
+        return {
+            name: '',
+            email: '',
+            password: '',
+            confirmPassword: ''
+        };
+    },
+    methods: {
+        register() {
+            if (this.password !== this.confirmPassword) {
+                alert('Passwords do not match');
+                return;
+            }
+
+            this.$axios.post('users.php', {
+                action: 'register',
+                username: this.email,
+                password: this.password
+            }).then((response: any) => {
+                alert('Registration successful! Please log in.');
+                this.$router.push('/login');
+            }).catch((error: any) => {
+                console.error('Registration error:', error);
+                alert('Registration failed. Please try again.');
+            });
+        }
+    }
+};
 </script>

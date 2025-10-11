@@ -143,6 +143,7 @@ const rememberMe = ref(false)
 
 const handleLogin = async () => {
     const success = await authStore.login({
+        action: 'login',
         username: username.value,
         password: password.value,
     })
