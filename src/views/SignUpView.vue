@@ -16,7 +16,7 @@
                     Create your account
                 </h2>
                 <p class="mt-2 text-sm text-primary-100">
-                    Get started with Control Center Cloud
+                    Get started with Control Cloud
                 </p>
             </div>
             <div class="bg-white rounded-2xl shadow-2xl p-8 space-y-6">

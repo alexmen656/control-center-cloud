@@ -5,7 +5,7 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div>
           <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">About</h1>
-          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Information about Control Center Cloud</p>
+          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Information about Control Cloud</p>
         </div>
       </div>
     </div>
@@ -14,7 +14,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-8">
         <div class="max-w-3xl">
-          <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Control Center Cloud</h2>
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Control Cloud</h2>
           <p class="text-gray-600 dark:text-gray-300 mb-6">
             A modern, professional cloud management platform designed for efficient infrastructure
             monitoring and service management. Built with Vue 3, TypeScript, and Tailwind CSS
