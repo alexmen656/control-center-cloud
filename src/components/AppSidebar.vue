@@ -67,11 +67,17 @@
             <div class="px-4 py-2">
                 <div class="space-y-2">
                     <div class="flex items-center justify-between text-sm">
-                        <span class="text-gray-600 dark:text-gray-400">45.2 GB of 100 GB used</span>
+                        <span class="text-gray-600 dark:text-gray-400">{{ storageUsed }} {{ unit }} of {{ storageTotal
+                        }}
+                            GB
+                            used</span>
                     </div>
                     <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                        <div class="bg-gray-600 dark:bg-gray-400 rounded-full h-2 transition-all" style="width: 45%">
+                        <div v-if="storageUsedInGB && storageTotal"
+                            class="bg-gray-600 dark:bg-gray-400 rounded-full h-2 transition-all"
+                            :style="{ width: storagePercent > 3 ? storagePercent + '%' : '3%' }">
                         </div>
+
                     </div>
                     <button
                         class="text-xs text-gray-600 dark:text-gray-400 hover:text-primary-700 dark:hover:text-primary-400 font-medium hover:underline">
@@ -82,7 +88,63 @@
         </nav>
     </div>
 </template>
+<script lang="ts">
+export default {
+    name: 'AppSidebar',
+    data() {
+        return {
+            storageUsed: 0,
+            storageUsedInGB: 0,
+            storageTotal: 0,
+            unit: 'GB'
+        };
+    },
+    computed: {
+        storagePercent() {
+            if (!this.storageTotal) return 0;
+            const percent = (this.storageUsedInGB / this.storageTotal) * 100;
+            console.log('Storage percent:', percent);
+            return percent;
+        }
+    },
+    created() {
+        const token = localStorage.getItem('auth_token') || '';
+        this.$axios.get(`files.php?action=get_drive_storage&drive=default`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        }).then((response: any) => {
+            console.log(response.data);
 
+            this.storageTotal = response.data.limit / 1024 / 1024 / 1024;
+
+            const usedData = this.formatStorage(response.data.used);
+            this.storageUsed = Math.round(usedData.value);
+            this.storageUsedInGB = (response.data.used / 1024 / 1024 / 1024);
+            console.log(this.storageUsedInGB, this.storageTotal);
+            this.unit = usedData.unit;
+
+        }).catch((error: any) => {
+            console.error('There was an error!', error);
+        });
+    },
+    methods: {
+        formatStorage: (bytes) => {
+            const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+            let value = bytes;
+            let unitIndex = 0;
+
+            while (value >= 1024 && unitIndex < units.length - 1) {
+                value /= 1024;
+                unitIndex++;
+            }
+
+            return { value, unit: units[unitIndex] };
+        }
+    }
+}
+</script>
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 </script>

@@ -50,6 +50,31 @@ if ($method === 'OPTIONS') {
             http_response_code(401);
             echo json_encode(['message' => 'Authorization header missing']);
         }
+    }elseif($_GET['action'] === 'get_drive_storage' && isset($_GET['drive'])){
+        $user = new User();
+        $headers = getallheaders();
+        if(isset($headers['Authorization'])){
+            $token = str_replace('Bearer ', '', $headers['Authorization']);
+            if($user->verifyJWT($token)){
+                $decoded = $user->decodeJWT($token);
+                $username = $decoded['username'];
+                $drive = $_GET['drive'] ?? 'default';
+
+                $fileManager = new FileManager(__DIR__ . '/uploads'.'/'.$username .'/'.$drive);
+                $totalSize = $fileManager->getDirectorySize('/');
+                                
+                echo json_encode([
+                    'used' => $totalSize,
+                    'limit' => 1024 * 1024 * 1024
+                ]);
+            }else{
+                http_response_code(401);
+                echo json_encode(['message' => 'Invalid token']);
+            }   
+        }else{
+            http_response_code(401);
+            echo json_encode(['message' => 'Authorization header missing']);
+        }
     }elseif($_GET['action'] === 'get_drive' && isset($_GET['drive'])){
         $user = new User();
         $headers = getallheaders();

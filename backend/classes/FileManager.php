@@ -95,6 +95,21 @@ class FileManager {
         return false;
     }
 
+    public function getDirectorySize($dirname) {
+        $dirPath = $this->baseDir . basename($dirname);
+        if (is_dir($dirPath)) {
+            $size = 0;
+            $rii = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dirPath));
+            foreach ($rii as $file) {
+                if (!$file->isDir()) {
+                    $size += filesize($file);
+                }
+            }
+            return $size;
+        }
+        return false;
+    }
+
     public function getFileContents($filename) {
         $filePath = $this->baseDir . basename($filename);
         if (file_exists($filePath)) {
