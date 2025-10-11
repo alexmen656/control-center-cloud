@@ -1,25 +1,28 @@
 <template>
-    <div class="min-h-screen bg-white">
-        <div class="border-b border-gray-200 bg-white px-6 py-3 sticky top-0 z-10">
+    <div class="min-h-screen bg-white dark:bg-gray-900">
+        <div
+            class="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-6 py-3 sticky top-0 z-10">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-4">
-                    <h1 class="text-2xl font-semibold text-gray-900">Starred</h1>
+                    <h1 class="text-2xl font-semibold text-gray-900 dark:text-gray-100">Starred</h1>
                 </div>
                 <div class="flex items-center space-x-2">
-                    <div class="flex items-center bg-gray-100 rounded-lg p-0.5">
+                    <div class="flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-0.5">
                         <button @click="viewMode = 'list'"
-                            :class="viewMode === 'list' ? 'bg-white shadow-sm' : 'hover:bg-gray-200'"
+                            :class="viewMode === 'list' ? 'bg-white dark:bg-gray-600 shadow-sm' : 'hover:bg-gray-200 dark:hover:bg-gray-600'"
                             class="p-1.5 rounded transition-all">
-                            <svg class="w-5 h-5 text-gray-700" fill="currentColor" viewBox="0 0 20 20">
+                            <svg class="w-5 h-5 text-gray-700 dark:text-gray-200" fill="currentColor"
+                                viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"
                                     d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
                                     clip-rule="evenodd" />
                             </svg>
                         </button>
                         <button @click="viewMode = 'grid'"
-                            :class="viewMode === 'grid' ? 'bg-white shadow-sm' : 'hover:bg-gray-200'"
+                            :class="viewMode === 'grid' ? 'bg-white dark:bg-gray-600 shadow-sm' : 'hover:bg-gray-200 dark:hover:bg-gray-600'"
                             class="p-1.5 rounded transition-all">
-                            <svg class="w-5 h-5 text-gray-700" fill="currentColor" viewBox="0 0 20 20">
+                            <svg class="w-5 h-5 text-gray-700 dark:text-gray-200" fill="currentColor"
+                                viewBox="0 0 20 20">
                                 <path
                                     d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM13 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2h-2z" />
                             </svg>
@@ -38,7 +41,7 @@
                 <p class="text-gray-500 text-sm mt-2">Star files to easily find them later</p>
             </div>
             <div v-else>
-                <div v-if="viewMode === 'list'" class="overflow-x-auto">
+                <div v-if="viewMode === 'list'" class="overflow-x-auto">x
                     <table class="min-w-full">
                         <thead>
                             <tr class="border-b border-gray-200">
