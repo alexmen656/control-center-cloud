@@ -115,17 +115,6 @@
                         {{ authStore.isLoading ? 'Signing in...' : 'Sign in' }}
                     </button>
                 </form>
-                <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-                    <p class="text-xs font-semibold text-blue-900 dark:text-blue-300 mb-2">Test Credentials:</p>
-                    <div class="space-y-1 text-xs text-blue-800 dark:text-blue-300">
-                        <p><span class="font-medium">Admin:</span> username: <code
-                                class="bg-blue-100 dark:bg-blue-800 px-1 rounded">admin</code> / password: <code
-                                class="bg-blue-100 dark:bg-blue-800 px-1 rounded">admin123</code></p>
-                        <p><span class="font-medium">User:</span> username: <code
-                                class="bg-blue-100 dark:bg-blue-800 px-1 rounded">user</code> / password: <code
-                                class="bg-blue-100 dark:bg-blue-800 px-1 rounded">user123</code></p>
-                    </div>
-                </div>
                 <div class="text-center">
                     <p class="text-sm text-gray-600 dark:text-gray-400">
                         Don't have an account?

@@ -31,3 +31,4 @@ coverage
 
 #added
 node_modules/*
+backend/classes/db_config.php

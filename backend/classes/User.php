@@ -1,19 +1,20 @@
 <?php
+require_once 'DB.php';
 
 class User {
     private $users = [];
 
     public function __construct() {
-        $this->users = [
+       /* $this->users = [
             ['username' => 'admin', 'password' => 'admin123', 'role' => 'admin'],
             ['username' => 'user', 'password' => 'user123', 'role' => 'user'],
-        ];
+        ];*/
     }
 
     public function listUsers() {
-        return array_map(function($user) {
-            return ['username' => $user['username'], 'role' => $user['role']];
-        }, $this->users);
+        $db = new Database();
+        $sql = "SELECT username, role FROM control_cloud_users";
+        return $db->fetchAll($sql);
     }
 
     public function generateJWT($username, $role) {
@@ -36,10 +37,15 @@ class User {
     }
 
     public function authenticate($username, $password) {
-        foreach ($this->users as $user) {
-            if ($user['username'] === $username && $user['password'] === $password) {
-                return $this->generateJWT($username, $user['role']);
-            }
+      $db = new Database();
+      $username = $db->escape($username);
+      $password = $db->escape($password);
+
+        $sql = "SELECT * FROM control_cloud_users WHERE username = '$username' AND password = '$password'";
+        $user = $db->fetchOne($sql);
+
+        if ($user) {
+            return $this->generateJWT($user['username'], $user['role']);
         }
         return false;
     }
