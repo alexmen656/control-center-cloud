@@ -221,7 +221,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="file in files" :key="file.id" @click="openFilePreview(file)"
+                        <tr v-for="file in files" :key="file.id" @click="openFilePreview(file)" :data-file-id="file.id"
                             class="hover:bg-gray-50 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-700 cursor-pointer group">
                             <td class="py-3 pr-4" @click.stop>
                                 <input type="checkbox"
@@ -309,7 +309,7 @@
                 </table>
             </div>
             <div v-else class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-                <div v-for="file in files" :key="file.id" @click="openFilePreview(file)"
+                <div v-for="file in files" :key="file.id" @click="openFilePreview(file)" :data-file-id="file.id"
                     class="group border border-gray-200 rounded-lg hover:shadow-lg hover:border-primary-300 transition-all cursor-pointer p-3">
                     <div
                         class="aspect-square bg-gray-100 rounded-lg mb-3 flex items-center justify-center relative overflow-hidden">
@@ -367,10 +367,12 @@
 import { ref, defineComponent, h, computed, onMounted, watch } from 'vue'
 import axios from 'axios'
 import FilePreviewModal from '../components/FilePreviewModal.vue'
+import { useRoute } from 'vue-router'
 
 const viewMode = ref<'list' | 'grid'>('list')
 const showPreview = ref(false)
 const selectedFile = ref<File | null>(null)
+const route = useRoute()
 
 const currentDrive = ref('default')
 const drives = ref<string[]>(['default'])
@@ -464,8 +466,49 @@ onMounted(() => {
             closeAllDropdowns()
         }
     })
+
+    if (route.query.drive && typeof route.query.drive === 'string') {
+        currentDrive.value = route.query.drive
+    }
+
     loadDrives()
     loadFiles()
+
+    if (route.query.highlight) {
+        setTimeout(() => {
+            const highlightId = route.query.highlight
+            const element = document.querySelector(`[data-file-id="${highlightId}"]`)
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                element.classList.add('bg-yellow-100', 'dark:bg-yellow-900', 'transition-colors', 'duration-1000')
+                setTimeout(() => {
+                    element.classList.remove('bg-yellow-100', 'dark:bg-yellow-900')
+                }, 1300)
+            }
+        }, 300)
+    }
+})
+
+watch(() => route.query, (newDrive) => {
+    if (newDrive.drive && typeof newDrive.drive === 'string' && newDrive.drive !== currentDrive.value) {
+        currentDrive.value = newDrive.drive
+        loadFiles()
+    }
+})
+
+watch(() => route.query, (newVal) => {
+    if (newVal.highlight) {
+        setTimeout(() => {
+            const element = document.querySelector(`[data-file-id="${newVal.highlight}"]`)
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                element.classList.add('bg-yellow-100', 'dark:bg-yellow-900', 'transition-colors', 'duration-1000')
+                setTimeout(() => {
+                    element.classList.remove('bg-yellow-100', 'dark:bg-yellow-900')
+                }, 1300)
+            }
+        }, 300)
+    }
 })
 
 const loadDrives = async () => {
