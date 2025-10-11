@@ -189,7 +189,8 @@
                         <tr class="border-b border-gray-200 dark:border-gray-700">
                             <th class="text-left py-3 pr-4 text-xs font-medium text-gray-600 dark:text-gray-400 w-8">
                                 <input type="checkbox"
-                                    class="rounded border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-primary-600 focus:ring-primary-500">
+                                    class="rounded border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-primary-600 focus:ring-primary-500"
+                                    v-model="selectAll">
                             </th>
                             <th class="text-left py-3 pr-4 text-xs font-medium text-gray-600 dark:text-gray-400">
                                 <button
@@ -224,7 +225,9 @@
                             class="hover:bg-gray-50 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-700 cursor-pointer group">
                             <td class="py-3 pr-4" @click.stop>
                                 <input type="checkbox"
-                                    class="rounded border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-primary-600 focus:ring-primary-500">
+                                    class="rounded border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-primary-600 focus:ring-primary-500"
+                                    v-model="selectedFiles[file.id]" :checked="selectAll">
+                                <!--{{ selectAll }}-->
                             </td>
                             <td class="py-3 pr-4">
                                 <div class="flex items-center space-x-3">
@@ -385,6 +388,8 @@ const selectedOwner = ref<string | null>(null)
 const selectedModified = ref<string | null>(null)
 const selectedSource = ref<string | null>(null)
 
+const selectAll = ref(false)
+const selectedFiles = ref<{ [key: number]: boolean }>({})
 interface File {
     id: number
     name: string
@@ -395,6 +400,20 @@ interface File {
     size: string
     starred?: boolean
 }
+
+setInterval(() => {
+    console.log(selectedFiles.value)
+}, 1000)
+
+watch(selectAll, (newVal) => {
+    if (newVal) {
+        files.value.forEach(file => {
+            selectedFiles.value[file.id] = true
+        })
+    } else {
+        selectedFiles.value = {}
+    }
+})
 
 const allFiles = ref<File[]>([])
 const files = ref<File[]>([])
