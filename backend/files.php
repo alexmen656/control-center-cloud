@@ -13,170 +13,170 @@ if ($method === 'OPTIONS') {
     http_response_code(200);
     exit;
 } elseif ($method === 'GET') {
-    if($_GET['action'] === 'get_drives'){
+    if ($_GET['action'] === 'get_drives') {
         $user = new User();
         $headers = getallheaders();
-        if(isset($headers['Authorization'])){
+        if (isset($headers['Authorization'])) {
             $token = str_replace('Bearer ', '', $headers['Authorization']);
-            if($user->verifyJWT($token)){
+            if ($user->verifyJWT($token)) {
                 $decoded = $user->decodeJWT($token);
                 $username = $decoded['username'];
-                
-                $userDir = __DIR__ . '/uploads/'.$username;
-                if(!is_dir($userDir)){
+
+                $userDir = __DIR__ . '/uploads/' . $username;
+                if (!is_dir($userDir)) {
                     mkdir($userDir, 0777, true);
                     mkdir($userDir . '/default', 0777, true);
                 }
-                
+
                 $drives = [];
                 $items = scandir($userDir);
-                foreach($items as $item){
-                    if($item != '.' && $item != '..' && is_dir($userDir . '/' . $item)){
+                foreach ($items as $item) {
+                    if ($item != '.' && $item != '..' && is_dir($userDir . '/' . $item)) {
                         $drives[] = $item;
                     }
                 }
-                
-                if(empty($drives)){
+
+                if (empty($drives)) {
                     $drives = ['default'];
                     mkdir($userDir . '/default', 0777, true);
                 }
-                
+
                 echo json_encode($drives);
-            }else{
+            } else {
                 http_response_code(401);
                 echo json_encode(['message' => 'Invalid token']);
-            }   
-        }else{
+            }
+        } else {
             http_response_code(401);
             echo json_encode(['message' => 'Authorization header missing']);
         }
-    }elseif($_GET['action'] === 'get_drive_storage' && isset($_GET['drive'])){
+    } elseif ($_GET['action'] === 'get_drive_storage' && isset($_GET['drive'])) {
         $user = new User();
         $headers = getallheaders();
-        if(isset($headers['Authorization'])){
+        if (isset($headers['Authorization'])) {
             $token = str_replace('Bearer ', '', $headers['Authorization']);
-            if($user->verifyJWT($token)){
+            if ($user->verifyJWT($token)) {
                 $decoded = $user->decodeJWT($token);
                 $username = $decoded['username'];
                 $drive = $_GET['drive'] ?? 'default';
 
-                $fileManager = new FileManager(__DIR__ . '/uploads'.'/'.$username .'/'.$drive);
+                $fileManager = new FileManager(__DIR__ . '/uploads' . '/' . $username . '/' . $drive);
                 $totalSize = $fileManager->getDirectorySize('/');
-                                
+
                 echo json_encode([
                     'used' => $totalSize,
                     'limit' => 1024 * 1024 * 1024
                 ]);
-            }else{
+            } else {
                 http_response_code(401);
                 echo json_encode(['message' => 'Invalid token']);
-            }   
-        }else{
+            }
+        } else {
             http_response_code(401);
             echo json_encode(['message' => 'Authorization header missing']);
         }
-    }elseif($_GET['action'] === 'get_drive' && isset($_GET['drive'])){
+    } elseif ($_GET['action'] === 'get_drive' && isset($_GET['drive'])) {
         $user = new User();
         $headers = getallheaders();
-        if(isset($headers['Authorization'])){
+        if (isset($headers['Authorization'])) {
             $token = str_replace('Bearer ', '', $headers['Authorization']);
-            if($user->verifyJWT($token)){
+            if ($user->verifyJWT($token)) {
                 $decoded = $user->decodeJWT($token);
                 $username = $decoded['username'];
                 $drive = $_GET['drive'] ?? 'default';
 
                 //echo __DIR__ . '/uploads'.'/'.$username;
-                $fileManager = new FileManager(__DIR__ . '/uploads'.'/'.$username .'/'.$drive);
+                $fileManager = new FileManager(__DIR__ . '/uploads' . '/' . $username . '/' . $drive);
                 $files = $fileManager->listFilesRecursive();
-                
-                $starredFile = __DIR__ . '/uploads/'.$username.'/starred.json';
+
+                $starredFile = __DIR__ . '/uploads/' . $username . '/starred.json';
                 $starredMap = [];
-                if(file_exists($starredFile)){
+                if (file_exists($starredFile)) {
                     $starred = json_decode(file_get_contents($starredFile), true);
-                    if(is_array($starred)){
-                        foreach($starred as $item){
-                            if($item['drive'] === $drive){
+                    if (is_array($starred)) {
+                        foreach ($starred as $item) {
+                            if ($item['drive'] === $drive) {
                                 $starredMap[$item['file_path']] = true;
                             }
                         }
                     }
                 }
-                
-                foreach($files as &$file){
+
+                foreach ($files as &$file) {
                     $filePath = $file['path'] ?? $file['name'];
                     $file['starred'] = isset($starredMap[$filePath]);
                 }
-                
+
                 echo json_encode($files);
-            }else{
+            } else {
                 http_response_code(401);
                 echo json_encode(['message' => 'Invalid token']);
-            }   
-        }else{
+            }
+        } else {
             http_response_code(401);
             echo json_encode(['message' => 'Authorization header missing']);
         }
-    }elseif($_GET['action'] === 'get_file_contents' && isset($_GET['drive']) && isset($_GET['file'])){
+    } elseif ($_GET['action'] === 'get_file_contents' && isset($_GET['drive']) && isset($_GET['file'])) {
         $user = new User();
         $headers = getallheaders();
-        if(isset($headers['Authorization'])){
+        if (isset($headers['Authorization'])) {
             $token = str_replace('Bearer ', '', $headers['Authorization']);
-            if($user->verifyJWT($token)){
+            if ($user->verifyJWT($token)) {
                 $decoded = $user->decodeJWT($token);
                 $username = $decoded['username'];
                 $drive = $_GET['drive'] ?? 'default';
                 $file = $_GET['file'];
                 //echo __DIR__ . '/uploads'.'/'.$username;
-                $fileManager = new FileManager(__DIR__ . '/uploads'.'/'.$username .'/'.$drive);
+                $fileManager = new FileManager(__DIR__ . '/uploads' . '/' . $username . '/' . $drive);
                 $content = $fileManager->getFileContents($file);
-                
-                if($content !== false){
-                    $filePath = __DIR__ . '/uploads'.'/'.$username .'/'.$drive.'/'.$file;
+
+                if ($content !== false) {
+                    $filePath = __DIR__ . '/uploads' . '/' . $username . '/' . $drive . '/' . $file;
                     $mimeType = mime_content_type($filePath);
-                    
+
                     echo json_encode([
                         'content' => base64_encode($content),
                         'mime_type' => $mimeType,
                         'filename' => basename($file),
                         'size' => filesize($filePath)
                     ]);
-                }else{
+                } else {
                     http_response_code(404);
                     echo json_encode(['message' => 'File not found']);
                 }
-            }else{
+            } else {
                 http_response_code(401);
                 echo json_encode(['message' => 'Invalid token']);
             }
-        }else{
+        } else {
             http_response_code(401);
             echo json_encode(['message' => 'Authorization header missing']);
         }
-    }elseif($_GET['action'] === 'get_starred'){
+    } elseif ($_GET['action'] === 'get_starred') {
         $user = new User();
         $headers = getallheaders();
-        if(isset($headers['Authorization'])){
+        if (isset($headers['Authorization'])) {
             $token = str_replace('Bearer ', '', $headers['Authorization']);
-            if($user->verifyJWT($token)){
+            if ($user->verifyJWT($token)) {
                 $decoded = $user->decodeJWT($token);
                 $username = $decoded['username'];
-                
-                $starredFile = __DIR__ . '/uploads/'.$username.'/starred.json';
-                if(file_exists($starredFile)){
+
+                $starredFile = __DIR__ . '/uploads/' . $username . '/starred.json';
+                if (file_exists($starredFile)) {
                     $starred = json_decode(file_get_contents($starredFile), true);
                     $starredFiles = [];
-                    
-                    foreach($starred as $item){
+
+                    foreach ($starred as $item) {
                         $drive = $item['drive'];
                         $filePath = $item['file_path'];
-                        $fullPath = __DIR__ . '/uploads/'.$username.'/'.$drive.'/'.$filePath;
-                        
-                        if(file_exists($fullPath)){
-                            $fileManager = new FileManager(__DIR__ . '/uploads/'.$username.'/'.$drive);
+                        $fullPath = __DIR__ . '/uploads/' . $username . '/' . $drive . '/' . $filePath;
+
+                        if (file_exists($fullPath)) {
+                            $fileManager = new FileManager(__DIR__ . '/uploads/' . $username . '/' . $drive);
                             $files = $fileManager->listFilesRecursive();
-                            
-                            foreach($files as $file){
-                                if(($file['path'] ?? $file['name']) === $filePath){
+
+                            foreach ($files as $file) {
+                                if (($file['path'] ?? $file['name']) === $filePath) {
                                     $file['drive'] = $drive;
                                     $file['starred'] = true;
                                     $starredFiles[] = $file;
@@ -185,211 +185,234 @@ if ($method === 'OPTIONS') {
                             }
                         }
                     }
-                    
+
                     echo json_encode($starredFiles);
-                }else{
+                } else {
                     echo json_encode([]);
                 }
-            }else{
+            } else {
                 http_response_code(401);
                 echo json_encode(['message' => 'Invalid token']);
             }
-        }else{
+        } else {
             http_response_code(401);
             echo json_encode(['message' => 'Authorization header missing']);
         }
-    }elseif($_GET['action'] === 'get_trash'){
+    } elseif ($_GET['action'] === 'get_trash') {
         $user = new User();
         $headers = getallheaders();
-        if(isset($headers['Authorization'])){
+        if (isset($headers['Authorization'])) {
             $token = str_replace('Bearer ', '', $headers['Authorization']);
-            if($user->verifyJWT($token)){
+            if ($user->verifyJWT($token)) {
                 $decoded = $user->decodeJWT($token);
                 $username = $decoded['username'];
-                
-                $trashFile = __DIR__ . '/uploads/'.$username.'/trash.json';
-                if(file_exists($trashFile)){
+
+                $trashFile = __DIR__ . '/uploads/' . $username . '/trash.json';
+                if (file_exists($trashFile)) {
                     $trash = json_decode(file_get_contents($trashFile), true);
                     echo json_encode(is_array($trash) ? $trash : []);
-                }else{
+                } else {
                     echo json_encode([]);
                 }
-            }else{
+            } else {
                 http_response_code(401);
                 echo json_encode(['message' => 'Invalid token']);
             }
-        }else{
+        } else {
             http_response_code(401);
             echo json_encode(['message' => 'Authorization header missing']);
         }
-    }else{
-   $fileManager = new FileManager(__DIR__ . '/uploads');
-    //echo json_encode($fileManager->listFiles());
-    echo json_encode($fileManager->listFilesRecursive());
+    } else {
+        $fileManager = new FileManager(__DIR__ . '/uploads');
+        //echo json_encode($fileManager->listFiles());
+        echo json_encode($fileManager->listFilesRecursive());
     }
 } elseif ($method === 'POST') {
     $user = new User();
     $headers = getallheaders();
-    
-    if(!isset($headers['Authorization'])){
+
+    if (!isset($headers['Authorization'])) {
         http_response_code(401);
         echo json_encode(['message' => 'Authorization header missing']);
         exit;
     }
-    
+
     $token = str_replace('Bearer ', '', $headers['Authorization']);
-    if(!$user->verifyJWT($token)){
+    if (!$user->verifyJWT($token)) {
         http_response_code(401);
         echo json_encode(['message' => 'Invalid token']);
         exit;
     }
-    
+
     $decoded = $user->decodeJWT($token);
     $username = $decoded['username'];
-    
-    if(isset($_FILES['file'])) {
-        $fileManager = new FileManager(__DIR__ . '/uploads');
-        if ($fileManager->uploadFile($_FILES['file'])) {
-            http_response_code(201);
-            echo json_encode(['message' => 'File uploaded successfully']);
+
+    if (isset($_POST['action']) && $_POST['action'] === 'upload' && isset($_FILES['file']) && isset($_POST['drive'])) {
+        $user = new User();
+        $headers = getallheaders();
+        if (isset($headers['Authorization'])) {
+            $token = str_replace('Bearer ', '', $headers['Authorization']);
+            if ($user->verifyJWT($token)) {
+                $decoded = $user->decodeJWT($token);
+                $username = $decoded['username'];
+                $drive = $_GET['drive'] ?? 'default';
+
+                $fileManager = new FileManager(__DIR__ . '/uploads' . '/' . $username . '/' . $drive);
+
+                if ($fileManager->uploadFile($_FILES['file'])) {
+                    http_response_code(201);
+                    echo json_encode(['message' => 'File uploaded successfully']);
+                } else {
+                    http_response_code(500);
+                    echo json_encode(['message' => 'File upload failed']);
+                }
+
+            } else {
+                http_response_code(401);
+                echo json_encode(['message' => 'Invalid token']);
+            }
         } else {
-            http_response_code(500);
-            echo json_encode(['message' => 'File upload failed']);
+            http_response_code(401);
+            echo json_encode(['message' => 'Authorization header missing']);
         }
     } else {
         $data = json_decode(file_get_contents('php://input'), true);
-        
-        if(isset($data['action']) && $data['action'] === 'toggle_star'){
+
+        if (isset($data['action']) && $data['action'] === 'toggle_star') {
             $drive = $data['drive'] ?? 'default';
             $filePath = $data['file_path'];
-            
-            $userDir = __DIR__ . '/uploads/'.$username;
+
+            $userDir = __DIR__ . '/uploads/' . $username;
             $starredFile = $userDir . '/starred.json';
-            
+
             $starred = [];
-            if(file_exists($starredFile)){
+            if (file_exists($starredFile)) {
                 $starred = json_decode(file_get_contents($starredFile), true);
-                if(!is_array($starred)) $starred = [];
+                if (!is_array($starred))
+                    $starred = [];
             }
-            
+
             $isStarred = false;
             $keyToRemove = -1;
-            foreach($starred as $key => $item){
-                if($item['drive'] === $drive && $item['file_path'] === $filePath){
+            foreach ($starred as $key => $item) {
+                if ($item['drive'] === $drive && $item['file_path'] === $filePath) {
                     $isStarred = true;
                     $keyToRemove = $key;
                     break;
                 }
             }
-            
-            if($isStarred){
+
+            if ($isStarred) {
                 array_splice($starred, $keyToRemove, 1);
-            }else{
+            } else {
                 $starred[] = [
                     'drive' => $drive,
                     'file_path' => $filePath,
                     'starred_at' => date('Y-m-d H:i:s')
                 ];
             }
-            
-            if(!is_dir($userDir)){
+
+            if (!is_dir($userDir)) {
                 mkdir($userDir, 0777, true);
             }
             file_put_contents($starredFile, json_encode($starred, JSON_PRETTY_PRINT));
-            
+
             http_response_code(200);
             echo json_encode([
                 'message' => $isStarred ? 'Unstarred' : 'Starred',
                 'starred' => !$isStarred
             ]);
-        }elseif(isset($data['action']) && $data['action'] === 'restore_file'){
+        } elseif (isset($data['action']) && $data['action'] === 'restore_file') {
             $drive = $data['drive'] ?? 'default';
             $filePath = $data['file_path'];
             $fileId = $data['file_id'];
-            
-            $userDir = __DIR__ . '/uploads/'.$username;
+
+            $userDir = __DIR__ . '/uploads/' . $username;
             $trashFile = $userDir . '/trash.json';
-            
+
             $trash = [];
-            if(file_exists($trashFile)){
+            if (file_exists($trashFile)) {
                 $trash = json_decode(file_get_contents($trashFile), true);
-                if(!is_array($trash)) $trash = [];
+                if (!is_array($trash))
+                    $trash = [];
             }
-            
+
             $keyToRemove = -1;
-            foreach($trash as $key => $item){
-                if($item['id'] == $fileId){
+            foreach ($trash as $key => $item) {
+                if ($item['id'] == $fileId) {
                     $keyToRemove = $key;
                     break;
                 }
             }
-            
-            if($keyToRemove !== -1){
+
+            if ($keyToRemove !== -1) {
                 array_splice($trash, $keyToRemove, 1);
                 file_put_contents($trashFile, json_encode($trash, JSON_PRETTY_PRINT));
-                
+
                 http_response_code(200);
                 echo json_encode(['message' => 'File restored successfully']);
-            }else{
+            } else {
                 http_response_code(404);
                 echo json_encode(['message' => 'File not found in trash']);
             }
-        }elseif(isset($data['action']) && $data['action'] === 'delete_permanently'){
+        } elseif (isset($data['action']) && $data['action'] === 'delete_permanently') {
             $drive = $data['drive'] ?? 'default';
             $filePath = $data['file_path'];
             $fileId = $data['file_id'];
-            
-            $userDir = __DIR__ . '/uploads/'.$username;
+
+            $userDir = __DIR__ . '/uploads/' . $username;
             $trashFile = $userDir . '/trash.json';
-            
+
             $trash = [];
-            if(file_exists($trashFile)){
+            if (file_exists($trashFile)) {
                 $trash = json_decode(file_get_contents($trashFile), true);
-                if(!is_array($trash)) $trash = [];
+                if (!is_array($trash))
+                    $trash = [];
             }
-            
+
             $keyToRemove = -1;
-            foreach($trash as $key => $item){
-                if($item['id'] == $fileId){
+            foreach ($trash as $key => $item) {
+                if ($item['id'] == $fileId) {
                     $keyToRemove = $key;
                     break;
                 }
             }
-            
-            if($keyToRemove !== -1){
+
+            if ($keyToRemove !== -1) {
                 array_splice($trash, $keyToRemove, 1);
                 file_put_contents($trashFile, json_encode($trash, JSON_PRETTY_PRINT));
-                
+
                 http_response_code(200);
                 echo json_encode(['message' => 'File deleted permanently']);
-            }else{
+            } else {
                 http_response_code(404);
                 echo json_encode(['message' => 'File not found in trash']);
             }
-        }elseif(isset($data['action']) && $data['action'] === 'empty_trash'){
-            $userDir = __DIR__ . '/uploads/'.$username;
+        } elseif (isset($data['action']) && $data['action'] === 'empty_trash') {
+            $userDir = __DIR__ . '/uploads/' . $username;
             $trashFile = $userDir . '/trash.json';
-            
-            if(file_exists($trashFile)){
+
+            if (file_exists($trashFile)) {
                 file_put_contents($trashFile, json_encode([], JSON_PRETTY_PRINT));
             }
-            
+
             http_response_code(200);
             echo json_encode(['message' => 'Trash emptied successfully']);
-        }elseif(isset($data['action']) && $data['action'] === 'move_to_trash'){
+        } elseif (isset($data['action']) && $data['action'] === 'move_to_trash') {
             $drive = $data['drive'] ?? 'default';
             $filePath = $data['file_path'];
             $fileId = $data['file_id'];
-            
-            $userDir = __DIR__ . '/uploads/'.$username;
+
+            $userDir = __DIR__ . '/uploads/' . $username;
             $trashFile = $userDir . '/trash.json';
-            
+
             $trash = [];
-            if(file_exists($trashFile)){
+            if (file_exists($trashFile)) {
                 $trash = json_decode(file_get_contents($trashFile), true);
-                if(!is_array($trash)) $trash = [];
+                if (!is_array($trash))
+                    $trash = [];
             }
-            
+
             $trash[] = [
                 'id' => $fileId,
                 'name' => $data['file_name'],
@@ -401,50 +424,50 @@ if ($method === 'OPTIONS') {
                 'modified' => $data['file_modified'],
                 'deleted' => date('d M Y')
             ];
-            
-            if(!is_dir($userDir)){
+
+            if (!is_dir($userDir)) {
                 mkdir($userDir, 0777, true);
             }
             file_put_contents($trashFile, json_encode($trash, JSON_PRETTY_PRINT));
-            
+
             http_response_code(200);
             echo json_encode(['message' => 'File moved to trash']);
-        }elseif(isset($data['action']) && $data['action'] === 'create_drive' && isset($data['drive_name'])){
+        } elseif (isset($data['action']) && $data['action'] === 'create_drive' && isset($data['drive_name'])) {
             $driveName = preg_replace('/[^a-zA-Z0-9_-]/', '', $data['drive_name']);
-            
-            if(empty($driveName)){
+
+            if (empty($driveName)) {
                 http_response_code(400);
                 echo json_encode(['message' => 'Invalid drive name']);
                 exit;
             }
-            
-            $userDir = __DIR__ . '/uploads/'.$username;
-            
+
+            $userDir = __DIR__ . '/uploads/' . $username;
+
             $drives = [];
-            if(is_dir($userDir)){
+            if (is_dir($userDir)) {
                 $items = scandir($userDir);
-                foreach($items as $item){
-                    if($item != '.' && $item != '..' && is_dir($userDir . '/' . $item)){
+                foreach ($items as $item) {
+                    if ($item != '.' && $item != '..' && is_dir($userDir . '/' . $item)) {
                         $drives[] = $item;
                     }
                 }
             }
-            
-            if(count($drives) >= 3){
+
+            if (count($drives) >= 3) {
                 http_response_code(400);
                 echo json_encode(['message' => 'Maximum of 3 drives allowed']);
                 exit;
             }
-            
+
             $driveDir = $userDir . '/' . $driveName;
-            
-            if(is_dir($driveDir)){
+
+            if (is_dir($driveDir)) {
                 http_response_code(400);
                 echo json_encode(['message' => 'Drive already exists']);
                 exit;
             }
-            
-            if(mkdir($driveDir, 0777, true)){
+
+            if (mkdir($driveDir, 0777, true)) {
                 http_response_code(201);
                 echo json_encode(['message' => 'Drive created successfully', 'drive_name' => $driveName]);
             } else {
