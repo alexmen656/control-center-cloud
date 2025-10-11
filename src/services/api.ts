@@ -20,6 +20,7 @@ api.interceptors.request.use((config) => {
 export interface LoginCredentials {
   username: string
   password: string
+  action: string
 }
 
 export interface LoginResponse {

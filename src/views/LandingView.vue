@@ -6,7 +6,7 @@
             <header class=" w-full p-2 mb-20 flex items-center justify-center">
                 <div class="max-w-7xl w-full flex items-center justify-between ">
                     <div class="flex items-center space-x-3">
-                        <div @click="router.push('/')" class="flex-shrink-0 flex items-center logo-container">
+                        <div @click="$router.push('/')" class="flex-shrink-0 flex items-center logo-container">
                             <img data-v-c970699f="" class="logo-image" src="../assets/logo.png" alt="Logo">
                             <span class="logo-text">
                                 Control Cloud</span>
