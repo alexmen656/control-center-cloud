@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-screen bg-white dark:bg-gray-900">
+    <div class="min-h-screen bg-white dark:bg-gray-950">
         <div class="relative overflow-hidden bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800">
 
 
@@ -18,7 +18,7 @@
                             Sign in
                         </router-link>
                         <router-link to="/signup"
-                            class="bg-white dark:bg-gray-800 text-primary-700 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-gray-700 px-6 py-2.5 rounded-lg text-sm font-semibold transition-all border border-gray-900 dark:border-gray-700">
+                            class="bg-white dark:bg-gray-800 text-primary-700 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-gray-700 px-6 py-2.5 rounded-lg text-sm font-semibold transition-all shadow-lg hover:shadow-xl border border-transparent dark:border-gray-700">
                             Get Started Free
                         </router-link>
                     </div>
@@ -26,22 +26,33 @@
             </header>
             <div class="relative mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-3">
                 <div class="text-center">
-                    <h1 class="text-4xl sm:text-5xl md:text-8xl font-extrabold dark:text-white tracking-tight">
+                    <h1 class="text-4xl sm:text-5xl md:text-8xl font-extrabold text-white tracking-tight">
                         Your Files, Anywhere,
                         <span class="block text-primary-200">Anytime</span>
                     </h1>
-                    <p class="mt-6 max-w-2xl mx-auto text-xl dark:text-white/90">
+                    <p class="mt-6 max-w-2xl mx-auto text-xl text-white/90">
                         Secure cloud storage with seamless sync across all your devices. Store, share, and collaborate
                         with ease.
                     </p>
+                    <div class="mt-10 flex justify-center gap-4">
+                        <router-link to="/signup"
+                            class="bg-white text-primary-700 hover:bg-primary-50 px-8 py-4 rounded-xl text-lg font-semibold transition-all shadow-xl hover:shadow-2xl hover:scale-105">
+                            Get Started - 1 GB Free
+                        </router-link>
+                        <button
+                            class="bg-white/10 text-white hover:bg-white/20 px-8 py-4 rounded-xl text-lg font-semibold transition-all backdrop-blur-sm border border-white/30">
+                            Watch Demo
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-            <div class="text-center mb-10">
-                <h2 class="text-3xl sm:text-5xl font-bold text-gray-900 dark:text-gray-100">Everything you need</h2>
-
+            <div class="text-center mb-16">
+                <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100">Everything you need</h2>
+                <p class="mt-4 text-xl text-gray-600 dark:text-gray-400">Powerful features to manage your digital life
+                </p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div
@@ -54,9 +65,10 @@
                             <path d="M17 5c0 1.657-3.134 3-7 3S3 6.657 3 5s3.134-3 7-3 7 1.343 7 3z" />
                         </svg>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3">Multiple Drives</h3>
-                    <p class="text-gray-600 dark:text-gray-400">You can create up to 3 drives with 1GB each to better
-                        organiye your files</p>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3">Secure Storage</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Your files are encrypted and stored securely with
+                        enterprise-grade
+                        security.</p>
                 </div>
                 <div
                     class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-8 hover:shadow-xl transition-shadow">
@@ -68,8 +80,9 @@
                         </svg>
                     </div>
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3">Easy Sharing</h3>
-                    <p class="text-gray-600 dark:text-gray-400">Share files and folders with any other Control Cloud
-                        User</p>
+                    <p class="text-gray-600 dark:text-gray-400">Share files and folders with anyone, with customizable
+                        permissions and
+                        access control.</p>
                 </div>
                 <div
                     class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-8 hover:shadow-xl transition-shadow">
@@ -87,7 +100,7 @@
                         up to date
                         everywhere.</p>
                 </div>
-                <!--- <div
+                <div
                     class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-8 hover:shadow-xl transition-shadow">
                     <div
                         class="w-12 h-12 bg-yellow-100 dark:bg-yellow-900/30 rounded-xl flex items-center justify-center mb-6">
@@ -130,10 +143,10 @@
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3">API Access</h3>
                     <p class="text-gray-600 dark:text-gray-400">Integrate with your workflow using our powerful REST
                         API.</p>
-                </div>-->
+                </div>
             </div>
         </div>
-        <!--<div class="bg-gray-50 dark:bg-gray-900 py-24">
+        <div class="bg-gray-50 dark:bg-gray-900 py-24">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <div class="bg-gradient-to-br from-primary-600 to-primary-700 rounded-3xl p-12 shadow-2xl">
                     <h2 class="text-4xl sm:text-5xl font-bold text-white mb-4">
@@ -183,10 +196,43 @@
                     </router-link>
                 </div>
             </div>
-        </div>-->
-        <footer class="bg-gray-900 dark:bg-gray-900 text-gray-400 py-8">
+        </div>
+        <footer class="bg-gray-900 dark:bg-black text-gray-400 py-12">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="mt-1 text-center">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                    <div>
+                        <h3 class="text-white font-semibold mb-4">Product</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="hover:text-white transition-colors">Features</a></li>
+                            <li><a href="#" class="hover:text-white transition-colors">Security</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-white font-semibold mb-4">Company</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="hover:text-white transition-colors">About</a></li>
+                            <li><a href="#" class="hover:text-white transition-colors">Blog</a></li>
+                            <li><a href="#" class="hover:text-white transition-colors">Careers</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-white font-semibold mb-4">Resources</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="hover:text-white transition-colors">Documentation</a></li>
+                            <li><a href="#" class="hover:text-white transition-colors">API</a></li>
+                            <li><a href="#" class="hover:text-white transition-colors">Support</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-white font-semibold mb-4">Legal</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="hover:text-white transition-colors">Privacy</a></li>
+                            <li><a href="#" class="hover:text-white transition-colors">Terms</a></li>
+                            <li><a href="#" class="hover:text-white transition-colors">Cookie Policy</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mt-12 pt-8 border-t border-gray-800 text-center">
                     <p class="text-gray-500">&copy; 2025 Control Cloud. All rights reserved.</p>
                 </div>
             </div>
@@ -199,7 +245,7 @@
 
 <style scoped>
 .logo-text {
-    font-size: 28px;
+    font-size: 26px;
     font-weight: 700;
     letter-spacing: -0.8px;
     line-height: 1;
@@ -215,7 +261,7 @@
 }
 
 .logo-image {
-    height: 38px;
+    height: 36px;
     width: auto;
     transition: transform 0.2s ease;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
