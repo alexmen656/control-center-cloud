@@ -264,7 +264,10 @@
                                 <span class="text-sm text-gray-600 dark:text-gray-300">{{ file.modified }}</span>
                             </td>
                             <td class="py-3 px-4">
-                                <span class="text-sm text-gray-600 dark:text-gray-300">{{ file.size }}</span>
+                                <span class="text-sm text-gray-600 dark:text-gray-300">{{
+                                    Math.round($formatUnit(file.size.replace(' bytes', '')).value) + ' ' +
+                                    $formatUnit(file.size.replace(' bytes', '')).unit
+                                }}</span>
                             </td>
                             <td class="py-3 pl-4 text-right">
                                 <div
