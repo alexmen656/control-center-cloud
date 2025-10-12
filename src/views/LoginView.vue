@@ -28,7 +28,7 @@
                 </div>
 
                 <div class="space-y-3">
-                    <button
+                    <button :disabled="!isReady" @click="() => login()"
                         class="w-full flex items-center justify-center px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors group">
                         <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24">
                             <path fill="#4285F4"
@@ -133,6 +133,11 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import {
+    useTokenClient,
+    type AuthCodeFlowSuccessResponse,
+    type AuthCodeFlowErrorResponse,
+} from "vue3-google-signin";
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -140,6 +145,19 @@ const authStore = useAuthStore()
 const username = ref('')
 const password = ref('')
 const rememberMe = ref(false)
+
+const handleOnSuccess = (response: AuthCodeFlowSuccessResponse) => {
+    console.log("Access Token: ", response.access_token);
+};
+
+const handleOnError = (errorResponse: AuthCodeFlowErrorResponse) => {
+    console.log("Error: ", errorResponse);
+};
+
+const { isReady, login } = useTokenClient({
+    onSuccess: handleOnSuccess,
+    onError: handleOnError,
+});
 
 const handleLogin = async () => {
     const success = await authStore.login({

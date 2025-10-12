@@ -94,7 +94,7 @@
                 <div class="space-y-2">
                     <div class="flex items-center justify-between text-sm">
                         <span class="text-gray-600 dark:text-gray-400">{{ storageUsed }} {{ unit }} of {{ storageTotal
-                            }}
+                        }}
                             GB
                             used</span>
                     </div>
