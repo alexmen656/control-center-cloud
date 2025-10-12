@@ -105,6 +105,36 @@ if ($method === 'OPTIONS') {
                 $filePath = __DIR__ . '/uploads' . '/' . $username . '/' . $drive . '/' . $file;
                 $mimeType = mime_content_type($filePath);
 
+                $userDir = __DIR__ . '/uploads/' . $username;
+                $recentFile = $userDir . '/recent.json';
+
+                $recent = [];
+                if (file_exists($recentFile)) {
+                    $recent = json_decode(file_get_contents($recentFile), true);
+                    if (!is_array($recent))
+                        $recent = [];
+                }
+
+                $recent = array_filter($recent, function ($item) use ($drive, $file) {
+                    return !($item['drive'] === $drive && $item['file_path'] === $file);
+                });
+
+                array_unshift($recent, [
+                    'drive' => $drive,
+                    'file_path' => $file,
+                    'file_name' => basename($file),
+                    'file_size' => filesize($filePath),
+                    'file_type' => $mimeType,
+                    'accessed_at' => date('Y-m-d H:i:s')
+                ]);
+
+                $recent = array_slice($recent, 0, 500);
+
+                if (!is_dir($userDir)) {
+                    mkdir($userDir, 0777, true);
+                }
+                file_put_contents($recentFile, json_encode($recent, JSON_PRETTY_PRINT));
+
                 echo json_encode([
                     'content' => base64_encode($content),
                     'mime_type' => $mimeType,
@@ -114,6 +144,39 @@ if ($method === 'OPTIONS') {
             } else {
                 http_response_code(404);
                 echo json_encode(['message' => 'File not found']);
+            }
+        } elseif ($_GET['action'] === 'get_recent_files') {
+            $recentFile = __DIR__ . '/uploads/' . $username . '/recent.json';
+
+            if (file_exists($recentFile)) {
+                $recent = json_decode(file_get_contents($recentFile), true);
+                $recentFiles = [];
+
+                if (is_array($recent)) {
+                    foreach ($recent as $item) {
+                        $drive = $item['drive'];
+                        $filePath = $item['file_path'];
+                        $fullPath = __DIR__ . '/uploads/' . $username . '/' . $drive . '/' . $filePath;
+
+                        if (file_exists($fullPath)) {
+                            $fileManager = new FileManager(__DIR__ . '/uploads/' . $username . '/' . $drive);
+                            $files = $fileManager->listFilesRecursive();
+
+                            foreach ($files as $file) {
+                                if (($file['path'] ?? $file['name']) === $filePath) {
+                                    $file['drive'] = $drive;
+                                    $file['accessed_at'] = $item['accessed_at'];
+                                    $recentFiles[] = $file;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                echo json_encode($recentFiles);
+            } else {
+                echo json_encode([]);
             }
         } elseif ($_GET['action'] === 'get_shared_files') {
             $db = new Database();

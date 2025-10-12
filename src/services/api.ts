@@ -82,6 +82,15 @@ export const filesApi = {
     })
     return response.data
   },
+
+  getRecentFiles: async () => {
+    const response = await api.get('/files.php', {
+      params: {
+        action: 'get_recent_files',
+      },
+    })
+    return response.data
+  },
 }
 
 export default api
