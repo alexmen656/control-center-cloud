@@ -235,30 +235,54 @@
                                 <input type="checkbox" v-model="selectAll">
                             </th>
                             <th class="text-left py-3 pr-4 text-xs font-medium text-gray-600 dark:text-gray-400">
-                                <button
-                                    class="flex items-center space-x-1 hover:text-gray-900 dark:hover:text-gray-200">
+                                <button @click="toggleSort('name')"
+                                    class="flex items-center space-x-1 hover:text-gray-900 dark:hover:text-gray-200 transition-colors">
                                     <span>Name</span>
-                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <svg v-if="sortField === 'name'" class="w-4 h-4 transition-transform"
+                                        :class="{ 'rotate-180': sortDirection === 'desc' }" fill="currentColor"
+                                        viewBox="0 0 20 20">
                                         <path
                                             d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z" />
                                     </svg>
                                 </button>
                             </th>
-                            <th class="text-left py-3 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">Owner
-                            </th>
-                            <th class="text-left py-3 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">Date
-                                modified</th>
-                            <th class="text-left py-3 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">File
-                                size</th>
-                            <th class="text-right py-3 pl-4 text-xs font-medium text-gray-600 dark:text-gray-400 w-16">
-                                <button
-                                    class="flex items-center space-x-1 hover:text-gray-900 dark:hover:text-gray-200 ml-auto">
-                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <th class="text-left py-3 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">
+                                <button @click="toggleSort('owner')"
+                                    class="flex items-center space-x-1 hover:text-gray-900 dark:hover:text-gray-200 transition-colors">
+                                    <span>Owner</span>
+                                    <svg v-if="sortField === 'owner'" class="w-4 h-4 transition-transform"
+                                        :class="{ 'rotate-180': sortDirection === 'desc' }" fill="currentColor"
+                                        viewBox="0 0 20 20">
                                         <path
-                                            d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z" />
+                                            d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z" />
                                     </svg>
-                                    <span>Sort</span>
                                 </button>
+                            </th>
+                            <th class="text-left py-3 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">
+                                <button @click="toggleSort('modified')"
+                                    class="flex items-center space-x-1 hover:text-gray-900 dark:hover:text-gray-200 transition-colors">
+                                    <span>Date modified</span>
+                                    <svg v-if="sortField === 'modified'" class="w-4 h-4 transition-transform"
+                                        :class="{ 'rotate-180': sortDirection === 'desc' }" fill="currentColor"
+                                        viewBox="0 0 20 20">
+                                        <path
+                                            d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z" />
+                                    </svg>
+                                </button>
+                            </th>
+                            <th class="text-left py-3 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">
+                                <button @click="toggleSort('size')"
+                                    class="flex items-center space-x-1 hover:text-gray-900 dark:hover:text-gray-200 transition-colors">
+                                    <span>File size</span>
+                                    <svg v-if="sortField === 'size'" class="w-4 h-4 transition-transform"
+                                        :class="{ 'rotate-180': sortDirection === 'desc' }" fill="currentColor"
+                                        viewBox="0 0 20 20">
+                                        <path
+                                            d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z" />
+                                    </svg>
+                                </button>
+                            </th>
+                            <th class="text-right py-3 pl-4 text-xs font-medium text-gray-600 dark:text-gray-400 w-16">
                             </th>
                         </tr>
                     </thead>
@@ -281,10 +305,12 @@
                             <td class="py-3 px-4">
                                 <div class="flex items-center space-x-2">
                                     <div
-                                        class="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center text-white text-xs">
-                                        {{ file.owner.charAt(0).toUpperCase() }}
+                                        class="w-6 h-6 rounded-full bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center text-white font-semibold text-xs">
+                                        {{ username.charAt(0).toUpperCase() }}
                                     </div>
-                                    <span class="text-sm text-gray-600 dark:text-gray-300">{{ file.owner }}</span>
+                                    <span class="text-sm text-gray-600 dark:text-gray-300">{{
+                                        file.owner[0]?.toUpperCase() + file.owner.slice(1)
+                                        }}</span>
                                 </div>
                             </td>
                             <td class="py-3 px-4">
@@ -338,14 +364,15 @@
                                                 d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                         </svg>
                                     </button>
-                                    <button class="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full"
+                                    <!--Actions like rename, copy, etc. comming soon-->
+                                    <!--  <button class="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full"
                                         title="More">
                                         <svg class="w-4 h-4 text-gray-600 dark:text-gray-400" fill="currentColor"
                                             viewBox="0 0 20 20">
                                             <path
                                                 d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
                                         </svg>
-                                    </button>
+                                    </button>-->
                                 </div>
                             </td>
                         </tr>
@@ -472,6 +499,9 @@ const showShareModal = ref(false)
 const shareWithUsername = ref('')
 const fileToShare = ref<File | null>(null)
 
+const sortField = ref<'name' | 'owner' | 'modified' | 'size'>('name')
+const sortDirection = ref<'asc' | 'desc'>('asc')
+
 interface File {
     id: number
     name: string
@@ -499,7 +529,7 @@ watch(selectAll, (newVal) => {
 
 const allFiles = ref<File[]>([])
 const files = ref<File[]>([])
-
+const username = localStorage.getItem('username') || 'User'
 const token = localStorage.getItem('auth_token') || ''
 
 const fileTypes = [
@@ -859,7 +889,45 @@ const applyFilters = () => {
         }
     }
 
+    filtered.sort((a, b) => {
+        let compareResult = 0
+
+        switch (sortField.value) {
+            case 'name':
+                compareResult = a.name.localeCompare(b.name)
+                break
+            case 'owner':
+                compareResult = a.owner.localeCompare(b.owner)
+                break
+            case 'modified':
+                compareResult = new Date(a.modified).getTime() - new Date(b.modified).getTime()
+                break
+            case 'size':
+                const getSizeInBytes = (size: string) => {
+                    if (!size || size === '-') return 0
+                    const units: { [key: string]: number } = { 'B': 1, 'KB': 1024, 'MB': 1024 * 1024, 'GB': 1024 * 1024 * 1024 }
+                    const match = size.match(/^([\d.]+)\s*([A-Z]+)$/)
+                    if (!match || !match[1] || !match[2]) return 0
+                    return parseFloat(match[1]) * (units[match[2]] || 0)
+                }
+                compareResult = getSizeInBytes(a.size) - getSizeInBytes(b.size)
+                break
+        }
+
+        return sortDirection.value === 'asc' ? compareResult : -compareResult
+    })
+
     files.value = filtered
+}
+
+const toggleSort = (field: 'name' | 'owner' | 'modified' | 'size') => {
+    if (sortField.value === field) {
+        sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc'
+    } else {
+        sortField.value = field
+        sortDirection.value = 'asc'
+    }
+    applyFilters()
 }
 
 const openFilePreview = (file: File) => {
@@ -1161,5 +1229,13 @@ input[type="checkbox"]:checked::after {
 
 .drop-zone {
     height: 100%;
+}
+
+.rotate-180 {
+    transform: rotate(180deg);
+}
+
+svg {
+    transition: transform 0.2s ease;
 }
 </style>

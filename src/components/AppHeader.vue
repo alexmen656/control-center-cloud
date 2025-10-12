@@ -80,7 +80,7 @@
                         class="p-2 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors">
                         <BellIcon class="w-5 h-5" />
                     </button>
-                    <div class="m-0">
+                    <div class="relative">
                         <button @click="toggleUserMenu"
                             class="flex items-center space-x-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg px-3 py-2 transition-colors">
                             <div
@@ -192,7 +192,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, defineComponent, h } from 'vue'
+import { ref, computed, onMounted, onUnmounted, defineComponent, h } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import lunr from 'lunr'
@@ -510,14 +510,26 @@ const getFileColor = (type: string) => {
 onMounted(() => {
     loadAllFiles()
 
-    document.addEventListener('click', (e) => {
+    const handleClickOutside = (e: MouseEvent) => {
         const target = e.target as HTMLElement
-        if (!target.closest('.relative')) {
-            userMenuOpen.value = false
-            if (!target.closest('.search-container')) {
-                isSearchFocused.value = false
+
+        if (userMenuOpen.value) {
+            const isInsideUserMenu = target.closest('.flex.items-center.space-x-3.hover\\:bg-gray-50') !== null ||
+                target.closest('.absolute.right-0.mt-2.w-48') !== null
+            if (!isInsideUserMenu) {
+                userMenuOpen.value = false
             }
         }
+
+        if (!target.closest('.search-container')) {
+            isSearchFocused.value = false
+        }
+    }
+
+    document.addEventListener('click', handleClickOutside)
+
+    onUnmounted(() => {
+        document.removeEventListener('click', handleClickOutside)
     })
 })
 
