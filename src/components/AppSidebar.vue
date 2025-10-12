@@ -11,7 +11,8 @@
                 <span class="text-sm font-medium text-gray-900 dark:text-gray-100">New</span>
             </button>
             <div v-if="showNewDropdown" @click.stop
-                class="absolute left-2 top-full mt-2 w-60 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-2 z-50">
+                class="absolute left-2 w-60 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-2 z-50">
+                <!--top-full-->
                 <button @click="createNewFolder"
                     class="w-full text-left px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-3 transition-colors">
                     <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20">
@@ -94,7 +95,7 @@
                 <div class="space-y-2">
                     <div class="flex items-center justify-between text-sm">
                         <span class="text-gray-600 dark:text-gray-400">{{ storageUsed }} {{ unit }} of {{ storageTotal
-                        }}
+                            }}
                             GB
                             used</span>
                     </div>

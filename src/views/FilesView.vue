@@ -232,8 +232,11 @@
                     <thead>
                         <tr class="border-b border-gray-200 dark:border-gray-700">
                             <th
-                                class="text-left py-3 pr-4 pl-1 text-xs font-medium text-gray-600 dark:text-gray-400 w-8">
-                                <input type="checkbox" v-model="selectAll">
+                                class="text-left pt-3 pb-2 pr-4 pl-1 text-xs font-medium text-gray-600 dark:text-gray-400 w-8">
+                                <div class="h-full flex items-center">
+
+                                    <input type="checkbox" v-model="selectAll">
+                                </div>
                             </th>
                             <th class="text-left pt-3 pb-2 pr-4 text-xs font-medium text-gray-600 dark:text-gray-400">
                                 <button @click="toggleSort('name')"
@@ -312,7 +315,7 @@
                                     </div>
                                     <span class="text-sm text-gray-600 dark:text-gray-300">{{
                                         file.owner[0]?.toUpperCase() + file.owner.slice(1)
-                                        }}</span>
+                                    }}</span>
                                 </div>
                             </td>
                             <td class="py-3 px-4">
@@ -322,7 +325,7 @@
                                 <span class="text-sm text-gray-600 dark:text-gray-300">{{
                                     Math.round(formatUnit(file.size.replace(' bytes', '')).value) + ' ' +
                                     formatUnit(file.size.replace(' bytes', '')).unit
-                                }}</span>
+                                    }}</span>
                             </td>
                             <td class="py-3 pl-4 text-right">
                                 <div
@@ -383,7 +386,7 @@
             </div>
             <div v-else class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
                 <div v-for="file in files" :key="file.id" @click="openFilePreview(file)" :data-file-id="file.id"
-                    class="group border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-lg hover:border-primary-300 transition-all cursor-pointer p-3">
+                    class="group border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-lg hover:border-primary-300 transition-all cursor-pointer p-2">
                     <div
                         class="aspect-square bg-gray-100 dark:bg-gray-700 rounded-lg mb-3 flex items-center justify-center relative overflow-hidden">
                         <component :is="getFileIcon(file.type)" :color="getFileColor(file.type)" class="w-16 h-16" />
