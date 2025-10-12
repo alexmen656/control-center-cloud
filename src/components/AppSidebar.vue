@@ -94,7 +94,7 @@
                 <div class="space-y-2">
                     <div class="flex items-center justify-between text-sm">
                         <span class="text-gray-600 dark:text-gray-400">{{ storageUsed }} {{ unit }} of {{ storageTotal
-                        }}
+                            }}
                             GB
                             used</span>
                     </div>
@@ -148,11 +148,9 @@ export default {
         document.removeEventListener('click', this.closeDropdown);
     },
     created() {
-        const token = localStorage.getItem('auth_token') || '';
         this.$axios.get(`files.php?action=get_drive_storage&drive=default`, {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
             }
         }).then((response: any) => {
             console.log(response.data);

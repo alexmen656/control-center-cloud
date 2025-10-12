@@ -20,7 +20,11 @@ class FileManager
     public function listFilesRecursive()
     {
         //echo "Base Dir: " . $this->baseDir . "\n"; // Debug line to check base directory
-        $rii = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->baseDir));
+        $rii = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($this->baseDir, FilesystemIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::SELF_FIRST
+        );
+
         $files = [];
         $id = 1;
         foreach ($rii as $file) {

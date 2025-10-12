@@ -241,6 +241,24 @@ if ($method === 'OPTIONS') {
                     'message' => $isStarred ? 'Unstarred' : 'Starred',
                     'starred' => !$isStarred
                 ]);
+            } elseif (isset($data['action']) && $data['action'] === 'create_folder' && isset($data['drive']) && isset($data['folder'])) {
+                $drive = $data['drive'] ?? 'default';
+                $folderName = preg_replace('/[^a-zA-Z0-9_-]/', '', $data['folder']);
+
+                if (empty($folderName)) {
+                    http_response_code(400);
+                    echo json_encode(['message' => 'Invalid folder name']);
+                    exit;
+                }
+
+                $fileManager = new FileManager(__DIR__ . '/uploads' . '/' . $username . '/' . $drive);
+                if ($fileManager->createDirectory($folderName)) {
+                    http_response_code(201);
+                    echo json_encode(['message' => 'Folder created successfully']);
+                } else {
+                    http_response_code(500);
+                    echo json_encode(['message' => 'Failed to create folder']);
+                }
             } elseif (isset($data['action']) && $data['action'] === 'restore_file') {
                 $drive = $data['drive'] ?? 'default';
                 $filePath = $data['file_path'];
