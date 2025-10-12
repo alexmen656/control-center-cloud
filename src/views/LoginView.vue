@@ -64,18 +64,18 @@
                     </div>
                     <div class="relative flex justify-center text-sm">
                         <span class="px-2 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">Or continue with
-                            username</span>
+                            email</span>
                     </div>
                 </div>
                 <form class="space-y-4" @submit.prevent="handleLogin">
                     <div>
                         <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Username
+                            Email or Username
                         </label>
                         <input id="username" v-model="username" name="username" type="text" required
                             :disabled="authStore.isLoading"
                             class="appearance-none block w-full px-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:cursor-not-allowed bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                            placeholder="admin or user">
+                            placeholder="your@email.com or username">
                     </div>
                     <div>
                         <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -146,17 +146,47 @@ const username = ref('')
 const password = ref('')
 const rememberMe = ref(false)
 
-const handleOnSuccess = (response: AuthCodeFlowSuccessResponse) => {
+const handleOnSuccess = async (response: AuthCodeFlowSuccessResponse) => {
     console.log("Access Token: ", response.access_token);
+
+    try {
+        const userInfoResponse = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+            headers: {
+                'Authorization': `Bearer ${response.access_token}`
+            }
+        });
+
+        if (userInfoResponse.ok) {
+            const userInfo = await userInfoResponse.json();
+            console.log("User Info: ", userInfo);
+
+            const success = await authStore.loginWithGoogle(
+                userInfo.email,
+                userInfo.name,
+                userInfo.sub
+            );
+
+            if (success) {
+                router.push('/dashboard');
+            }
+        } else {
+            authStore.error = 'Failed to fetch user information from Google';
+        }
+    } catch (error) {
+        console.error("Error fetching user info:", error);
+        authStore.error = 'Google login failed. Please try again.';
+    }
 };
 
 const handleOnError = (errorResponse: AuthCodeFlowErrorResponse) => {
     console.log("Error: ", errorResponse);
+    authStore.error = 'Google login was cancelled or failed';
 };
 
 const { isReady, login } = useTokenClient({
     onSuccess: handleOnSuccess,
     onError: handleOnError,
+    scope: 'email profile',
 });
 
 const handleLogin = async () => {

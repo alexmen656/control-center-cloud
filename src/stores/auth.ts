@@ -64,6 +64,41 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  const loginWithGoogle = async (email: string, name?: string, googleId?: string) => {
+    isLoading.value = true
+    error.value = null
+
+    try {
+      const response = await authApi.login({
+        action: 'google-login',
+        email,
+        name,
+        googleId,
+      } as any)
+
+      if (response.token) {
+        token.value = response.token
+        localStorage.setItem('auth_token', response.token)
+
+        const payload = parseJWT(response.token)
+        if (payload) {
+          username.value = payload.username
+          role.value = payload.role
+          localStorage.setItem('username', payload.username)
+          localStorage.setItem('role', payload.role)
+        }
+
+        return true
+      }
+      return false
+    } catch (err: any) {
+      error.value = 'Google login failed. Please try again.'
+      return false
+    } finally {
+      isLoading.value = false
+    }
+  }
+
   const logout = () => {
     token.value = null
     username.value = null
@@ -81,6 +116,7 @@ export const useAuthStore = defineStore('auth', () => {
     error,
     isAuthenticated,
     login,
+    loginWithGoogle,
     logout,
   }
 })
