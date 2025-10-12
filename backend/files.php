@@ -6,6 +6,7 @@ header('Content-Type: application/json');
 
 include_once 'classes/FileManager.php';
 include_once 'classes/User.php';
+include_once 'classes/DB.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -152,6 +153,25 @@ if ($method === 'OPTIONS') {
             http_response_code(401);
             echo json_encode(['message' => 'Authorization header missing']);
         }
+    } elseif ($_GET['action'] === 'get_shared_files') {
+        $user = new User();
+        $headers = getallheaders();
+        if (isset($headers['Authorization'])) {
+            $token = str_replace('Bearer ', '', $headers['Authorization']);
+            if ($user->verifyJWT($token)) {
+                $decoded = $user->decodeJWT($token);
+                $username = $decoded['username'];
+
+                $db = new Database();
+                echo json_encode($db->fetchAll("SELECT * FROM control_cloud_shared_files WHERE share_with = '$username'"));
+            } else {
+                http_response_code(401);
+                echo json_encode(['message' => 'Invalid token']);
+            }
+        } else {
+            http_response_code(401);
+            echo json_encode(['message' => 'Authorization header missing']);
+        }
     } elseif ($_GET['action'] === 'get_starred') {
         $user = new User();
         $headers = getallheaders();
@@ -275,7 +295,37 @@ if ($method === 'OPTIONS') {
             http_response_code(401);
             echo json_encode(['message' => 'Authorization header missing']);
         }
+    } else if (isset($_GET['action']) && $_GET['action'] === 'share') {
+
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        if (isset($data['file_path']) && isset($data['drive']) && isset($data['share_with'])) {
+            $db = new Database();
+            $filePath = $db->escape($data['file_path']);
+            $drive = $db->escape($data['drive'] ?? 'default');
+            $decoded = $user->decodeJWT($token);
+            $username = $decoded['username'];
+            $shareWith = $db->escape($data['share_with']);
+
+            if (
+                $db->query(
+                    "INSERT INTO control_cloud_shared_files (owner, drive, file_path, share_with, shared_at)
+     VALUES ('$username', '$drive', '$filePath', '$shareWith', NOW())"
+                )
+            ) {
+                http_response_code(201);
+                echo json_encode(['message' => 'File shared successfully']);
+            } else {
+                http_response_code(500);
+                echo json_encode(['message' => 'Failed to share file']);
+            }
+
+
+        }
+
     } else {
+        // print_R('here');
+        //print_r($_POST);
         $data = json_decode(file_get_contents('php://input'), true);
 
         if (isset($data['action']) && $data['action'] === 'toggle_star') {

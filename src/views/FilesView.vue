@@ -269,7 +269,8 @@
                             <td class="py-3 pl-4 text-right">
                                 <div
                                     class="flex items-center justify-end space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button class="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full"
+                                    <button @click.stop="openShareModal(file)"
+                                        class="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full"
                                         title="Share">
                                         <svg class="w-4 h-4 text-gray-600 dark:text-gray-400" fill="currentColor"
                                             viewBox="0 0 20 20">
@@ -345,6 +346,31 @@
                 </div>
             </div>
         </div>
+        <div v-if="showShareModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+            @click.self="showShareModal = false">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md">
+                <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Share "{{ fileToShare?.name }}"
+                </h2>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Share with
+                        (username)</label>
+                    <input v-model="shareWithUsername" type="text"
+                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                        placeholder="Enter username" @keyup.enter="shareFile" />
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">The user will be able to view this file</p>
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button @click="showShareModal = false"
+                        class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
+                        Cancel
+                    </button>
+                    <button @click="shareFile"
+                        class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700">
+                        Share
+                    </button>
+                </div>
+            </div>
+        </div>
         <FilePreviewModal :show="showPreview" :fileName="selectedFile?.name || ''"
             :filePath="selectedFile?.path || selectedFile?.name || ''" :fileSize="selectedFile?.size || ''"
             @close="closePreview" />
@@ -406,6 +432,11 @@ const selectedSource = ref<string | null>(null)
 
 const selectAll = ref(false)
 const selectedFiles = ref<{ [key: number]: boolean }>({})
+
+const showShareModal = ref(false)
+const shareWithUsername = ref('')
+const fileToShare = ref<File | null>(null)
+
 interface File {
     id: number
     name: string
@@ -670,6 +701,44 @@ const moveToTrash = async (file: File) => {
     } catch (error) {
         console.error('Error moving file to trash:', error)
         alert('Failed to move file to trash')
+    }
+}
+
+const openShareModal = (file: File) => {
+    fileToShare.value = file
+    shareWithUsername.value = ''
+    showShareModal.value = true
+}
+
+const shareFile = async () => {
+    if (!shareWithUsername.value.trim()) {
+        alert('Please enter a username')
+        return
+    }
+
+    if (!fileToShare.value) {
+        return
+    }
+
+    try {
+        await axios.post('https://alex.polan.sk/control-center/cloud/files.php?action=share', {
+            file_path: fileToShare.value.path || fileToShare.value.name,
+            drive: currentDrive.value,
+            share_with: shareWithUsername.value
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
+
+        alert(`File shared successfully with ${shareWithUsername.value}`)
+        showShareModal.value = false
+        shareWithUsername.value = ''
+        fileToShare.value = null
+    } catch (error) {
+        console.error('Error sharing file:', error)
+        alert('Failed to share file')
     }
 }
 
