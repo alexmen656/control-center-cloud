@@ -51,7 +51,7 @@
                     <div class="relative">
                         <button @click="showDriveMenu = !showDriveMenu"
                             class="flex items-center space-x-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-lg">
-                            <span class="text-lg font-medium">{{
+                            <span class="text-lg font-medium font-semibold">{{
                                 currentDrive[0]?.toUpperCase() + currentDrive.slice(1) }}</span>
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"
@@ -231,13 +231,14 @@
                 <table class="min-w-full">
                     <thead>
                         <tr class="border-b border-gray-200 dark:border-gray-700">
-                            <th class="text-left py-3 pr-4 text-xs font-medium text-gray-600 dark:text-gray-400 w-8">
+                            <th
+                                class="text-left py-3 pr-4 pl-1 text-xs font-medium text-gray-600 dark:text-gray-400 w-8">
                                 <input type="checkbox" v-model="selectAll">
                             </th>
-                            <th class="text-left py-3 pr-4 text-xs font-medium text-gray-600 dark:text-gray-400">
+                            <th class="text-left pt-3 pb-2 pr-4 text-xs font-medium text-gray-600 dark:text-gray-400">
                                 <button @click="toggleSort('name')"
                                     class="flex items-center space-x-1 hover:text-gray-900 dark:hover:text-gray-200 transition-colors">
-                                    <span>Name</span>
+                                    <span class="text-sm">Name</span>
                                     <svg v-if="sortField === 'name'" class="w-4 h-4 transition-transform"
                                         :class="{ 'rotate-180': sortDirection === 'desc' }" fill="currentColor"
                                         viewBox="0 0 20 20">
@@ -246,10 +247,10 @@
                                     </svg>
                                 </button>
                             </th>
-                            <th class="text-left py-3 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">
+                            <th class="text-left pt-3 pb-2 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">
                                 <button @click="toggleSort('owner')"
                                     class="flex items-center space-x-1 hover:text-gray-900 dark:hover:text-gray-200 transition-colors">
-                                    <span>Owner</span>
+                                    <span class="text-sm">Owner</span>
                                     <svg v-if="sortField === 'owner'" class="w-4 h-4 transition-transform"
                                         :class="{ 'rotate-180': sortDirection === 'desc' }" fill="currentColor"
                                         viewBox="0 0 20 20">
@@ -258,10 +259,10 @@
                                     </svg>
                                 </button>
                             </th>
-                            <th class="text-left py-3 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">
+                            <th class="text-left pt-3 pb-2 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">
                                 <button @click="toggleSort('modified')"
                                     class="flex items-center space-x-1 hover:text-gray-900 dark:hover:text-gray-200 transition-colors">
-                                    <span>Date modified</span>
+                                    <span class="text-sm">Date modified</span>
                                     <svg v-if="sortField === 'modified'" class="w-4 h-4 transition-transform"
                                         :class="{ 'rotate-180': sortDirection === 'desc' }" fill="currentColor"
                                         viewBox="0 0 20 20">
@@ -270,10 +271,10 @@
                                     </svg>
                                 </button>
                             </th>
-                            <th class="text-left py-3 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">
+                            <th class="text-left pt-3 pb-2 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">
                                 <button @click="toggleSort('size')"
                                     class="flex items-center space-x-1 hover:text-gray-900 dark:hover:text-gray-200 transition-colors">
-                                    <span>File size</span>
+                                    <span class="text-sm">File size</span>
                                     <svg v-if="sortField === 'size'" class="w-4 h-4 transition-transform"
                                         :class="{ 'rotate-180': sortDirection === 'desc' }" fill="currentColor"
                                         viewBox="0 0 20 20">
@@ -289,9 +290,10 @@
                     <tbody>
                         <tr v-for="file in files" :key="file.id" @click="openFilePreview(file)" :data-file-id="file.id"
                             class="hover:bg-gray-50 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-700 cursor-pointer group">
-                            <td class="py-3 pr-4" @click.stop>
-                                <input type="checkbox" v-model="selectedFiles[file.id]" :checked="selectAll">
-                                <!--{{ selectAll }}-->
+                            <td class="py-3 pr-4 pl-1">
+                                <div class="h-full flex items-center">
+                                    <input type="checkbox" v-model="selectedFiles[file.id]" :checked="selectAll">
+                                </div>
                             </td>
                             <td class="py-3 pr-4">
                                 <div class="flex items-center space-x-3">
@@ -1162,8 +1164,8 @@ const { isOverDropZone } = useDropZone(dropZoneRef, {
 input[type="checkbox"] {
     appearance: none;
     -webkit-appearance: none;
-    width: 18px;
-    height: 18px;
+    width: 15px;
+    height: 15px;
     border: 2px solid #d1d5db;
     border-radius: 4px;
     background-color: white;
@@ -1184,8 +1186,8 @@ input[type="checkbox"]:checked {
 input[type="checkbox"]:checked::after {
     content: '';
     position: absolute;
-    left: 5px;
-    top: 2px;
+    left: 3.5px;
+    top: 1.25px;
     width: 4px;
     height: 8px;
     border: solid white;
