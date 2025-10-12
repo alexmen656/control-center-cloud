@@ -1,7 +1,7 @@
 <template>
     <div class="w-64 h-screen bg-white dark:bg-gray-800 flex flex-col fixed left-0 top-15 sidebar">
-        <div class="px-2 pb-4 pt-2">
-            <button
+        <div class="px-2 pb-4 pt-2 relative">
+            <button @click.stop="showNewDropdown = !showNewDropdown"
                 class="flex items-center space-x-3 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 shadow-md hover:shadow-lg border border-gray-200 dark:border-gray-600 rounded-full px-6 py-3 w-full transition-all group">
                 <svg class="w-6 h-6 text-primary-600 dark:text-primary-400" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd"
@@ -10,6 +10,32 @@
                 </svg>
                 <span class="text-sm font-medium text-gray-900 dark:text-gray-100">New</span>
             </button>
+            <div v-if="showNewDropdown" @click.stop
+                class="absolute left-2 top-full mt-2 w-60 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-2 z-50">
+                <button @click="createNewFolder"
+                    class="w-full text-left px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-3 transition-colors">
+                    <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
+                    </svg>
+                    <div>
+                        <div class="text-sm font-medium text-gray-900 dark:text-gray-100">New folder</div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400">Create a new folder</div>
+                    </div>
+                </button>
+                <button @click="triggerFileUpload"
+                    class="w-full text-left px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-3 transition-colors">
+                    <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <div>
+                        <div class="text-sm font-medium text-gray-900 dark:text-gray-100">File upload</div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400">Upload files from your device</div>
+                    </div>
+                </button>
+            </div>
+            <input ref="fileInput" type="file" multiple class="hidden" @change="handleFileUpload" />
         </div>
         <nav class="flex-1 px-2 space-y-1 overflow-y-auto">
             <router-link to="/dashboard"
@@ -68,7 +94,7 @@
                 <div class="space-y-2">
                     <div class="flex items-center justify-between text-sm">
                         <span class="text-gray-600 dark:text-gray-400">{{ storageUsed }} {{ unit }} of {{ storageTotal
-                            }}
+                        }}
                             GB
                             used</span>
                     </div>
@@ -96,7 +122,9 @@ export default {
             storageUsed: 0,
             storageUsedInGB: 0,
             storageTotal: 0,
-            unit: 'GB'
+            unit: 'GB',
+            showNewDropdown: false,
+            currentDrive: 'default'
         };
     },
     computed: {
@@ -106,6 +134,18 @@ export default {
             console.log('Storage percent:', percent);
             return percent;
         }
+    },
+    watch: {
+        '$route'() {
+            this.updateCurrentDrive();
+        }
+    },
+    mounted() {
+        this.updateCurrentDrive();
+        document.addEventListener('click', this.closeDropdown);
+    },
+    beforeUnmount() {
+        document.removeEventListener('click', this.closeDropdown);
     },
     created() {
         const token = localStorage.getItem('auth_token') || '';
@@ -141,6 +181,65 @@ export default {
             }
 
             return { value, unit: units[unitIndex] ?? '' };
+        },
+        updateCurrentDrive() {
+            const route = this.$route;
+            if (route.query.drive) {
+                this.currentDrive = route.query.drive as string;
+            } else if (route.path === '/dashboard') {
+                this.currentDrive = 'default';
+            } else {
+                this.currentDrive = 'default';
+            }
+        },
+        closeDropdown() {
+            this.showNewDropdown = false;
+        },
+        createNewFolder() {
+            const folderName = prompt('Enter folder name:');
+            if (!folderName) return;
+
+            this.$axios.post('files.php', {
+                action: 'create_folder',
+                drive: this.currentDrive,
+                folder: folderName
+            }).then(() => {
+                alert(`Folder "${folderName}" created successfully!`);
+                this.showNewDropdown = false;
+                this.$emit('refresh-files');
+            }).catch((error: any) => {
+                console.error('Error creating folder:', error);
+                alert('Failed to create folder');
+            });
+        },
+        triggerFileUpload() {
+            const fileInput = this.$refs.fileInput as HTMLInputElement;
+            fileInput.click();
+            this.showNewDropdown = false;
+        },
+        async handleFileUpload(event: Event) {
+            const input = event.target as HTMLInputElement;
+            const files = input.files;
+            if (!files || files.length === 0) return;
+
+            for (const file of Array.from(files)) {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('action', 'upload');
+                formData.append('drive', this.currentDrive);
+
+                try {
+                    await this.$axios.post('files.php', formData);
+                    console.log('File uploaded:', file.name);
+                } catch (error) {
+                    console.error('Error uploading file:', error);
+                    alert(`Failed to upload ${file.name}`);
+                }
+            }
+
+            input.value = '';
+            this.$emit('refresh-files');
+            alert('Files uploaded successfully!');
         }
     }
 }

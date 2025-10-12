@@ -267,7 +267,7 @@
                                 <span class="text-sm text-gray-600 dark:text-gray-300">{{
                                     Math.round($formatUnit(file.size.replace(' bytes', '')).value) + ' ' +
                                     $formatUnit(file.size.replace(' bytes', '')).unit
-                                }}</span>
+                                    }}</span>
                             </td>
                             <td class="py-3 pl-4 text-right">
                                 <div
@@ -329,11 +329,12 @@
                 <div v-for="file in files" :key="file.id" @click="openFilePreview(file)" :data-file-id="file.id"
                     class="group border border-gray-200 rounded-lg hover:shadow-lg hover:border-primary-300 transition-all cursor-pointer p-3">
                     <div
-                        class="aspect-square bg-gray-100 rounded-lg mb-3 flex items-center justify-center relative overflow-hidden">
+                        class="aspect-square bg-gray-100 dark:bg-gray-700 rounded-lg mb-3 flex items-center justify-center relative overflow-hidden">
                         <component :is="getFileIcon(file.type)" :color="getFileColor(file.type)" class="w-16 h-16" />
                         <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
                             @click.stop>
-                            <input type="checkbox" class="rounded border-gray-300 bg-white">
+                            <input type="checkbox"
+                                class="rounded border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-primary-600 focus:ring-primary-500">
                         </div>
                     </div>
                     <div class="text-sm font-medium text-gray-900 truncate mb-1">{{ file.name }}</div>
