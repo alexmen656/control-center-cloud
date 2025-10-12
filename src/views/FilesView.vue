@@ -15,6 +15,37 @@
 
         <div
             class="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-6 py-3 sticky top-0 z-10">
+            <div v-if="currentFolder" class="mb-3 flex items-center space-x-2 text-sm">
+                <button @click="currentFolder = ''; router.push({ path: '/dashboard', query: { drive: currentDrive } })"
+                    class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 flex items-center transition-colors">
+                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 12v3c0 1.657 3.134 3 7 3s7-1.343 7-3v-3c0 1.657-3.134 3-7 3s-7-1.343-7-3z" />
+                        <path d="M3 7v3c0 1.657 3.134 3 7 3s7-1.343 7-3V7c0 1.657-3.134 3-7 3S3 8.657 3 7z" />
+                        <path d="M17 5c0 1.657-3.134 3-7 3S3 6.657 3 5s3.134-3 7-3 7 1.343 7 3z" />
+                    </svg>
+                    {{ currentDrive[0]?.toUpperCase() + currentDrive.slice(1) }}
+                </button>
+                <template v-for="(folder, index) in currentFolder.split('/')" :key="index">
+                    <svg class="w-4 h-4 text-gray-400 dark:text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <button v-if="index < currentFolder.split('/').length - 1"
+                        @click="navigateToFolderByPath(currentFolder.split('/').slice(0, index + 1).join('/'))"
+                        class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                        {{ folder }}
+                    </button>
+                    <span v-else class="font-semibold text-gray-900 dark:text-gray-100">
+                        {{ folder }}
+                    </span>
+                </template>
+            </div>
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-4">
                     <div class="relative">
@@ -201,9 +232,7 @@
                     <thead>
                         <tr class="border-b border-gray-200 dark:border-gray-700">
                             <th class="text-left py-3 pr-4 text-xs font-medium text-gray-600 dark:text-gray-400 w-8">
-                                <input type="checkbox"
-                                    class="rounded border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-primary-600 focus:ring-primary-500"
-                                    v-model="selectAll">
+                                <input type="checkbox" v-model="selectAll">
                             </th>
                             <th class="text-left py-3 pr-4 text-xs font-medium text-gray-600 dark:text-gray-400">
                                 <button
@@ -237,9 +266,7 @@
                         <tr v-for="file in files" :key="file.id" @click="openFilePreview(file)" :data-file-id="file.id"
                             class="hover:bg-gray-50 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-700 cursor-pointer group">
                             <td class="py-3 pr-4" @click.stop>
-                                <input type="checkbox"
-                                    class="rounded border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-primary-600 focus:ring-primary-500"
-                                    v-model="selectedFiles[file.id]" :checked="selectAll">
+                                <input type="checkbox" v-model="selectedFiles[file.id]" :checked="selectAll">
                                 <!--{{ selectAll }}-->
                             </td>
                             <td class="py-3 pr-4">
@@ -265,9 +292,9 @@
                             </td>
                             <td class="py-3 px-4">
                                 <span class="text-sm text-gray-600 dark:text-gray-300">{{
-                                    Math.round($formatUnit(file.size.replace(' bytes', '')).value) + ' ' +
-                                    $formatUnit(file.size.replace(' bytes', '')).unit
-                                    }}</span>
+                                    Math.round(formatUnit(file.size.replace(' bytes', '')).value) + ' ' +
+                                    formatUnit(file.size.replace(' bytes', '')).unit
+                                }}</span>
                             </td>
                             <td class="py-3 pl-4 text-right">
                                 <div
@@ -327,7 +354,7 @@
             </div>
             <div v-else class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
                 <div v-for="file in files" :key="file.id" @click="openFilePreview(file)" :data-file-id="file.id"
-                    class="group border border-gray-200 rounded-lg hover:shadow-lg hover:border-primary-300 transition-all cursor-pointer p-3">
+                    class="group border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-lg hover:border-primary-300 transition-all cursor-pointer p-3">
                     <div
                         class="aspect-square bg-gray-100 dark:bg-gray-700 rounded-lg mb-3 flex items-center justify-center relative overflow-hidden">
                         <component :is="getFileIcon(file.type)" :color="getFileColor(file.type)" class="w-16 h-16" />
@@ -337,7 +364,8 @@
                                 class="rounded border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-primary-600 focus:ring-primary-500">
                         </div>
                     </div>
-                    <div class="text-sm font-medium text-gray-900 truncate mb-1">{{ file.name }}</div>
+                    <div class="text-sm font-medium text-gray-900 dark:text-gray-100 truncate mb-1">{{ file.name }}
+                    </div>
                     <div class="flex items-center justify-between text-xs text-gray-500">
                         <span>{{ file.modified }}</span>
                         <button class="opacity-0 group-hover:opacity-100 p-1 hover:bg-gray-200 rounded">
@@ -411,14 +439,17 @@ import { ref, defineComponent, h, computed, onMounted, watch } from 'vue'
 import { useDropZone } from '@vueuse/core'
 import axios from 'axios'
 import FilePreviewModal from '../components/FilePreviewModal.vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
+import formatUnit from '../utils/formatUnit'
 
 const viewMode = ref<'list' | 'grid'>('list')
 const showPreview = ref(false)
 const selectedFile = ref<File | null>(null)
 const route = useRoute()
+const router = useRouter()
 
 const currentDrive = ref('default')
+const currentFolder = ref('')
 const drives = ref<string[]>(['default'])
 const showDriveMenu = ref(false)
 const showNewDriveModal = ref(false)
@@ -520,6 +551,10 @@ onMounted(() => {
         currentDrive.value = route.query.drive
     }
 
+    if (route.query.folder && typeof route.query.folder === 'string') {
+        currentFolder.value = route.query.folder
+    }
+
     loadDrives()
     loadFiles()
 
@@ -538,9 +573,20 @@ onMounted(() => {
     }
 })
 
-watch(() => route.query, (newDrive) => {
-    if (newDrive.drive && typeof newDrive.drive === 'string' && newDrive.drive !== currentDrive.value) {
-        currentDrive.value = newDrive.drive
+watch(() => route.query, (newQuery) => {
+    if (newQuery.drive && typeof newQuery.drive === 'string' && newQuery.drive !== currentDrive.value) {
+        currentDrive.value = newQuery.drive
+        currentFolder.value = ''
+        loadFiles()
+    }
+
+    if (newQuery.folder !== currentFolder.value) {
+        currentFolder.value = (typeof newQuery.folder === 'string' ? newQuery.folder : '')
+        loadFiles()
+    }
+
+    if (!newQuery.folder && currentFolder.value) {
+        currentFolder.value = ''
         loadFiles()
     }
 })
@@ -579,6 +625,7 @@ const loadDrives = async () => {
 
 const selectDrive = (drive: string) => {
     currentDrive.value = drive
+    currentFolder.value = ''
     showDriveMenu.value = false
     loadFiles()
 }
@@ -618,7 +665,8 @@ const createNewDrive = async () => {
 
 const loadFiles = async () => {
     try {
-        const response = await axios.get(`https://alex.polan.sk/control-center/cloud/files.php?action=get_drive&drive=${currentDrive.value}`, {
+        const folderParam = currentFolder.value ? `&folder=${encodeURIComponent(currentFolder.value)}` : ''
+        const response = await axios.get(`https://alex.polan.sk/control-center/cloud/files.php?action=get_drive&drive=${currentDrive.value}${folderParam}`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
@@ -816,11 +864,40 @@ const applyFilters = () => {
 
 const openFilePreview = (file: File) => {
     if (file.type === 'folder') {
+        navigateToFolder(file)
         return
     }
 
     selectedFile.value = file
     showPreview.value = true
+}
+
+const navigateToFolder = (folder: File) => {
+    currentFolder.value = folder.path || folder.name
+    router.push({
+        path: '/dashboard',
+        query: { drive: currentDrive.value, folder: currentFolder.value }
+    })
+}
+
+const navigateToFolderByPath = (path: string) => {
+    currentFolder.value = path
+    router.push({
+        path: '/dashboard',
+        query: { drive: currentDrive.value, folder: path }
+    })
+}
+
+const navigateBack = () => {
+    if (currentFolder.value) {
+        const parts = currentFolder.value.split('/')
+        parts.pop()
+        currentFolder.value = parts.join('/')
+        router.push({
+            path: '/dashboard',
+            query: currentFolder.value ? { drive: currentDrive.value, folder: currentFolder.value } : { drive: currentDrive.value }
+        })
+    }
 }
 
 const closePreview = () => {
@@ -980,6 +1057,9 @@ const uploadFiles = async (droppedFiles: globalThis.File[]) => {
         formData.append('file', file)
         formData.append('action', 'upload')
         formData.append('drive', currentDrive.value)
+        if (currentFolder.value) {
+            formData.append('folder', currentFolder.value)
+        }
 
         try {
             await axios.post('https://alex.polan.sk/control-center/cloud/files.php', formData, {
@@ -1011,6 +1091,56 @@ const { isOverDropZone } = useDropZone(dropZoneRef, {
 </script>
 
 <style scoped>
+input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #d1d5db;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+input[type="checkbox"]:hover {
+    border-color: #9ca3af;
+}
+
+input[type="checkbox"]:checked {
+    background-color: #dc2626;
+    border-color: #dc2626;
+}
+
+input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 2px;
+    width: 4px;
+    height: 8px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+@media (prefers-color-scheme: dark) {
+    input[type="checkbox"] {
+        border-color: #4b5563;
+        background-color: #374151;
+    }
+
+    input[type="checkbox"]:hover {
+        border-color: #6b7280;
+    }
+
+    input[type="checkbox"]:checked {
+        background-color: #dc2626;
+        border-color: #dc2626;
+    }
+}
+
 ::-webkit-scrollbar {
     width: 8px;
     height: 8px;

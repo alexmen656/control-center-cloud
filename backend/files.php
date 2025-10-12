@@ -66,8 +66,15 @@ if ($method === 'OPTIONS') {
             ]);
         } elseif ($_GET['action'] === 'get_drive' && isset($_GET['drive'])) {
             $drive = $_GET['drive'] ?? 'default';
+            $folder = $_GET['folder'] ?? '';
             $fileManager = new FileManager(__DIR__ . '/uploads' . '/' . $username . '/' . $drive);
-            $files = $fileManager->listFilesRecursive();
+
+            if ($folder) {
+                $files = $fileManager->listFilesInFolder($folder);
+            } else {
+                $files = $fileManager->listFilesRecursive();
+            }
+
             $starredFile = __DIR__ . '/uploads/' . $username . '/starred.json';
             $starredMap = [];
 
@@ -156,10 +163,11 @@ if ($method === 'OPTIONS') {
         }
     } elseif ($method === 'POST') {
         if (isset($_POST['action']) && $_POST['action'] === 'upload' && isset($_FILES['file']) && isset($_POST['drive'])) {
-            $drive = $_GET['drive'] ?? 'default';
+            $drive = $_POST['drive'] ?? 'default';
+            $folder = $_POST['folder'] ?? '';
             $fileManager = new FileManager(__DIR__ . '/uploads' . '/' . $username . '/' . $drive);
 
-            if ($fileManager->uploadFile($_FILES['file'])) {
+            if ($fileManager->uploadFile($_FILES['file'], $folder)) {
                 http_response_code(201);
                 echo json_encode(['message' => 'File uploaded successfully']);
             } else {

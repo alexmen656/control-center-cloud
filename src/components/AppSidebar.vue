@@ -124,7 +124,8 @@ export default {
             storageTotal: 0,
             unit: 'GB',
             showNewDropdown: false,
-            currentDrive: 'default'
+            currentDrive: 'default',
+            currentFolder: ''
         };
     },
     computed: {
@@ -189,6 +190,12 @@ export default {
             } else {
                 this.currentDrive = 'default';
             }
+
+            if (route.query.folder) {
+                this.currentFolder = route.query.folder as string;
+            } else {
+                this.currentFolder = '';
+            }
         },
         closeDropdown() {
             this.showNewDropdown = false;
@@ -197,10 +204,12 @@ export default {
             const folderName = prompt('Enter folder name:');
             if (!folderName) return;
 
+            const folderPath = this.currentFolder ? `${this.currentFolder}/${folderName}` : folderName;
+
             this.$axios.post('files.php', {
                 action: 'create_folder',
                 drive: this.currentDrive,
-                folder: folderName
+                folder: folderPath
             }).then(() => {
                 alert(`Folder "${folderName}" created successfully!`);
                 this.showNewDropdown = false;
@@ -225,6 +234,9 @@ export default {
                 formData.append('file', file);
                 formData.append('action', 'upload');
                 formData.append('drive', this.currentDrive);
+                if (this.currentFolder) {
+                    formData.append('folder', this.currentFolder);
+                }
 
                 try {
                     await this.$axios.post('files.php', formData);

@@ -58,9 +58,63 @@ class FileManager
         return $files;
     }
 
-    public function uploadFile($file)
+    public function listFilesInFolder($folder)
     {
-        $targetPath = $this->baseDir . basename($file['name']);
+        $folderPath = $this->baseDir . $folder;
+        if (!is_dir($folderPath)) {
+            return [];
+        }
+
+        $files = [];
+        $id = 1;
+        $items = scandir($folderPath);
+
+        foreach ($items as $item) {
+            if ($item === '.' || $item === '..') {
+                continue;
+            }
+
+            $itemPath = $folderPath . '/' . $item;
+            $relativePath = str_replace($this->baseDir, '', $itemPath);
+
+            if (is_dir($itemPath)) {
+                $files[] = [
+                    "id" => $id++,
+                    "name" => $item,
+                    "path" => $relativePath,
+                    "type" => 'folder',
+                    "owner" => 'me',
+                    "modified" => date('d M Y', filemtime($itemPath)),
+                    "size" => '—'
+                ];
+            } else {
+                $ext = pathinfo($item, PATHINFO_EXTENSION);
+                $files[] = [
+                    "id" => $id++,
+                    "name" => $item,
+                    "path" => $relativePath,
+                    "type" => $ext ?: 'file',
+                    "owner" => 'me',
+                    "modified" => date('d M Y', filemtime($itemPath)),
+                    "size" => filesize($itemPath) . ' bytes'
+                ];
+            }
+        }
+
+        return $files;
+    }
+
+    public function uploadFile($file, $folder = '')
+    {
+        $targetDir = $this->baseDir;
+        if ($folder) {
+            $targetDir .= rtrim($folder, '/') . '/';
+            if (!is_dir($targetDir)) {
+                mkdir($targetDir, 0755, true);
+            }
+        }
+
+        $targetPath = $targetDir . basename($file['name']);
         echo 'Uploading to: ' . $targetPath . '';
         if (move_uploaded_file($file['tmp_name'], $targetPath)) {
             return true;
@@ -79,7 +133,7 @@ class FileManager
 
     public function createDirectory($dirname)
     {
-        $dirPath = $this->baseDir . basename($dirname);
+        $dirPath = $this->baseDir . $dirname;
         if (!is_dir($dirPath)) {
             return mkdir($dirPath, 0755, true);
         }
