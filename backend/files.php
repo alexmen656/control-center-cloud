@@ -24,7 +24,7 @@ if ($method === 'OPTIONS') {
     }
 
     $token = str_replace('Bearer ', '', $headers['Authorization']);
-    if ($user->verifyJWT($token)) {
+    if (!$user->verifyJWT($token)) {
         http_response_code(401);
         echo json_encode(['message' => 'Invalid token']);
         exit;
