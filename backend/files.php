@@ -181,6 +181,45 @@ if ($method === 'OPTIONS') {
         } elseif ($_GET['action'] === 'get_shared_files') {
             $db = new Database();
             echo json_encode($db->fetchAll("SELECT * FROM control_cloud_shared_files WHERE share_with = '$username'"));
+        } elseif ($_GET['action'] === 'get_shared_file_contents' && isset($_GET['drive']) && isset($_GET['file']) && isset($_GET['owner'])) {
+            $drive = $_GET['drive'];
+            $file = $_GET['file'];
+            $owner = $_GET['owner'];
+
+            $db = new Database();
+            $shared = $db->fetchAll("SELECT * FROM control_cloud_shared_files WHERE owner = '$owner' AND drive = '$drive' AND file_path = '$file' AND share_with = '$username'");
+
+            if (empty($shared)) {
+                http_response_code(403);
+                echo json_encode(['message' => 'Access denied']);
+                exit;
+            }
+
+            $fileManager = new FileManager(__DIR__ . '/uploads' . '/' . $owner . '/' . $drive);
+            $content = $fileManager->getFileContents($file);
+
+            if ($content !== false) {
+                $filePath = __DIR__ . '/uploads' . '/' . $owner . '/' . $drive . '/' . $file;
+                $mimeType = mime_content_type($filePath);
+
+                echo json_encode([
+                    'content' => base64_encode($content),
+                    'mime_type' => $mimeType,
+                    'filename' => basename($file),
+                    'size' => filesize($filePath)
+                ]);
+            } else {
+                http_response_code(404);
+                echo json_encode(['message' => 'File not found']);
+            }
+        } elseif ($_GET['action'] === 'get_starred_shared') {
+            $starredFile = __DIR__ . '/uploads/' . $username . '/starred_shared.json';
+            if (file_exists($starredFile)) {
+                $starred = json_decode(file_get_contents($starredFile), true);
+                echo json_encode(is_array($starred) ? $starred : []);
+            } else {
+                echo json_encode([]);
+            }
         } elseif ($_GET['action'] === 'get_starred') {
             $starredFile = __DIR__ . '/uploads/' . $username . '/starred.json';
             if (file_exists($starredFile)) {
@@ -308,6 +347,50 @@ if ($method === 'OPTIONS') {
                 file_put_contents($starredFile, json_encode($starred, JSON_PRETTY_PRINT));
 
                 http_response_code(200);
+                echo json_encode(['message' => 'File star toggled successfully']);
+            } elseif (isset($data['action']) && $data['action'] === 'toggle_star_shared') {
+                $owner = $data['owner'];
+                $drive = $data['drive'];
+                $filePath = $data['file_path'];
+
+                $userDir = __DIR__ . '/uploads/' . $username;
+                $starredFile = $userDir . '/starred_shared.json';
+
+                $starred = [];
+                if (file_exists($starredFile)) {
+                    $starred = json_decode(file_get_contents($starredFile), true);
+                    if (!is_array($starred))
+                        $starred = [];
+                }
+
+                $isStarred = false;
+                $keyToRemove = -1;
+                foreach ($starred as $key => $item) {
+                    if ($item['owner'] === $owner && $item['drive'] === $drive && $item['file_path'] === $filePath) {
+                        $isStarred = true;
+                        $keyToRemove = $key;
+                        break;
+                    }
+                }
+
+                if ($isStarred) {
+                    array_splice($starred, $keyToRemove, 1);
+                } else {
+                    $starred[] = [
+                        'owner' => $owner,
+                        'drive' => $drive,
+                        'file_path' => $filePath,
+                        'starred_at' => date('Y-m-d H:i:s')
+                    ];
+                }
+
+                if (!is_dir($userDir)) {
+                    mkdir($userDir, 0777, true);
+                }
+                file_put_contents($starredFile, json_encode($starred, JSON_PRETTY_PRINT));
+
+                http_response_code(200);
+                echo json_encode(['message' => 'Shared file star toggled successfully']);
                 echo json_encode([
                     'message' => $isStarred ? 'Unstarred' : 'Starred',
                     'starred' => !$isStarred

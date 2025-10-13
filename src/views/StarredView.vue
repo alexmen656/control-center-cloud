@@ -41,7 +41,7 @@
                 <p class="text-gray-500 text-sm mt-2">Star files to easily find them later</p>
             </div>
             <div v-else>
-                <div v-if="viewMode === 'list'" class="overflow-x-auto">x
+                <div v-if="viewMode === 'list'" class="overflow-x-auto">
                     <table class="min-w-full">
                         <thead>
                             <tr class="border-b border-gray-200">

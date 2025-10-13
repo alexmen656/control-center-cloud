@@ -72,14 +72,18 @@ export const filesApi = {
     return response.data
   },
 
-  getFileContents: async (drive: string, file: string) => {
-    const response = await api.get('/files.php', {
-      params: {
-        action: 'get_file_contents',
-        drive: drive,
-        file: file,
-      },
-    })
+  getFileContents: async (drive: string, file: string, owner?: string) => {
+    const params: any = {
+      action: owner ? 'get_shared_file_contents' : 'get_file_contents',
+      drive: drive,
+      file: file,
+    }
+
+    if (owner) {
+      params.owner = owner
+    }
+
+    const response = await api.get('/files.php', { params })
     return response.data
   },
 

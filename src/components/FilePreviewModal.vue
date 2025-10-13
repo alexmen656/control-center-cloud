@@ -126,10 +126,12 @@ interface Props {
     filePath: string
     fileSize: string
     drive?: string
+    owner?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
-    drive: 'default'
+    drive: 'default',
+    owner: ''
 })
 
 const emit = defineEmits<{
@@ -224,7 +226,7 @@ const loadFileContent = async () => {
     contentUrl.value = ''
 
     try {
-        const response = await filesApi.getFileContents(props.drive, props.filePath)
+        const response = await filesApi.getFileContents(props.drive, props.filePath, props.owner)
 
         if (response.error) {
             error.value = response.error
