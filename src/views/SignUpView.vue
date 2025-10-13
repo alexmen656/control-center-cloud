@@ -3,7 +3,7 @@
         class="min-h-screen bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 dark:from-gray-800 dark:via-gray-900 dark:to-black flex items-center justify-center px-4 sm:px-6 lg:px-8">
         <div class="max-w-md w-full space-y-8">
             <div class="text-center">
-                <div class="flex justify-center">
+                <!--<div class="flex justify-center">
                     <div
                         class="w-16 h-16 bg-white dark:bg-gray-800 rounded-2xl flex items-center justify-center shadow-lg">
                         <svg class="w-10 h-10 text-primary-600 dark:text-primary-400" fill="currentColor"
@@ -13,8 +13,8 @@
                             <path d="M17 5c0 1.657-3.134 3-7 3S3 6.657 3 5s3.134-3 7-3 7 1.343 7 3z" />
                         </svg>
                     </div>
-                </div>
-                <h2 class="mt-6 text-3xl font-extrabold text-white">
+                </div>-->
+                <h2 class="mt-6 text-3xl font-extrabold dark:text-white">
                     Create your account
                 </h2>
                 <p class="mt-2 text-sm text-primary-100 dark:text-gray-300">
@@ -46,7 +46,7 @@
                         </span>
                     </button>
 
-                    <button
+                    <!--   <button
                         class="w-full flex items-center justify-center px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors group">
                         <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24">
                             <path fill="#00A4EF"
@@ -56,7 +56,7 @@
                             class="text-sm font-medium text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-gray-100">
                             Sign up with Microsoft
                         </span>
-                    </button>
+                    </button>-->
                 </div>
                 <div class="relative">
                     <div class="absolute inset-0 flex items-center">
@@ -111,7 +111,7 @@
                             class="appearance-none block w-full px-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:cursor-not-allowed bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                             placeholder="••••••••" v-model="confirmPassword">
                     </div>
-                    <div class="flex items-start">
+                    <!--  <div class="flex items-start">
                         <div class="flex items-center h-5">
                             <input id="terms" name="terms" type="checkbox" v-model="termsAccepted" :disabled="isLoading"
                                 class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700">
@@ -129,9 +129,9 @@
                                     Policy</a>
                             </label>
                         </div>
-                    </div>
+                    </div>-->
                     <button type="submit" :disabled="isLoading"
-                        class="w-full flex justify-center items-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-600 dark:bg-primary-700 hover:bg-primary-700 dark:hover:bg-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors disabled:bg-primary-400 dark:disabled:bg-primary-600 disabled:cursor-not-allowed">
+                        class="w-full flex justify-center items-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium dark:text-white bg-primary-600 dark:bg-primary-700 hover:bg-primary-700 dark:hover:bg-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors disabled:bg-primary-400 dark:disabled:bg-primary-600 disabled:cursor-not-allowed">
                         <svg v-if="isLoading" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
