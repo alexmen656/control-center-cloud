@@ -13,11 +13,11 @@
                         class="px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg border border-red-300 dark:border-red-700 transition-colors">
                         Empty trash
                     </button>
-                    <div class="flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-0.5">
+                    <div class="flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-0.5">
                         <button @click="viewMode = 'list'"
-                            :class="viewMode === 'list' ? 'bg-white dark:bg-gray-700 shadow-sm' : 'hover:bg-gray-200 dark:hover:bg-gray-700'"
+                            :class="viewMode === 'list' ? 'bg-white dark:bg-gray-600 shadow-sm' : 'hover:bg-gray-200 dark:hover:bg-gray-600'"
                             class="p-1.5 rounded transition-all">
-                            <svg class="w-5 h-5 text-gray-700 dark:text-gray-300" fill="currentColor"
+                            <svg class="w-5 h-5 text-gray-700 dark:text-gray-200" fill="currentColor"
                                 viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"
                                     d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
@@ -25,9 +25,9 @@
                             </svg>
                         </button>
                         <button @click="viewMode = 'grid'"
-                            :class="viewMode === 'grid' ? 'bg-white dark:bg-gray-700 shadow-sm' : 'hover:bg-gray-200 dark:hover:bg-gray-700'"
+                            :class="viewMode === 'grid' ? 'bg-white dark:bg-gray-600 shadow-sm' : 'hover:bg-gray-200 dark:hover:bg-gray-600'"
                             class="p-1.5 rounded transition-all">
-                            <svg class="w-5 h-5 text-gray-700 dark:text-gray-300" fill="currentColor"
+                            <svg class="w-5 h-5 text-gray-700 dark:text-gray-200" fill="currentColor"
                                 viewBox="0 0 20 20">
                                 <path
                                     d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM13 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2h-2z" />
@@ -54,18 +54,27 @@
                         <thead>
                             <tr class="border-b border-gray-200 dark:border-gray-700">
                                 <th
-                                    class="text-left py-3 pr-4 text-xs font-medium text-gray-600 dark:text-gray-400 w-8">
-                                    <input type="checkbox"
-                                        class="rounded border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700">
+                                    class="text-left pt-3 pb-2 pr-4 pl-1 text-xs font-medium text-gray-600 dark:text-gray-400 w-8">
+                                    <div class="h-full flex items-center">
+                                        <input type="checkbox">
+                                    </div>
                                 </th>
-                                <th class="text-left py-3 pr-4 text-xs font-medium text-gray-600 dark:text-gray-400">
-                                    Name</th>
-                                <th class="text-left py-3 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">
-                                    Original location</th>
-                                <th class="text-left py-3 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">
-                                    Deleted</th>
-                                <th class="text-left py-3 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">
-                                    File size</th>
+                                <th
+                                    class="text-left pt-3 pb-2 pr-4 text-xs font-medium text-gray-600 dark:text-gray-400">
+                                    <span class="text-sm">Name</span>
+                                </th>
+                                <th
+                                    class="text-left pt-3 pb-2 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">
+                                    <span class="text-sm">Original location</span>
+                                </th>
+                                <th
+                                    class="text-left pt-3 pb-2 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">
+                                    <span class="text-sm">Deleted</span>
+                                </th>
+                                <th
+                                    class="text-left pt-3 pb-2 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">
+                                    <span class="text-sm">File size</span>
+                                </th>
                                 <th
                                     class="text-right py-3 pl-4 text-xs font-medium text-gray-600 dark:text-gray-400 w-16">
                                 </th>
@@ -73,10 +82,11 @@
                         </thead>
                         <tbody>
                             <tr v-for="file in trashedFiles" :key="file.id"
-                                class="hover:bg-gray-50 dark:hover:bg-gray-800 border-b border-gray-100 dark:border-gray-700 group">
-                                <td class="py-3 pr-4" @click.stop>
-                                    <input type="checkbox"
-                                        class="rounded border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700">
+                                class="hover:bg-gray-50 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-700 group">
+                                <td class="py-3 pr-4 pl-1">
+                                    <div class="h-full flex items-center" @click.stop>
+                                        <input type="checkbox">
+                                    </div>
                                 </td>
                                 <td class="py-3 pr-4">
                                     <div class="flex items-center space-x-3">
@@ -88,19 +98,19 @@
                                     </div>
                                 </td>
                                 <td class="py-3 px-4">
-                                    <span class="text-sm text-gray-600 dark:text-gray-400">{{ file.drive }}</span>
+                                    <span class="text-sm text-gray-600 dark:text-gray-300">{{ file.drive }}</span>
                                 </td>
                                 <td class="py-3 px-4">
-                                    <span class="text-sm text-gray-600 dark:text-gray-400">{{ file.deleted }}</span>
+                                    <span class="text-sm text-gray-600 dark:text-gray-300">{{ file.deleted }}</span>
                                 </td>
                                 <td class="py-3 px-4">
-                                    <span class="text-sm text-gray-600 dark:text-gray-400">{{ file.size }}</span>
+                                    <span class="text-sm text-gray-600 dark:text-gray-300">{{ file.size }}</span>
                                 </td>
                                 <td class="py-3 pl-4 text-right">
                                     <div
                                         class="flex items-center justify-end space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                         <button @click.stop="restoreFile(file)"
-                                            class="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full"
+                                            class="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full"
                                             title="Restore">
                                             <svg class="w-4 h-4 text-gray-600 dark:text-gray-400" fill="currentColor"
                                                 viewBox="0 0 20 20">
@@ -127,15 +137,14 @@
                 </div>
                 <div v-else class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
                     <div v-for="file in trashedFiles" :key="file.id"
-                        class="group border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-lg hover:border-primary-300 dark:hover:border-primary-600 transition-all p-3">
+                        class="group border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-lg hover:border-primary-300 dark:hover:border-primary-600 transition-all p-2">
                         <div
-                            class="aspect-square bg-gray-100 dark:bg-gray-800 rounded-lg mb-3 flex items-center justify-center relative overflow-hidden">
+                            class="aspect-square bg-gray-100 dark:bg-gray-700 rounded-lg mb-3 flex items-center justify-center relative overflow-hidden">
                             <component :is="getFileIcon(file.type)" :color="getFileColor(file.type)"
                                 class="w-16 h-16" />
                             <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
                                 @click.stop>
-                                <input type="checkbox"
-                                    class="rounded border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700">
+                                <input type="checkbox">
                             </div>
                         </div>
                         <div class="text-sm font-medium text-gray-900 dark:text-gray-100 truncate mb-1">{{ file.name }}
@@ -144,7 +153,7 @@
                             <span>{{ file.deleted }}</span>
                             <div class="flex space-x-1">
                                 <button @click.stop="restoreFile(file)"
-                                    class="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded opacity-0 group-hover:opacity-100"
+                                    class="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded opacity-0 group-hover:opacity-100"
                                     title="Restore">
                                     <svg class="w-4 h-4 text-gray-600 dark:text-gray-400" fill="currentColor"
                                         viewBox="0 0 20 20">
@@ -418,6 +427,56 @@ const getFileColor = (type: string) => {
 </script>
 
 <style scoped>
+input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 15px;
+    height: 15px;
+    border: 2px solid #d1d5db;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+input[type="checkbox"]:hover {
+    border-color: #9ca3af;
+}
+
+input[type="checkbox"]:checked {
+    background-color: #dc2626;
+    border-color: #dc2626;
+}
+
+input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    left: 3.5px;
+    top: 1.25px;
+    width: 4px;
+    height: 8px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+@media (prefers-color-scheme: dark) {
+    input[type="checkbox"] {
+        border-color: #4b5563;
+        background-color: #374151;
+    }
+
+    input[type="checkbox"]:hover {
+        border-color: #6b7280;
+    }
+
+    input[type="checkbox"]:checked {
+        background-color: #dc2626;
+        border-color: #dc2626;
+    }
+}
+
 ::-webkit-scrollbar {
     width: 8px;
     height: 8px;

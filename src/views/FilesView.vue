@@ -315,7 +315,7 @@
                                     </div>
                                     <span class="text-sm text-gray-600 dark:text-gray-300">{{
                                         file.owner[0]?.toUpperCase() + file.owner.slice(1)
-                                    }}</span>
+                                        }}</span>
                                 </div>
                             </td>
                             <td class="py-3 px-4">
@@ -412,7 +412,7 @@
                 </div>
             </div>
         </div>
-        <div v-if="showShareModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        <div v-if="showShareModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
             @click.self="showShareModal = false">
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md">
                 <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Share "{{ fileToShare?.name }}"
@@ -440,7 +440,7 @@
         <FilePreviewModal :show="showPreview" :fileName="selectedFile?.name || ''"
             :filePath="selectedFile?.path || selectedFile?.name || ''" :fileSize="selectedFile?.size || ''"
             @close="closePreview" />
-        <div v-if="showNewDriveModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        <div v-if="showNewDriveModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
             @click.self="showNewDriveModal = false">
             <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
                 <h2 class="text-xl font-semibold text-gray-900 mb-4">Create New Drive</h2>

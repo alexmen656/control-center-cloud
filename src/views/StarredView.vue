@@ -1,7 +1,7 @@
 <template>
     <div class="min-h-screen bg-white dark:bg-gray-900">
         <div
-            class="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-6 py-3 sticky top-0 z-10">
+            class="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-6 py-3 sticky top-0 z-10">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-4">
                     <h1 class="text-2xl font-semibold text-gray-900 dark:text-gray-100">Starred</h1>
@@ -33,70 +33,95 @@
         </div>
         <div class="px-6 py-4">
             <div v-if="starredFiles.length === 0" class="text-center py-12">
-                <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="currentColor" viewBox="0 0 20 20">
+                <svg class="w-16 h-16 text-gray-400 dark:text-gray-600 mx-auto mb-4" fill="currentColor"
+                    viewBox="0 0 20 20">
                     <path
                         d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                 </svg>
-                <p class="text-gray-600 text-lg">No starred files yet</p>
-                <p class="text-gray-500 text-sm mt-2">Star files to easily find them later</p>
+                <p class="text-gray-600 dark:text-gray-400 text-lg">No starred files yet</p>
+                <p class="text-gray-500 dark:text-gray-500 text-sm mt-2">Star files to easily find them later</p>
             </div>
             <div v-else>
                 <div v-if="viewMode === 'list'" class="overflow-x-auto">
                     <table class="min-w-full">
                         <thead>
-                            <tr class="border-b border-gray-200">
-                                <th class="text-left py-3 pr-4 text-xs font-medium text-gray-600 w-8">
-                                    <input type="checkbox" class="rounded border-gray-300">
+                            <tr class="border-b border-gray-200 dark:border-gray-700">
+                                <th
+                                    class="text-left pt-3 pb-2 pr-4 pl-1 text-xs font-medium text-gray-600 dark:text-gray-400 w-8">
+                                    <div class="h-full flex items-center">
+                                        <input type="checkbox">
+                                    </div>
                                 </th>
-                                <th class="text-left py-3 pr-4 text-xs font-medium text-gray-600">Name</th>
-                                <th class="text-left py-3 px-4 text-xs font-medium text-gray-600">Owner</th>
-                                <th class="text-left py-3 px-4 text-xs font-medium text-gray-600">Date modified</th>
-                                <th class="text-left py-3 px-4 text-xs font-medium text-gray-600">File size</th>
-                                <th class="text-right py-3 pl-4 text-xs font-medium text-gray-600 w-16"></th>
+                                <th
+                                    class="text-left pt-3 pb-2 pr-4 text-xs font-medium text-gray-600 dark:text-gray-400">
+                                    <span class="text-sm">Name</span>
+                                </th>
+                                <th
+                                    class="text-left pt-3 pb-2 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">
+                                    <span class="text-sm">Owner</span>
+                                </th>
+                                <th
+                                    class="text-left pt-3 pb-2 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">
+                                    <span class="text-sm">Date modified</span>
+                                </th>
+                                <th
+                                    class="text-left pt-3 pb-2 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">
+                                    <span class="text-sm">File size</span>
+                                </th>
+                                <th
+                                    class="text-right py-3 pl-4 text-xs font-medium text-gray-600 dark:text-gray-400 w-16">
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="file in starredFiles" :key="file.id" @click="openFilePreview(file)"
-                                class="hover:bg-gray-50 border-b border-gray-100 cursor-pointer group">
-                                <td class="py-3 pr-4" @click.stop>
-                                    <input type="checkbox" class="rounded border-gray-300">
+                                class="hover:bg-gray-50 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-700 cursor-pointer group">
+                                <td class="py-3 pr-4 pl-1">
+                                    <div class="h-full flex items-center" @click.stop>
+                                        <input type="checkbox">
+                                    </div>
                                 </td>
                                 <td class="py-3 pr-4">
                                     <div class="flex items-center space-x-3">
                                         <div class="flex-shrink-0">
                                             <component :is="getFileIcon(file.type)" :color="getFileColor(file.type)" />
                                         </div>
-                                        <span class="text-sm text-gray-900 font-medium truncate">{{ file.name }}</span>
+                                        <span class="text-sm text-gray-900 dark:text-gray-100 font-medium truncate">{{
+                                            file.name }}</span>
                                     </div>
                                 </td>
                                 <td class="py-3 px-4">
                                     <div class="flex items-center space-x-2">
                                         <div
-                                            class="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center text-white text-xs">
+                                            class="w-6 h-6 rounded-full bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center text-white font-semibold text-xs">
                                             {{ file.owner.charAt(0).toUpperCase() }}
                                         </div>
-                                        <span class="text-sm text-gray-600">{{ file.owner }}</span>
+                                        <span class="text-sm text-gray-600 dark:text-gray-300">{{
+                                            file.owner[0]?.toUpperCase() + file.owner.slice(1) }}</span>
                                     </div>
                                 </td>
                                 <td class="py-3 px-4">
-                                    <span class="text-sm text-gray-600">{{ file.modified }}</span>
+                                    <span class="text-sm text-gray-600 dark:text-gray-300">{{ file.modified }}</span>
                                 </td>
                                 <td class="py-3 px-4">
-                                    <span class="text-sm text-gray-600">{{ file.size }}</span>
+                                    <span class="text-sm text-gray-600 dark:text-gray-300">{{ file.size }}</span>
                                 </td>
                                 <td class="py-3 pl-4 text-right">
                                     <div
                                         class="flex items-center justify-end space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                         <button @click.stop="downloadFile(file)"
-                                            class="p-1.5 hover:bg-gray-200 rounded-full" title="Download">
-                                            <svg class="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                                            class="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full"
+                                            title="Download">
+                                            <svg class="w-4 h-4 text-gray-600 dark:text-gray-400" fill="currentColor"
+                                                viewBox="0 0 20 20">
                                                 <path fill-rule="evenodd"
                                                     d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
                                                     clip-rule="evenodd" />
                                             </svg>
                                         </button>
                                         <button @click.stop="toggleStar(file)"
-                                            class="p-1.5 hover:bg-gray-200 rounded-full" title="Unstar">
+                                            class="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full"
+                                            title="Unstar">
                                             <svg class="w-4 h-4 text-yellow-500" fill="currentColor"
                                                 viewBox="0 0 20 20">
                                                 <path
@@ -111,13 +136,14 @@
                 </div>
                 <div v-else class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
                     <div v-for="file in starredFiles" :key="file.id" @click="openFilePreview(file)"
-                        class="group border border-gray-200 rounded-lg hover:shadow-lg hover:border-primary-300 transition-all cursor-pointer p-3">
+                        class="group border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-lg hover:border-primary-300 dark:hover:border-primary-600 transition-all cursor-pointer p-2">
                         <div
-                            class="aspect-square bg-gray-100 rounded-lg mb-3 flex items-center justify-center relative overflow-hidden">
+                            class="aspect-square bg-gray-100 dark:bg-gray-700 rounded-lg mb-3 flex items-center justify-center relative overflow-hidden">
                             <component :is="getFileIcon(file.type)" :color="getFileColor(file.type)"
                                 class="w-16 h-16" />
                             <div class="absolute top-2 right-2">
-                                <button @click.stop="toggleStar(file)" class="p-1 hover:bg-gray-200 rounded">
+                                <button @click.stop="toggleStar(file)"
+                                    class="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded">
                                     <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
                                         <path
                                             d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
@@ -125,8 +151,9 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="text-sm font-medium text-gray-900 truncate mb-1">{{ file.name }}</div>
-                        <div class="flex items-center justify-between text-xs text-gray-500">
+                        <div class="text-sm font-medium text-gray-900 dark:text-gray-100 truncate mb-1">{{ file.name }}
+                        </div>
+                        <div class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
                             <span>{{ file.modified }}</span>
                         </div>
                     </div>
@@ -383,6 +410,56 @@ const getFileColor = (type: string) => {
 </script>
 
 <style scoped>
+input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 15px;
+    height: 15px;
+    border: 2px solid #d1d5db;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+input[type="checkbox"]:hover {
+    border-color: #9ca3af;
+}
+
+input[type="checkbox"]:checked {
+    background-color: #dc2626;
+    border-color: #dc2626;
+}
+
+input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    left: 3.5px;
+    top: 1.25px;
+    width: 4px;
+    height: 8px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+@media (prefers-color-scheme: dark) {
+    input[type="checkbox"] {
+        border-color: #4b5563;
+        background-color: #374151;
+    }
+
+    input[type="checkbox"]:hover {
+        border-color: #6b7280;
+    }
+
+    input[type="checkbox"]:checked {
+        background-color: #dc2626;
+        border-color: #dc2626;
+    }
+}
+
 ::-webkit-scrollbar {
     width: 8px;
     height: 8px;

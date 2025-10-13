@@ -75,6 +75,20 @@ if ($method === 'OPTIONS') {
                 $files = $fileManager->listFilesRecursive();
             }
 
+            $trashFile = __DIR__ . '/uploads/' . $username . '/trash.json';
+            $trashedMap = [];
+
+            if (file_exists($trashFile)) {
+                $trash = json_decode(file_get_contents($trashFile), true);
+                if (is_array($trash)) {
+                    foreach ($trash as $item) {
+                        if ($item['drive'] === $drive) {
+                            $trashedMap[$item['path']] = true;
+                        }
+                    }
+                }
+            }
+
             $starredFile = __DIR__ . '/uploads/' . $username . '/starred.json';
             $starredMap = [];
 
@@ -89,12 +103,19 @@ if ($method === 'OPTIONS') {
                 }
             }
 
-            foreach ($files as &$file) {
+            $filteredFiles = [];
+            foreach ($files as $file) {
                 $filePath = $file['path'] ?? $file['name'];
+
+                if (isset($trashedMap[$filePath])) {
+                    continue;
+                }
+
                 $file['starred'] = isset($starredMap[$filePath]);
+                $filteredFiles[] = $file;
             }
 
-            echo json_encode($files);
+            echo json_encode($filteredFiles);
         } elseif ($_GET['action'] === 'get_file_contents' && isset($_GET['drive']) && isset($_GET['file'])) {
             $drive = $_GET['drive'] ?? 'default';
             $file = $_GET['file'];
@@ -493,14 +514,40 @@ if ($method === 'OPTIONS') {
                 }
 
                 $keyToRemove = -1;
+                $itemToDelete = null;
                 foreach ($trash as $key => $item) {
                     if ($item['id'] == $fileId) {
                         $keyToRemove = $key;
+                        $itemToDelete = $item;
                         break;
                     }
                 }
 
-                if ($keyToRemove !== -1) {
+                if ($keyToRemove !== -1 && $itemToDelete !== null) {
+                    $fullPath = __DIR__ . '/uploads/' . $username . '/' . $itemToDelete['drive'] . '/' . $itemToDelete['path'];
+
+                    if (file_exists($fullPath)) {
+                        if (is_dir($fullPath)) {
+                            function deleteDirectoryPermanently($dir)
+                            {
+                                if (!file_exists($dir))
+                                    return true;
+                                if (!is_dir($dir))
+                                    return unlink($dir);
+                                foreach (scandir($dir) as $item) {
+                                    if ($item == '.' || $item == '..')
+                                        continue;
+                                    if (!deleteDirectoryPermanently($dir . DIRECTORY_SEPARATOR . $item))
+                                        return false;
+                                }
+                                return rmdir($dir);
+                            }
+                            deleteDirectoryPermanently($fullPath);
+                        } else {
+                            unlink($fullPath);
+                        }
+                    }
+
                     array_splice($trash, $keyToRemove, 1);
                     file_put_contents($trashFile, json_encode($trash, JSON_PRETTY_PRINT));
 
@@ -514,7 +561,39 @@ if ($method === 'OPTIONS') {
                 $userDir = __DIR__ . '/uploads/' . $username;
                 $trashFile = $userDir . '/trash.json';
 
-                if (file_exists($trashFile)) {
+                if (file_exists(filename: $trashFile)) {
+                    $trash = json_decode(file_get_contents($trashFile), true);
+
+                    if (is_array($trash)) {
+                        foreach ($trash as $item) {
+                            $drive = $item['drive'];
+                            $filePath = $item['path'];
+                            $fullPath = __DIR__ . '/uploads/' . $username . '/' . $drive . '/' . $filePath;
+
+                            if (file_exists($fullPath)) {
+                                if (is_dir($fullPath)) {
+                                    function deleteDirectory($dir)
+                                    {
+                                        if (!file_exists($dir))
+                                            return true;
+                                        if (!is_dir($dir))
+                                            return unlink($dir);
+                                        foreach (scandir($dir) as $item) {
+                                            if ($item == '.' || $item == '..')
+                                                continue;
+                                            if (!deleteDirectory($dir . DIRECTORY_SEPARATOR . $item))
+                                                return false;
+                                        }
+                                        return rmdir($dir);
+                                    }
+                                    deleteDirectory($fullPath);
+                                } else {
+                                    unlink($fullPath);
+                                }
+                            }
+                        }
+                    }
+
                     file_put_contents($trashFile, json_encode([], JSON_PRETTY_PRINT));
                 }
 
