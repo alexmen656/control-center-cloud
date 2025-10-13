@@ -1,6 +1,13 @@
 # Control Cloud
 
-This template should help get you started developing with Vue 3 in Vite.
+What is Control Cloud?
+Control Cloud allows you to store files online and access them on any device basically something like iCloud or Google Drive
+
+Features:
+Sharing: you can share files with any other Control Cloud users
+Multiple Drives: Every user can have up to 3 different drives which act similar like to have 3 different spaces
+Google Login/sign up: you can login fast with google
+Simple/Modern design inspired by Google Drive
 
 ## Recommended IDE Setup
 
