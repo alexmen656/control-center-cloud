@@ -48,8 +48,8 @@
             </div>
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-4">
-                    <div class="relative">
-                        <button @click="showDriveMenu = !showDriveMenu"
+                    <div class="relative" data-dropdown="drive">
+                        <button @click="toggleDropdown('drive')"
                             class="flex items-center space-x-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-lg">
                             <span class="text-lg font-medium font-semibold">{{
                                 currentDrive[0]?.toUpperCase() + currentDrive.slice(1) }}</span>
@@ -91,8 +91,8 @@
                         </div>
                     </div>
                     <div class="flex items-center space-x-2">
-                        <div class="relative">
-                            <button @click="showTypeFilter = !showTypeFilter"
+                        <div class="relative" data-dropdown="type">
+                            <button @click="toggleDropdown('type')"
                                 class="flex items-center space-x-1 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600">
                                 <span>Type{{((selectedType != null) ? ': ' + fileTypes.find(fT => fT.value ==
                                     selectedType)?.label : '')}}</span>
@@ -116,8 +116,8 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="relative">
-                            <button @click="showPeopleFilter = !showPeopleFilter"
+                        <div class="relative" data-dropdown="people">
+                            <button @click="toggleDropdown('people')"
                                 class="flex items-center space-x-1 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600">
                                 <span>People{{ ((selectedOwner != null) ? ': ' + selectedOwner : '') }}</span>
                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -140,8 +140,8 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="relative">
-                            <button @click="showModifiedFilter = !showModifiedFilter"
+                        <div class="relative" data-dropdown="modified">
+                            <button @click="toggleDropdown('modified')"
                                 class="flex items-center space-x-1 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600">
                                 <span>Modified{{((selectedModified != null) ? ': ' + modifiedPeriods.find(mP =>
                                     mP.value === selectedModified)?.label : '')}}</span>
@@ -166,8 +166,8 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="relative">
-                            <button @click="showSourceFilter = !showSourceFilter"
+                        <div class="relative" data-dropdown="source">
+                            <button @click="toggleDropdown('source')"
                                 class="flex items-center space-x-1 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600">
                                 <span>Source{{((selectedSource != null) ? ': ' + sources.find(s => s.value ===
                                     selectedSource)?.label : '')}}</span>
@@ -315,7 +315,7 @@
                                     </div>
                                     <span class="text-sm text-gray-600 dark:text-gray-300">{{
                                         file.owner[0]?.toUpperCase() + file.owner.slice(1)
-                                    }}</span>
+                                        }}</span>
                                 </div>
                             </td>
                             <td class="py-3 px-4">
@@ -325,7 +325,7 @@
                                 <span class="text-sm text-gray-600 dark:text-gray-300">{{
                                     Math.round(formatUnit(file.size.replace(' bytes', '')).value) + ' ' +
                                     formatUnit(file.size.replace(' bytes', '')).unit
-                                    }}</span>
+                                }}</span>
                             </td>
                             <td class="py-3 pl-4 text-right">
                                 <div
@@ -574,13 +574,54 @@ const closeAllDropdowns = () => {
     showSourceFilter.value = false
 }
 
+const toggleDropdown = (dropdownName: 'drive' | 'type' | 'people' | 'modified' | 'source') => {
+    // Close all dropdowns first
+    const previousState = {
+        drive: showDriveMenu.value,
+        type: showTypeFilter.value,
+        people: showPeopleFilter.value,
+        modified: showModifiedFilter.value,
+        source: showSourceFilter.value
+    }
+
+    closeAllDropdowns()
+
+    switch (dropdownName) {
+        case 'drive':
+            showDriveMenu.value = !previousState.drive
+            break
+        case 'type':
+            showTypeFilter.value = !previousState.type
+            break
+        case 'people':
+            showPeopleFilter.value = !previousState.people
+            break
+        case 'modified':
+            showModifiedFilter.value = !previousState.modified
+            break
+        case 'source':
+            showSourceFilter.value = !previousState.source
+            break
+    }
+}
+
 onMounted(() => {
-    document.addEventListener('click', (e) => {
+    const handleClickOutside = (e: MouseEvent) => {
         const target = e.target as HTMLElement
-        if (!target.closest('.relative')) {
-            closeAllDropdowns()
-        }
-    })
+        const isInsideDriveDropdown = target.closest('[data-dropdown="drive"]')
+        const isInsideTypeDropdown = target.closest('[data-dropdown="type"]')
+        const isInsidePeopleDropdown = target.closest('[data-dropdown="people"]')
+        const isInsideModifiedDropdown = target.closest('[data-dropdown="modified"]')
+        const isInsideSourceDropdown = target.closest('[data-dropdown="source"]')
+
+        if (!isInsideDriveDropdown) showDriveMenu.value = false
+        if (!isInsideTypeDropdown) showTypeFilter.value = false
+        if (!isInsidePeopleDropdown) showPeopleFilter.value = false
+        if (!isInsideModifiedDropdown) showModifiedFilter.value = false
+        if (!isInsideSourceDropdown) showSourceFilter.value = false
+    }
+
+    document.addEventListener('click', handleClickOutside)
 
     if (route.query.drive && typeof route.query.drive === 'string') {
         currentDrive.value = route.query.drive

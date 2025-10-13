@@ -222,34 +222,65 @@ if ($method === 'OPTIONS') {
             }
         } elseif ($_GET['action'] === 'get_starred') {
             $starredFile = __DIR__ . '/uploads/' . $username . '/starred.json';
+            $starredSharedFile = __DIR__ . '/uploads/' . $username . '/starred_shared.json';
+            $starredFiles = [];
+
             if (file_exists($starredFile)) {
                 $starred = json_decode(file_get_contents($starredFile), true);
-                $starredFiles = [];
 
-                foreach ($starred as $item) {
-                    $drive = $item['drive'];
-                    $filePath = $item['file_path'];
-                    $fullPath = __DIR__ . '/uploads/' . $username . '/' . $drive . '/' . $filePath;
+                if (is_array($starred)) {
+                    foreach ($starred as $item) {
+                        $drive = $item['drive'];
+                        $filePath = $item['file_path'];
+                        $owner = $username;
+                        $fullPath = __DIR__ . '/uploads/' . $owner . '/' . $drive . '/' . $filePath;
 
-                    if (file_exists($fullPath)) {
-                        $fileManager = new FileManager(__DIR__ . '/uploads/' . $username . '/' . $drive);
-                        $files = $fileManager->listFilesRecursive();
+                        if (file_exists($fullPath)) {
+                            $fileManager = new FileManager(__DIR__ . '/uploads/' . $owner . '/' . $drive);
+                            $files = $fileManager->listFilesRecursive();
 
-                        foreach ($files as $file) {
-                            if (($file['path'] ?? $file['name']) === $filePath) {
-                                $file['drive'] = $drive;
-                                $file['starred'] = true;
-                                $starredFiles[] = $file;
-                                break;
+                            foreach ($files as $file) {
+                                if (($file['path'] ?? $file['name']) === $filePath) {
+                                    $file['drive'] = $drive;
+                                    $file['starred'] = true;
+                                    $starredFiles[] = $file;
+                                    break;
+                                }
                             }
                         }
                     }
                 }
-
-                echo json_encode($starredFiles);
-            } else {
-                echo json_encode([]);
             }
+
+            if (file_exists($starredSharedFile)) {
+                $starredShared = json_decode(file_get_contents($starredSharedFile), true);
+
+                if (is_array($starredShared)) {
+                    foreach ($starredShared as $item) {
+                        $owner = $item['owner'];
+                        $drive = $item['drive'];
+                        $filePath = $item['file_path'];
+                        $fullPath = __DIR__ . '/uploads/' . $owner . '/' . $drive . '/' . $filePath;
+
+                        if (file_exists($fullPath)) {
+                            $fileManager = new FileManager(__DIR__ . '/uploads/' . $owner . '/' . $drive);
+                            $files = $fileManager->listFilesRecursive();
+
+                            foreach ($files as $file) {
+                                if (($file['path'] ?? $file['name']) === $filePath) {
+                                    $file['drive'] = $drive;
+                                    $file['starred'] = true;
+                                    $file['owner'] = $owner;
+                                    $starredFiles[] = $file;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            echo json_encode($starredFiles);
         } elseif ($_GET['action'] === 'get_trash') {
             $trashFile = __DIR__ . '/uploads/' . $username . '/trash.json';
             if (file_exists($trashFile)) {

@@ -37,8 +37,8 @@
                     <p class="text-gray-500 dark:text-gray-400">No recent files found</p>
                 </div>
                 <div v-else class="p-3 space-y-2">
-                    <div v-for="file in filteredFiles" :key="file.path + file.drive"
-                        class="flex items-center p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg cursor-pointer transition-colors">
+                    <div v-for="(file, index) in filteredFiles" :key="file.path + file.drive" @click="openFile(file)"
+                        class="flex items-center p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg cursor-pointer transition-colors group">
                         <div :class="getFileIconClass(file.type)"
                             class="w-10 h-10 rounded-lg flex items-center justify-center mr-3">
                             <svg class="w-5 h-5" :class="getFileIconColor(file.type)" fill="currentColor"
@@ -54,16 +54,47 @@
                                 {{ formatFileSize(file.size) }} • {{ getTimeAgo(file.accessed_at) }} • {{ file.drive }}
                             </p>
                         </div>
-                        <button class="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                <path
-                                    d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-                            </svg>
-                        </button>
+                        <div class="relative" @click.stop :data-dropdown="'actions-' + index">
+                            <button @click="toggleDropdown(index)"
+                                class="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors opacity-0 group-hover:opacity-100">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                                </svg>
+                            </button>
+                            <div v-if="openDropdownIndex === index"
+                                class="absolute right-0 top-full mt-1 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-2 z-50">
+                                <button @click="downloadFile(file)"
+                                    class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-3 transition-colors">
+                                    <svg class="w-4 h-4 text-gray-600 dark:text-gray-400" fill="currentColor"
+                                        viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    <span class="text-sm text-gray-900 dark:text-gray-100">Download</span>
+                                </button>
+                                <button @click="toggleStar(file)"
+                                    class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-3 transition-colors">
+                                    <svg class="w-4 h-4"
+                                        :class="file.starred ? 'text-yellow-500' : 'text-gray-600 dark:text-gray-400'"
+                                        fill="currentColor" viewBox="0 0 20 20">
+                                        <path
+                                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                    <span class="text-sm text-gray-900 dark:text-gray-100">{{ file.starred ? 'Unstar' :
+                                        'Star' }}</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <FilePreviewModal :show="showPreview" :file-name="selectedFile?.name || ''"
+            :file-path="selectedFile?.path || ''" :file-size="selectedFile?.size.toString() || ''"
+            :drive="selectedFile?.drive" :owner="selectedFile?.owner" @close="closePreview" />
     </div>
 </template>
 
@@ -71,6 +102,14 @@
 import { ref, computed, onMounted } from 'vue'
 import { filesApi } from '@/services/api'
 import formatUnit from '@/utils/formatUnit'
+import axios from 'axios'
+import { useRouter } from 'vue-router'
+import FilePreviewModal from '@/components/FilePreviewModal.vue'
+
+const router = useRouter()
+const token = localStorage.getItem('auth_token') || ''
+const showPreview = ref(false)
+const selectedFile = ref<RecentFile | null>(null)
 
 interface RecentFile {
     name: string
@@ -80,11 +119,14 @@ interface RecentFile {
     drive: string
     accessed_at: string
     modified: string
+    starred?: boolean
+    owner?: string
 }
 
 const recentFiles = ref<RecentFile[]>([])
 const loading = ref(true)
 const filterPeriod = ref<'today' | 'week' | 'month'>('today')
+const openDropdownIndex = ref<number | null>(null)
 
 const loadRecentFiles = async () => {
     try {
@@ -155,7 +197,101 @@ const getFileIconColor = (type: string) => {
     return 'text-blue-600 dark:text-blue-400'
 }
 
+const toggleDropdown = (index: number) => {
+    if (openDropdownIndex.value === index) {
+        openDropdownIndex.value = null
+    } else {
+        openDropdownIndex.value = index
+    }
+}
+
+const openFile = (file: RecentFile) => {
+    if (file.type === 'folder') {
+        router.push({
+            path: '/dashboard',
+            query: { drive: file.drive, folder: file.path }
+        })
+    } else {
+        selectedFile.value = file
+        showPreview.value = true
+    }
+}
+
+const closePreview = () => {
+    showPreview.value = false
+    selectedFile.value = null
+}
+
+const downloadFile = async (file: RecentFile) => {
+    try {
+        const response = await axios.get('https://alex.polan.sk/control-center/cloud/files.php', {
+            params: {
+                action: 'get_file_contents',
+                drive: file.drive,
+                file: file.path,
+                owner: file.owner || localStorage.getItem('username')
+            },
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+
+        const { content, mime_type, filename } = response.data
+        const byteCharacters = atob(content)
+        const byteNumbers = new Array(byteCharacters.length)
+        for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i)
+        }
+        const byteArray = new Uint8Array(byteNumbers)
+        const blob = new Blob([byteArray], { type: mime_type })
+
+        const url = window.URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = filename
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        window.URL.revokeObjectURL(url)
+
+        openDropdownIndex.value = null
+    } catch (error) {
+        console.error('Error downloading file:', error)
+        alert('Failed to download file')
+    }
+}
+
+const toggleStar = async (file: RecentFile) => {
+    try {
+        await axios.post('https://alex.polan.sk/control-center/cloud/files.php', {
+            action: 'toggle_star',
+            drive: file.drive,
+            file_path: file.path
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
+
+        file.starred = !file.starred
+        openDropdownIndex.value = null
+    } catch (error) {
+        console.error('Error toggling star:', error)
+        alert('Failed to update star status')
+    }
+}
+
 onMounted(() => {
     loadRecentFiles()
+
+    const handleClickOutside = (e: MouseEvent) => {
+        const target = e.target as HTMLElement
+        if (!target.closest('[data-dropdown^="actions-"]')) {
+            openDropdownIndex.value = null
+        }
+    }
+
+    document.addEventListener('click', handleClickOutside)
 })
 </script>
