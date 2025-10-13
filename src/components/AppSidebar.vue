@@ -88,14 +88,14 @@
                 <span class="text-sm font-medium">Trash</span>
             </router-link>
             <div class="border-t border-gray-200 dark:border-gray-700 my-2"></div>
-            <div class="px-4 py-2">
+            <div class="px-4 pt-2">
                 <span class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Storage</span>
             </div>
             <div class="px-4 py-2">
                 <div class="space-y-2">
                     <div class="flex items-center justify-between text-sm">
                         <span class="text-gray-600 dark:text-gray-400">{{ storageUsed }} {{ unit }} of {{ storageTotal
-                        }}
+                            }}
                             GB
                             used</span>
                     </div>
@@ -106,10 +106,10 @@
                         </div>
 
                     </div>
-                    <button
+                    <!-- <button
                         class="text-xs text-gray-600 dark:text-gray-400 hover:text-primary-700 dark:hover:text-primary-400 font-medium hover:underline">
                         Buy storage
-                    </button>
+                    </button>-->
                 </div>
             </div>
         </nav>

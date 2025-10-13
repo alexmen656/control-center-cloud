@@ -3,9 +3,10 @@
         <div
             class="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-6 py-3 sticky top-0 z-10">
             <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-4">
+                <div class="flex items-end space-x-4">
                     <h1 class="text-2xl font-semibold text-gray-900 dark:text-gray-100">Trash</h1>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Files in trash will be automatically deleted
+                    <p class="text-sm text-gray-500 dark:text-gray-400 pb-1">Files in trash will be automatically
+                        deleted
                         after 30 days</p>
                 </div>
                 <div class="flex items-center space-x-2">
