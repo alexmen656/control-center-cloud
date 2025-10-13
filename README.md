@@ -8,6 +8,7 @@ Sharing: you can share files with any other Control Cloud users
 Multiple Drives: Every user can have up to 3 different drives which act similar like to have 3 different spaces
 Google Login/sign up: you can login fast with google
 Simple/Modern design inspired by Google Drive
+Magical file upload you can drag and drop your files to the dashboard at any time and they will upload
 
 ## Recommended IDE Setup
 
