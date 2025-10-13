@@ -1,4 +1,4 @@
-# 🌥️ Control Cloud
+# Control Cloud
 
 <div align="center">
 
@@ -54,7 +54,6 @@ Control Cloud is a modern cloud storage platform that allows you to store files 
 
 - **Google OAuth** - Fast login and signup with Google account
 - **Secure Authentication** - JWT-based authentication system
-- **Session Management** - Persistent login sessions
 
 ---
 
