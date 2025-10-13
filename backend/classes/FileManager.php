@@ -17,7 +17,7 @@ class FileManager
         return array_values($files);
     }
 
-    public function listFilesRecursive()
+    /*public function listFilesRecursive()
     {
         //echo "Base Dir: " . $this->baseDir . "\n"; // Debug line to check base directory
         $rii = new RecursiveIteratorIterator(
@@ -56,7 +56,54 @@ class FileManager
             }
         }
         return $files;
+    }*/
+
+    public function listFilesRecursive()
+    {
+        $dir = rtrim($this->baseDir, '/');
+        $files = [];
+        $id = 1;
+
+        if (!is_dir($dir)) {
+            return [];
+        }
+
+        $items = scandir($dir);
+
+        foreach ($items as $item) {
+            if ($item === '.' || $item === '..')
+                continue;
+
+            $path = $dir . '/' . $item;
+            $relativePath = str_replace($this->baseDir, '', $path);
+
+            if (is_dir($path)) {
+                $files[] = [
+                    "id" => $id++,
+                    "name" => $item,
+                    "path" => $relativePath,
+                    "type" => 'folder',
+                    "owner" => 'me',
+                    "modified" => date('d M Y', filemtime($path)),
+                    "size" => '—'
+                ];
+            } else {
+                $ext = pathinfo($item, PATHINFO_EXTENSION);
+                $files[] = [
+                    "id" => $id++,
+                    "name" => $item,
+                    "path" => $relativePath,
+                    "type" => $ext ?: 'file',
+                    "owner" => 'me',
+                    "modified" => date('d M Y', filemtime($path)),
+                    "size" => filesize($path) . ' bytes'
+                ];
+            }
+        }
+
+        return $files;
     }
+
 
     public function listFilesInFolder($folder)
     {
