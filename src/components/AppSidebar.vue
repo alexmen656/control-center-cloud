@@ -95,7 +95,7 @@
                 <div class="space-y-2">
                     <div class="flex items-center justify-between text-sm">
                         <span class="text-gray-600 dark:text-gray-400">{{ storageUsed }} {{ unit }} of {{ storageTotal
-                            }}
+                        }}
                             GB
                             used</span>
                     </div>
@@ -214,7 +214,7 @@ export default {
             }).then(() => {
                 alert(`Folder "${folderName}" created successfully!`);
                 this.showNewDropdown = false;
-                this.$emit('refresh-files');
+                window.dispatchEvent(new CustomEvent('refresh-files'));
             }).catch((error: any) => {
                 console.error('Error creating folder:', error);
                 alert('Failed to create folder');
@@ -249,7 +249,8 @@ export default {
             }
 
             input.value = '';
-            this.$emit('refresh-files');
+
+            window.dispatchEvent(new CustomEvent('refresh-files'));
             alert('Files uploaded successfully!');
         }
     }

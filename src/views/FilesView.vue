@@ -327,7 +327,7 @@
                                         '')).value) + ' '
                                         +
                                         formatUnit(file.size.replace(' bytes', '')).unit : '----'
-                                    }}</span>
+                                }}</span>
                             </td>
                             <td class="py-3 pl-4 text-right">
                                 <div
@@ -469,7 +469,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineComponent, h, computed, onMounted, watch } from 'vue'
+import { ref, defineComponent, h, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useDropZone } from '@vueuse/core'
 import axios from 'axios'
 import FilePreviewModal from '../components/FilePreviewModal.vue'
@@ -577,7 +577,6 @@ const closeAllDropdowns = () => {
 }
 
 const toggleDropdown = (dropdownName: 'drive' | 'type' | 'people' | 'modified' | 'source') => {
-    // Close all dropdowns first
     const previousState = {
         drive: showDriveMenu.value,
         type: showTypeFilter.value,
@@ -607,23 +606,28 @@ const toggleDropdown = (dropdownName: 'drive' | 'type' | 'people' | 'modified' |
     }
 }
 
+const handleClickOutside = (e: MouseEvent) => {
+    const target = e.target as HTMLElement
+    const isInsideDriveDropdown = target.closest('[data-dropdown="drive"]')
+    const isInsideTypeDropdown = target.closest('[data-dropdown="type"]')
+    const isInsidePeopleDropdown = target.closest('[data-dropdown="people"]')
+    const isInsideModifiedDropdown = target.closest('[data-dropdown="modified"]')
+    const isInsideSourceDropdown = target.closest('[data-dropdown="source"]')
+
+    if (!isInsideDriveDropdown) showDriveMenu.value = false
+    if (!isInsideTypeDropdown) showTypeFilter.value = false
+    if (!isInsidePeopleDropdown) showPeopleFilter.value = false
+    if (!isInsideModifiedDropdown) showModifiedFilter.value = false
+    if (!isInsideSourceDropdown) showSourceFilter.value = false
+}
+
+const handleRefreshFiles = () => {
+    loadFiles()
+}
+
 onMounted(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-        const target = e.target as HTMLElement
-        const isInsideDriveDropdown = target.closest('[data-dropdown="drive"]')
-        const isInsideTypeDropdown = target.closest('[data-dropdown="type"]')
-        const isInsidePeopleDropdown = target.closest('[data-dropdown="people"]')
-        const isInsideModifiedDropdown = target.closest('[data-dropdown="modified"]')
-        const isInsideSourceDropdown = target.closest('[data-dropdown="source"]')
-
-        if (!isInsideDriveDropdown) showDriveMenu.value = false
-        if (!isInsideTypeDropdown) showTypeFilter.value = false
-        if (!isInsidePeopleDropdown) showPeopleFilter.value = false
-        if (!isInsideModifiedDropdown) showModifiedFilter.value = false
-        if (!isInsideSourceDropdown) showSourceFilter.value = false
-    }
-
     document.addEventListener('click', handleClickOutside)
+    window.addEventListener('refresh-files', handleRefreshFiles)
 
     if (route.query.drive && typeof route.query.drive === 'string') {
         currentDrive.value = route.query.drive
@@ -651,20 +655,43 @@ onMounted(() => {
     }
 })
 
-watch(() => route.query, (newQuery) => {
-    if (newQuery.drive && typeof newQuery.drive === 'string' && newQuery.drive !== currentDrive.value) {
-        currentDrive.value = newQuery.drive
-        currentFolder.value = ''
-        loadFiles()
+onBeforeUnmount(() => {
+    document.removeEventListener('click', handleClickOutside)
+    window.removeEventListener('refresh-files', handleRefreshFiles)
+})
+
+watch(() => [route.query.drive, route.query.folder] as const, ([newDrive, newFolder], [oldDrive, oldFolder]) => {
+    let shouldReload = false
+
+    if (newDrive !== oldDrive) {
+        const driveValue = typeof newDrive === 'string' ? newDrive : 'default'
+        if (driveValue !== currentDrive.value) {
+            currentDrive.value = driveValue
+            currentFolder.value = ''
+            shouldReload = true
+        }
     }
 
-    if (newQuery.folder !== currentFolder.value) {
-        currentFolder.value = (typeof newQuery.folder === 'string' ? newQuery.folder : '')
-        loadFiles()
+    if (newFolder !== oldFolder) {
+        const folderValue = typeof newFolder === 'string' ? newFolder : ''
+        if (folderValue !== currentFolder.value) {
+            currentFolder.value = folderValue
+            shouldReload = true
+        }
     }
 
-    if (!newQuery.folder && currentFolder.value) {
-        currentFolder.value = ''
+    if (shouldReload) {
+        loadFiles()
+    }
+})
+
+watch(() => route.fullPath, () => {
+    const queryDrive = typeof route.query.drive === 'string' ? route.query.drive : 'default'
+    const queryFolder = typeof route.query.folder === 'string' ? route.query.folder : ''
+
+    if (queryDrive !== currentDrive.value || queryFolder !== currentFolder.value || queryFolder == currentFolder.value) {
+        currentDrive.value = queryDrive
+        currentFolder.value = queryFolder
         loadFiles()
     }
 })
@@ -702,10 +729,11 @@ const loadDrives = async () => {
 }
 
 const selectDrive = (drive: string) => {
-    currentDrive.value = drive
-    currentFolder.value = ''
     showDriveMenu.value = false
-    loadFiles()
+    router.push({
+        path: '/dashboard',
+        query: { drive: drive }
+    })
 }
 
 const createNewDrive = async () => {
@@ -731,10 +759,14 @@ const createNewDrive = async () => {
         })
 
         drives.value.push(newDriveName.value)
-        currentDrive.value = newDriveName.value
+        const newDrive = newDriveName.value
         newDriveName.value = ''
         showNewDriveModal.value = false
-        loadFiles()
+
+        router.push({
+            path: '/dashboard',
+            query: { drive: newDrive }
+        })
     } catch (error) {
         console.error('Error creating drive:', error)
         alert('Failed to create drive')
@@ -989,15 +1021,15 @@ const openFilePreview = (file: File) => {
 }
 
 const navigateToFolder = (folder: File) => {
-    currentFolder.value = folder.path || folder.name
+    const folderPath = folder.path || folder.name
+
     router.push({
         path: '/dashboard',
-        query: { drive: currentDrive.value, folder: currentFolder.value }
+        query: { drive: currentDrive.value, folder: folderPath }
     })
 }
 
 const navigateToFolderByPath = (path: string) => {
-    currentFolder.value = path
     router.push({
         path: '/dashboard',
         query: { drive: currentDrive.value, folder: path }
@@ -1008,10 +1040,11 @@ const navigateBack = () => {
     if (currentFolder.value) {
         const parts = currentFolder.value.split('/')
         parts.pop()
-        currentFolder.value = parts.join('/')
+        const newFolder = parts.join('/')
+
         router.push({
             path: '/dashboard',
-            query: currentFolder.value ? { drive: currentDrive.value, folder: currentFolder.value } : { drive: currentDrive.value }
+            query: newFolder ? { drive: currentDrive.value, folder: newFolder } : { drive: currentDrive.value }
         })
     }
 }
