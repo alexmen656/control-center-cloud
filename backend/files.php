@@ -428,7 +428,7 @@ if ($method === 'OPTIONS') {
                 ]);
             } elseif (isset($data['action']) && $data['action'] === 'create_folder' && isset($data['drive']) && isset($data['folder'])) {
                 $drive = $data['drive'] ?? 'default';
-                $folderName = preg_replace('/[^a-zA-Z0-9_-]/', '', $data['folder']);
+                $folderName = preg_replace('/[^a-zA-Z0-9_\/-]/', '', $data['folder']);
 
                 if (empty($folderName)) {
                     http_response_code(400);

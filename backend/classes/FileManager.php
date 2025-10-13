@@ -7,7 +7,8 @@ class FileManager
     {
         $this->baseDir = rtrim($baseDir, '/') . '/';
         if (!is_dir($this->baseDir)) {
-            mkdir($this->baseDir, 0755, true);
+            mkdir($this->baseDir, 0777, true);
+            chmod($this->baseDir, 0777);
         }
     }
 
@@ -157,7 +158,8 @@ class FileManager
         if ($folder) {
             $targetDir .= rtrim($folder, '/') . '/';
             if (!is_dir($targetDir)) {
-                mkdir($targetDir, 0755, true);
+                mkdir($targetDir, 0777, true);
+                chmod($targetDir, permissions: 0777);
             }
         }
 
@@ -182,7 +184,8 @@ class FileManager
     {
         $dirPath = $this->baseDir . $dirname;
         if (!is_dir($dirPath)) {
-            return mkdir($dirPath, 0755, true);
+            echo 'Creating directory: ' . $dirPath . '\n';
+            return mkdir($dirPath, 0777, true) && chmod($dirPath, 0777);
         }
         return false;
     }
@@ -202,7 +205,8 @@ class FileManager
         $filePath = $this->baseDir . basename($filename);
         $newDirPath = rtrim($this->baseDir . basename($newDir), '/') . '/';
         if (!is_dir($newDirPath)) {
-            mkdir($newDirPath, 0755, true);
+            mkdir($newDirPath, 0777, true);
+            chmod($newDirPath, 0777);
         }
         if (file_exists($filePath)) {
             return rename($filePath, $newDirPath . basename($filename));
