@@ -1,62 +1,329 @@
-# Control Cloud
+# 🌥️ Control Cloud
 
-What is Control Cloud?
-Control Cloud allows you to store files online and access them on any device basically something like iCloud or Google Drive
+<div align="center">
 
-Features:
-Sharing: you can share files with any other Control Cloud users
-Multiple Drives: Every user can have up to 3 different drives which act similar like to have 3 different spaces
-Google Login/sign up: you can login fast with google
-Simple/Modern design inspired by Google Drive
-Magical file upload you can drag and drop your files to the dashboard at any time and they will upload
+**A modern, feature-rich cloud storage solution for storing, managing, and sharing files across all your devices.**
 
-## Recommended IDE Setup
+[![Vue.js](https://img.shields.io/badge/Vue.js-3.x-4FC08D?style=flat&logo=vue.js&logoColor=white)](https://vuejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-5.x-646CFF?style=flat&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.x-06B6D4?style=flat&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+</div>
 
-## Recommended Browser Setup
+---
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+## 📖 About
 
-## Type Support for `.vue` Imports in TS
+Control Cloud is a modern cloud storage platform that allows you to store files online and access them from any device. Built with Vue.js 3 and TypeScript, it offers a sleek, intuitive interface inspired by Google Drive with powerful features for personal and collaborative file management.
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+## ✨ Features
 
-## Customize configuration
+### 🗂️ **File Management**
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+- **Drag & Drop Upload** - Simply drag files anywhere on the dashboard to upload instantly
+- **File Preview** - Preview images, PDFs, videos, audio, and text files directly in the browser
+- **Folder Navigation** - Organize files in nested folders with breadcrumb navigation
+- **Search & Filter** - Filter files by type, owner, modification date, and source
+- **Bulk Operations** - Select multiple files to download, star, or delete at once
+- **Sort Options** - Sort by name, owner, date modified, or file size
 
-## Project Setup
+### 💾 **Storage & Organization**
 
-```sh
-npm install
-```
+- **Multiple Drives** - Create up to 3 separate drives per user for better organization
+- **Starred Files** - Mark important files for quick access
+- **Trash Bin** - Safely delete files with the ability to restore them later
+- **Recent Files** - Quick access to recently modified files
+- **Shared Files** - View all files shared with you in one place
 
-### Compile and Hot-Reload for Development
+### 🤝 **Collaboration**
+
+- **File Sharing** - Share files with other Control Cloud users by username
+- **Access Control** - Track file ownership and shared content
+- **Shared with Me** - Dedicated view for files others have shared with you
+
+### 🎨 **User Experience**
+
+- **Modern UI** - Clean, Google Drive-inspired interface
+- **Dark Mode** - Full dark mode support for comfortable viewing
+- **List & Grid Views** - Switch between list and grid layouts
+- **Responsive Design** - Works seamlessly on desktop, tablet, and mobile
+- **Real-time Updates** - Instant file list updates after operations
+
+### 🔐 **Authentication**
+
+- **Google OAuth** - Fast login and signup with Google account
+- **Secure Authentication** - JWT-based authentication system
+- **Session Management** - Persistent login sessions
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- **Node.js** 18.x or higher
+- **npm** 9.x or higher
+
+### Installation
+
+1. **Clone the repository**
+
+   ```sh
+   git clone https://github.com/alexmen656/control-center-cloud.git
+   cd control-center-cloud
+   ```
+
+2. **Install dependencies**
+
+   ```sh
+   npm install
+   ```
+
+3. **Start the development server**
+
+   ```sh
+   npm run dev
+   ```
+
+4. **Open your browser**
+   ```
+   Navigate to http://localhost:5173
+   ```
+
+---
+
+## 🛠️ Available Scripts
+
+### Development
 
 ```sh
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+Starts the Vite development server with hot module replacement.
+
+### Build
 
 ```sh
 npm run build
 ```
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+Type-checks the project and creates an optimized production build.
+
+### Preview
+
+```sh
+npm run preview
+```
+
+Preview the production build locally.
+
+### Testing
 
 ```sh
 npm run test:unit
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+Run unit tests with [Vitest](https://vitest.dev/).
+
+### Linting
 
 ```sh
 npm run lint
 ```
+
+Lint and fix code with [ESLint](https://eslint.org/).
+
+### Type Checking
+
+```sh
+npm run type-check
+```
+
+Run TypeScript type checking without emitting files.
+
+---
+
+## 🏗️ Tech Stack
+
+### Frontend
+
+- **[Vue.js 3](https://vuejs.org/)** - Progressive JavaScript framework
+- **[TypeScript](https://www.typescriptlang.org/)** - Type-safe JavaScript
+- **[Vite](https://vitejs.dev/)** - Next-generation frontend tooling
+- **[Vue Router](https://router.vuejs.org/)** - Official router for Vue.js
+- **[Pinia](https://pinia.vuejs.org/)** - State management for Vue
+- **[Tailwind CSS](https://tailwindcss.com/)** - Utility-first CSS framework
+- **[Axios](https://axios-http.com/)** - HTTP client
+- **[VueUse](https://vueuse.org/)** - Collection of Vue composition utilities
+
+### Backend
+
+- **PHP** - Server-side scripting
+- **MySQL** - Database management
+
+### Build Tools
+
+- **[Vite](https://vitejs.dev/)** - Build tool and dev server
+- **[ESLint](https://eslint.org/)** - Code linting
+- **[Vitest](https://vitest.dev/)** - Unit testing framework
+- **[TypeScript](https://www.typescriptlang.org/)** - Type checking
+
+---
+
+## 📁 Project Structure
+
+```
+control-center-cloud/
+├── backend/                # PHP backend files
+│   ├── files.php          # File operations API
+│   ├── users.php          # User authentication API
+│   └── classes/           # PHP classes (DB, FileManager, User)
+├── src/
+│   ├── assets/            # Static assets (images, styles)
+│   ├── components/        # Vue components
+│   │   ├── AppHeader.vue
+│   │   ├── AppSidebar.vue
+│   │   ├── FileManager.vue
+│   │   └── FilePreviewModal.vue
+│   ├── router/            # Vue Router configuration
+│   ├── services/          # API services
+│   ├── stores/            # Pinia stores
+│   ├── types/             # TypeScript type definitions
+│   ├── utils/             # Utility functions
+│   ├── views/             # Page components
+│   │   ├── FilesView.vue
+│   │   ├── RecentView.vue
+│   │   ├── SharedView.vue
+│   │   ├── StarredView.vue
+│   │   └── TrashView.vue
+│   ├── App.vue            # Root component
+│   └── main.ts            # Application entry point
+├── public/                # Public static files
+├── docs/                  # Documentation
+├── package.json           # Project dependencies
+├── vite.config.ts         # Vite configuration
+├── tsconfig.json          # TypeScript configuration
+└── tailwind.config.js     # Tailwind CSS configuration
+```
+
+---
+
+## 💻 Development Setup
+
+### Recommended IDE
+
+[Visual Studio Code](https://code.visualstudio.com/) with the following extensions:
+
+- **[Vue - Official](https://marketplace.visualstudio.com/items?itemName=Vue.volar)** - Vue language support
+  - ⚠️ Disable Vetur if installed
+- **[TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin)** - TypeScript support for `.vue` files
+- **[ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)** - Code linting
+- **[Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)** - Tailwind class suggestions
+
+### Browser DevTools
+
+#### Chromium-based browsers (Chrome, Edge, Brave)
+
+- [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
+- [Enable Custom Object Formatters](http://bit.ly/object-formatters) in DevTools settings
+
+#### Firefox
+
+- [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
+- [Enable Custom Object Formatters](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+
+### Type Support for `.vue` Files
+
+TypeScript doesn't natively understand `.vue` imports. This project uses:
+
+- **`vue-tsc`** instead of `tsc` for type checking
+- **[Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar)** for Vue 3 `.vue` file type support in your editor
+
+---
+
+## 🎯 Key Features Explained
+
+### Multi-Drive System
+
+Each user can create up to 3 independent drives, allowing for better organization:
+
+- **Personal** - For personal files
+- **Work** - For professional documents
+- **Projects** - For project-specific content
+
+### Smart File Filtering
+
+Advanced filtering options help you find files quickly:
+
+- **Type** - Filter by file type (folders, PDFs, images, videos, documents, etc.)
+- **People** - Filter by file owner
+- **Modified** - Filter by modification date (today, last 7 days, last 30 days, this year)
+- **Source** - Filter between your files and files shared with you
+
+### Bulk Operations
+
+Select multiple files with checkboxes to perform batch operations:
+
+- **Download** - Download all selected files
+- **Star** - Add all selected files to starred
+- **Delete** - Move all selected files to trash
+
+---
+
+## 🔧 Configuration
+
+### Vite Configuration
+
+See [Vite Configuration Reference](https://vite.dev/config/) for customization options.
+
+### Environment Variables
+
+Create a `.env` file in the root directory:
+
+```env
+VITE_API_BASE_URL=https://your-api-url.com
+```
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+---
+
+## 👨‍💻 Author
+
+**Alex Polan**
+
+- GitHub: [@alexmen656](https://github.com/alexmen656)
+
+---
+
+## 🙏 Acknowledgments
+
+- UI/UX inspired by [Google Drive](https://drive.google.com/)
+- Built with [Vue.js 3](https://vuejs.org/) and modern web technologies
+- Icons from [Heroicons](https://heroicons.com/)
+
+---
+
+<div align="center">
+
+**Made with ❤️ and Vue.js**
+
+</div>
