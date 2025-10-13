@@ -315,7 +315,7 @@
                                     </div>
                                     <span class="text-sm text-gray-600 dark:text-gray-300">{{
                                         file.owner[0]?.toUpperCase() + file.owner.slice(1)
-                                        }}</span>
+                                    }}</span>
                                 </div>
                             </td>
                             <td class="py-3 px-4">
@@ -323,9 +323,11 @@
                             </td>
                             <td class="py-3 px-4">
                                 <span class="text-sm text-gray-600 dark:text-gray-300">{{
-                                    Math.round(formatUnit(file.size.replace(' bytes', '')).value) + ' ' +
-                                    formatUnit(file.size.replace(' bytes', '')).unit
-                                }}</span>
+                                    file.type !== 'folder' ? Math.round(formatUnit(file.size.replace(' bytes',
+                                        '')).value) + ' '
+                                        +
+                                        formatUnit(file.size.replace(' bytes', '')).unit : '----'
+                                    }}</span>
                             </td>
                             <td class="py-3 pl-4 text-right">
                                 <div
