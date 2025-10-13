@@ -232,7 +232,7 @@ class FileManager
 
     public function getFileContents($filename)
     {
-        $filePath = $this->baseDir . basename($filename);
+        $filePath = $this->baseDir . $filename;//basename()
         if (file_exists($filePath)) {
             return file_get_contents($filePath);
         }

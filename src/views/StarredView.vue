@@ -94,7 +94,8 @@
                                     <div class="flex items-center space-x-2">
                                         <div
                                             class="w-6 h-6 rounded-full bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center text-white font-semibold text-xs">
-                                            {{ file.owner.charAt(0).toUpperCase() }}
+                                            {{ file.owner == 'me' ? username.charAt(0).toUpperCase() :
+                                            file.owner.charAt(0).toUpperCase() }}
                                         </div>
                                         <span class="text-sm text-gray-600 dark:text-gray-300">{{
                                             file.owner[0]?.toUpperCase() + file.owner.slice(1) }}</span>
@@ -175,6 +176,7 @@ const viewMode = ref<'list' | 'grid'>('list')
 const showPreview = ref(false)
 const selectedFile = ref<File | null>(null)
 const starredFiles = ref<File[]>([])
+const username = localStorage.getItem('username') || ''
 
 interface File {
     id: number

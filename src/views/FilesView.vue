@@ -226,6 +226,48 @@
                 </div>
             </div>
         </div>
+        <div v-if="selectedFilesCount > 0"
+            class="border-b border-gray-200 dark:border-gray-700 bg-primary-50 dark:bg-primary-900/20 px-6 py-3 sticky top-[73px] z-10">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                        {{ selectedFilesCount }} file{{ selectedFilesCount > 1 ? 's' : '' }} selected
+                    </span>
+                    <button @click="clearSelection"
+                        class="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300">
+                        Clear selection
+                    </button>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button @click="bulkDownload"
+                        class="flex items-center space-x-2 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span>Download</span>
+                    </button>
+                    <button @click="bulkStar"
+                        class="flex items-center space-x-2 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                        <span>Star</span>
+                    </button>
+                    <button @click="bulkMoveToTrash"
+                        class="flex items-center space-x-2 px-4 py-2 bg-red-600 dark:bg-red-600 rounded-lg hover:bg-red-700 dark:hover:bg-red-700 text-sm font-medium text-white">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span>Delete</span>
+                    </button>
+                </div>
+            </div>
+        </div>
         <div class="flex-1 px-6 py-4">
             <div v-if="viewMode === 'list'" class="overflow-x-auto">
                 <table class="min-w-full">
@@ -293,7 +335,7 @@
                     <tbody>
                         <tr v-for="file in files" :key="file.id" @click="openFilePreview(file)" :data-file-id="file.id"
                             class="hover:bg-gray-50 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-700 cursor-pointer group">
-                            <td class="py-3 pr-4 pl-1">
+                            <td class="py-3 pr-4 pl-1" @click.stop>
                                 <div class="h-full flex items-center">
                                     <input type="checkbox" v-model="selectedFiles[file.id]" :checked="selectAll">
                                 </div>
@@ -431,7 +473,7 @@
                         Cancel
                     </button>
                     <button @click="shareFile"
-                        class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700">
+                        class="px-4 py-2 bg-red-600 dark:bg-primary-600 text-gray-700 text-white rounded-lg hover:bg-primary-700">
                         Share
                     </button>
                 </div>
@@ -439,6 +481,7 @@
         </div>
         <FilePreviewModal :show="showPreview" :fileName="selectedFile?.name || ''"
             :filePath="selectedFile?.path || selectedFile?.name || ''" :fileSize="selectedFile?.size || ''"
+            :drive="currentDrive" :owner="selectedFile?.owner !== username ? selectedFile?.owner : undefined"
             @close="closePreview" />
         <div v-if="showNewDriveModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
             @click.self="showNewDriveModal = false">
@@ -567,6 +610,66 @@ const uniqueOwners = computed(() => {
     allFiles.value.forEach(file => owners.add(file.owner))
     return Array.from(owners)
 })
+
+const selectedFilesCount = computed(() => {
+    return Object.values(selectedFiles.value).filter(Boolean).length
+})
+
+const getSelectedFiles = () => {
+    return files.value.filter(file => selectedFiles.value[file.id])
+}
+
+const clearSelection = () => {
+    selectedFiles.value = {}
+    selectAll.value = false
+}
+
+const bulkDownload = async () => {
+    const filesToDownload = getSelectedFiles()
+    for (const file of filesToDownload) {
+        if (file.type !== 'folder') {
+            await downloadFile(file)
+        }
+    }
+}
+
+const bulkStar = async () => {
+    const filesToStar = getSelectedFiles()
+    for (const file of filesToStar) {
+        await toggleStar(file)
+    }
+    clearSelection()
+}
+
+const bulkMoveToTrash = async () => {
+    const filesToDelete = getSelectedFiles()
+    if (!confirm(`Move ${filesToDelete.length} file(s) to trash?`)) return
+
+    for (const file of filesToDelete) {
+        try {
+            await axios.post('https://alex.polan.sk/control-center/cloud/files.php', {
+                action: 'move_to_trash',
+                file_id: file.id,
+                drive: currentDrive.value,
+                file_path: file.path || file.name,
+                file_name: file.name,
+                file_type: file.type,
+                file_size: file.size,
+                file_owner: file.owner,
+                file_modified: file.modified
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+        } catch (error) {
+            console.error('Error moving file to trash:', error)
+        }
+    }
+    clearSelection()
+    loadFiles()
+}
 
 const closeAllDropdowns = () => {
     showDriveMenu.value = false
@@ -961,11 +1064,11 @@ const applyFilters = () => {
     }
 
     if (selectedSource.value) {
-        const currentUser = localStorage.getItem('username') || ''
+        const currentUser = (localStorage.getItem('username') || '').toLowerCase()
         if (selectedSource.value === 'mine') {
-            filtered = filtered.filter(file => file.owner === currentUser)
+            filtered = filtered.filter(file => file.owner.toLowerCase() === currentUser)
         } else if (selectedSource.value === 'shared') {
-            filtered = filtered.filter(file => file.owner !== currentUser)
+            filtered = filtered.filter(file => file.owner.toLowerCase() !== currentUser)
         }
     }
 

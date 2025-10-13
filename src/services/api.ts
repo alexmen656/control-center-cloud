@@ -74,7 +74,7 @@ export const filesApi = {
 
   getFileContents: async (drive: string, file: string, owner?: string) => {
     const params: any = {
-      action: owner ? 'get_shared_file_contents' : 'get_file_contents',
+      action: owner != 'me' ? 'get_shared_file_contents' : 'get_file_contents',
       drive: drive,
       file: file,
     }
