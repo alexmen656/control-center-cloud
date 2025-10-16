@@ -17,43 +17,13 @@
 
 Control Cloud is a modern cloud storage platform that allows you to store files online and access them from any device. Built with Vue.js 3 and TypeScript, it offers a sleek, intuitive interface inspired by Google Drive with powerful features for personal and collaborative file management.
 
-## Features
-
-### **File Management**
+## Special Features
 
 - **Drag & Drop Upload** - Simply drag files anywhere on the dashboard to upload instantly
-- **File Preview** - Preview images, PDFs, videos, audio, and text files directly in the browser
-- **Folder Navigation** - Organize files in nested folders with breadcrumb navigation
 - **Search & Filter** - Filter files by type, owner, modification date, and source
-- **Bulk Operations** - Select multiple files to download, star, or delete at once
-- **Sort Options** - Sort by name, owner, date modified, or file size
-
-### **Storage & Organization**
-
 - **Multiple Drives** - Create up to 3 separate drives per user for better organization
-- **Starred Files** - Mark important files for quick access
-- **Trash Bin** - Safely delete files with the ability to restore them later
-- **Recent Files** - Quick access to recently modified files
 - **Shared Files** - View all files shared with you in one place
-
-### **Collaboration**
-
-- **File Sharing** - Share files with other Control Cloud users by username
-- **Access Control** - Track file ownership and shared content
-- **Shared with Me** - Dedicated view for files others have shared with you
-
-### **User Experience**
-
-- **Modern UI** - Clean, Google Drive-inspired interface
-- **Dark Mode** - Full dark mode support for comfortable viewing
-- **List & Grid Views** - Switch between list and grid layouts
-- **Responsive Design** - Works seamlessly on desktop, tablet, and mobile
-- **Real-time Updates** - Instant file list updates after operations
-
-### **Authentication**
-
 - **Google OAuth** - Fast login and signup with Google account
-- **Secure Authentication** - JWT-based authentication system
 
 ---
 
