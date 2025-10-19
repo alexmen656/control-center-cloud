@@ -15,7 +15,7 @@
 
 ## About
 
-Control Cloud is a cloud platform like Google Drive or iCloud. The design was inspired by Google Drive.
+Control Cloud is a modern cloud platform similar to Google Drive or iCloud, with a design inspired by Google Drive.
 
 ## Special Features
 
