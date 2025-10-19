@@ -15,15 +15,14 @@
 
 ## About
 
-Control Cloud is a modern cloud storage platform that allows you to store files online and access them from any device. Built with Vue.js 3 and TypeScript, it offers a sleek, intuitive interface inspired by Google Drive with powerful features for personal and collaborative file management.
+Control Cloud is a cloud platform like Google Drive or iCloud. The design was inspired by Google Drive.
 
 ## Special Features
 
-- **Drag & Drop Upload** - Simply drag files anywhere on the dashboard to upload instantly
-- **Search & Filter** - Filter files by type, owner, modification date, and source
-- **Multiple Drives** - Create up to 3 separate drives per user for better organization
-- **Shared Files** - View all files shared with you in one place
-- **Google OAuth** - Fast login and signup with Google account
+- *Sharing:* You can share files with other Control Cloud users.
+- *Multiple drives:* You can create up to 3 drives, each with 1GB of storage.
+- *Google Login:* You can quickly log in or register with Google.
+- *Drag & Drop upload:* You can simply drag files anywhere onto the dashboard to upload them.
 
 ---
 
