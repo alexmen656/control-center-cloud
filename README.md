@@ -17,10 +17,10 @@ Control Cloud is a modern cloud platform similar to Google Drive or iCloud, with
 
 ## Special Features
 
-- *Sharing:* You can share files with other Control Cloud users.
-- *Multiple drives:* You can create up to 3 drives, each with 1GB of storage.
-- *Google Login:* You can quickly log in or register with Google.
-- *Drag & Drop upload:* You can simply drag files anywhere onto the dashboard to upload them.
+- **Sharing:** You can share files with other Control Cloud users.
+- **Multiple drives:** You can create up to 3 drives, each with 1GB of storage.
+- **Google Login:** You can quickly log in or register with Google.
+- **Drag & Drop upload:** You can simply drag files anywhere onto the dashboard to upload them.
 
 ---
 
