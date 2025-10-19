@@ -237,11 +237,6 @@ const register = async () => {
         return;
     }
 
-    if (!termsAccepted.value) {
-        error.value = 'You must accept the Terms of Service and Privacy Policy';
-        return;
-    }
-
     isLoading.value = true;
 
     try {
